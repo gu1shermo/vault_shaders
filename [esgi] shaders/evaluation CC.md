@@ -57,61 +57,15 @@ Réaliser une **scène 3D simple en raymarching**.
 La scène doit inclure :
 
 - une **composition d’objets SDF**
-    
 - le calcul de la **normale**
-    
 - un modèle d’éclairage simple comprenant :
-    
     - **ambiant**
-        
     - **diffuse**
-        
     - **spéculaire**
-        
-
-L’objectif est de comprendre le **pipeline de base du raymarching** : scène SDF → calcul des normales → éclairage.
-
-### Shader 4 — CSG et ombres en raymarching
-
-Réaliser une **scène 3D en raymarching** utilisant des **opérations CSG** et un **éclairage avec ombres**.
-
-La scène doit inclure :
-
-- une **forme principale** construite à partir de primitives SDF
-    
-- l’utilisation d’**opérations CSG** (union, soustraction, intersection)
-    
-- un **plan** servant de sol
-    
-- un **éclairage diffuse**
-    
-- une **ombre projetée** calculée avec un raymarch secondaire
-    
-
-L’objectif est de comprendre :
-
-- comment **sculpter une forme complexe à partir de primitives**
-    
-- comment fonctionne la **soustraction dans les SDF**
-    
-- comment calculer une **ombre en raymarching** avec un second rayon
-    
-
-Des expérimentations sont encouragées :
-
-- modifier les primitives (sphère, boîte, cylindre, etc.)
-    
-- changer la forme résultante
-    
-- déplacer ou animer la lumière
-    
-- modifier la caméra ou la composition de la scène.
-    
-
-L’évaluation portera principalement sur la **compréhension des opérations CSG**, la **mise en place de l’ombre**, et votre **capacité à explorer différentes variations de la scène**.
-
-
-
+- plusieurs objets et pouvoir les discriminer
+- un sol
+- ombre
+- caméra
 
 ### Shader 5 — Smooth minimum et fusion organique
 

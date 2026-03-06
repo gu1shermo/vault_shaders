@@ -1,10 +1,24 @@
 ### outils debug
-desmos, graphtoy
+
+https://www.desmos.com/calculator
+
+https://graphtoy.com/
 
 ### refs
-inigo quilez, the art of code, flopine, wiki du fuz
-
+https://iquilezles.org/
+https://www.youtube.com/c/InigoQuilez
+https://www.youtube.com/@TheArtofCodeIsCool
+https://www.twitch.tv/flopine
 https://thebookofshaders.com/
 
+### fuz
+
+code commenté: https://wiki.fuz.re/doku.php?id=atelier:creative_coding:code_des_ateliers
+ressources: https://wiki.fuz.re/doku.php?id=atelier:creative_coding:shader_links
+
+
+sons avec des shaders
+
+https://www.youtube.com/watch?v=3mteFftC7fE
 
 
