@@ -1,3 +1,13 @@
+https://www.shadertoy.com/view/Ncs3WN
+
+
+Divide the screen into tiles of 10×10 pixels size. For each tile, use the texel from the pixel with the smallest `uv` coordinates inside that tile.
+
+
+
+![[Pasted image 20260306160431.png]]
+
+
 
 Assume that the screen size always matches the texture size. Thus, each screen pixel corresponds to one texture pixel:
 

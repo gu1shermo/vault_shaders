@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "[esgi] shaders/pixelisation.md",
+                "file": "[esgi] shaders/evaluation CC.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "pixelisation"
+              "title": "evaluation CC"
             }
           }
         ],
@@ -200,9 +200,17 @@
   },
   "active": "40709fdb4462e534",
   "lastOpenFiles": [
-    "[esgi] shaders/ref shaders.md",
-    "[esgi] shaders/pixelisation.md",
+    "postprocess/pixelisation.md",
+    "postprocess/toon.md",
+    "Pasted image 20260306160524.png",
+    "postprocess/edge detection.md",
+    "Pasted image 20260306160431.png",
     "[esgi] shaders/evaluation CC.md",
+    "Pasted image 20260306155535.png",
+    "Pasted image 20260306155456.png",
+    "Pasted image 20260306155417.png",
+    "postprocess",
+    "[esgi] shaders/ref shaders.md",
     "[esgi] shaders/prog vendredi.md",
     "[esgi] shaders/toonshading.md",
     "Pasted image 20260306135703.png",
