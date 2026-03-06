@@ -66,8 +66,8 @@ La scène doit inclure :
 - un sol
 - ombre
 - caméra
-- bonus: effet de toon shading
-- bonus: répétition de l espace
+- bonus+: effet de toon shading
+- bonus+: répétition de l espace
 ---
 - perturber la surface d'un des objets avec une texture 3D
 - ajouter du bloom sur un autre objet
@@ -77,8 +77,9 @@ La scène doit inclure :
 ### Shader 4 — Noise
 
 - au choix: value noise avec layers (fractal noise?) vu mercredi ou voronoi (vu vendredi)
-- bonus+ : l'utiliser dans une scène 2D 
-- bonus++: le "mapper" à un objet 3D
+- bonus+ : utiliser le noise dans une scène 2D 
+- défi bonus++: le "mapper" à un objet 3D (sur la face d'un cube par exemple)
+
 
 
 
