@@ -1,7 +1,8 @@
-
+### rendu 30/03/26
 ### Modalités d’évaluation
 
 Les travaux réalisés pendant les cours et ateliers seront évalués dans le cadre du **contrôle continu**. L’objectif n’est pas uniquement d’obtenir un résultat final précis, mais surtout de montrer votre **compréhension des concepts vus en cours** et votre **capacité à les explorer**.
+
 
 L’évaluation repose principalement sur plusieurs critères :
 
@@ -31,6 +32,8 @@ L’objectif est de montrer que vous comprenez comment **composer des formes à 
 ---
 
 ### Shader 2 — Pavage de Truchet
+
+voir: https://www.shadertoy.com/view/scXGzn
 
 Réaliser un **pavage de Truchet procédural**.
 
@@ -66,7 +69,12 @@ La scène doit inclure :
 - bonus+: répétition de l espace
 - bonus+: déformer le sol avec une texture de noise
 - bonus+:  ajouter du bloom sur un autre objet
+- bonus+: ajouter blur horizontal/vertical
+- bonus++: si le rayon ne touche rien, il tape dans un "ciel" => background
+	- voir https://www.shadertoy.com/view/lXsXRj
 - bonus++: reflect dans la scène qui va piocher dans les autres objets 
+	- voir https://www.shadertoy.com/view/ctVyWK
+
 
 ---
 - perturber la surface d'un des objets avec une texture 3D
@@ -74,7 +82,8 @@ La scène doit inclure :
 - 
 
 ### Shader 4 — Value Noise / Voronoi
-
+voir: https://www.shadertoy.com/view/tXyBWd
+voir: https://www.shadertoy.com/view/sff3D8
 - au choix: value noise avec layers (fractal noise?) vu mercredi ou voronoi (vu vendredi)
 - bonus+ : utiliser le noise dans une scène 2D 
 - bonus++: le "mapper" à un objet 3D (sur la face d'un cube par exemple)

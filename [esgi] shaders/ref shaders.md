@@ -1,7 +1,6 @@
 ### outils debug
 
 https://www.desmos.com/calculator
-
 https://graphtoy.com/
 
 ### refs
