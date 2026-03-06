@@ -1,4 +1,8 @@
-### rendu 30/03/26
+# RENDU le 30/03/26
+
+## ATTENTION, vérifiez bien que vos shaders sont *public* ou *unlisted*
+
+
 ### Modalités d’évaluation
 
 Les travaux réalisés pendant les cours et ateliers seront évalués dans le cadre du **contrôle continu**. L’objectif n’est pas uniquement d’obtenir un résultat final précis, mais surtout de montrer votre **compréhension des concepts vus en cours** et votre **capacité à les explorer**.
