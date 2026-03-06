@@ -66,6 +66,14 @@ La scène doit inclure :
 - un sol
 - ombre
 - caméra
+- bonus: effet de toon shading
+- répétition de l espace
+- perturber la surface d'un des objets avec une texture 3D
+- ajouter du bloom sur un autre objet
+- ajouter texture un autre objet
+- 
+
+
 
 ### Shader 5 — Smooth minimum et fusion organique
 
@@ -84,17 +92,6 @@ La scène doit inclure :
 - l’utilisation d’une **texture comme bruit volumétrique** pour perturber la surface
     
 
-Dans le code fourni, la texture est utilisée comme une **texture 3D approximée**, en échantillonnant la texture avec la position dans l’espace :
-
-texture(iChannel1, p * scale)
-
-La valeur retournée est ensuite utilisée pour **modifier la distance de la surface**, ce qui produit :
-
-- des **déformations**
-    
-- du **micro-relief**
-    
-- une surface plus **organique**
 
 
 

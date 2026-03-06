@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "[esgi] shaders/ref shaders.md",
+                "file": "[esgi] shaders/evaluation CC.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ref shaders"
+              "title": "evaluation CC"
             }
           }
         ],
@@ -200,9 +200,9 @@
   },
   "active": "40709fdb4462e534",
   "lastOpenFiles": [
+    "[esgi] shaders/ref shaders.md",
     "code shader toy.md",
     "[esgi] shaders/evaluation CC.md",
-    "[esgi] shaders/ref shaders.md",
     "[esgi] shaders/prog vendredi.md"
   ]
 }
