@@ -64,12 +64,14 @@ La scène doit inclure :
     - **spéculaire**
 - plusieurs objets et pouvoir les discriminer
 - un sol
-- ombre
+- ombre (sharp, diffuse à zéro si on se trouve dans l'ombre d'un objet)
 - caméra
 - bonus+: effet de toon shading
+- bonus+: soft shadows
 - bonus+: répétition de l espace
 - bonus+: déformer le sol avec une texture de noise
 - bonus+: ajouter du bloom sur un autre objet
+- bonus++: reflect dans la scène qui va piocher dans les autres objets 
 
 ---
 - perturber la surface d'un des objets avec une texture 3D
