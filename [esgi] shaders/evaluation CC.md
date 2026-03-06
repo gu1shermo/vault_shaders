@@ -6,11 +6,8 @@ Les travaux réalisés pendant les cours et ateliers seront évalués dans le ca
 L’évaluation repose principalement sur plusieurs critères :
 
 - **La maîtrise technique** : bonne utilisation des concepts étudiés (SDF, opérations booléennes, raymarching, éclairage, etc.).
-    
 - **L’exploration et l’expérimentation** : capacité à tester différentes idées, modifier les paramètres, combiner plusieurs techniques et aller au-delà du minimum demandé.
-    
 - **L’originalité** : propositions personnelles, composition de scène, variations intéressantes à partir des outils vus en cours.
-    
 - **La qualité visuelle** : l’aspect artistique peut être un plus, mais il reste secondaire par rapport à la compréhension technique.
     
 
@@ -40,9 +37,7 @@ Réaliser un **pavage de Truchet procédural**.
 La scène doit inclure :
 
 - une **grille répétée**
-    
 - une **variation aléatoire** des tuiles
-    
 - une composition visuelle cohérente
     
 
@@ -70,7 +65,7 @@ La scène doit inclure :
 - bonus+: soft shadows
 - bonus+: répétition de l espace
 - bonus+: déformer le sol avec une texture de noise
-- bonus+: ajouter du bloom sur un autre objet
+- bonus+:  ajouter du bloom sur un autre objet
 - bonus++: reflect dans la scène qui va piocher dans les autres objets 
 
 ---
@@ -78,13 +73,17 @@ La scène doit inclure :
 - ajouter texture un autre objet
 - 
 
-### Shader 4 — Noise
+### Shader 4 — Value Noise / Voronoi
 
 - au choix: value noise avec layers (fractal noise?) vu mercredi ou voronoi (vu vendredi)
 - bonus+ : utiliser le noise dans une scène 2D 
-- défi bonus++: le "mapper" à un objet 3D (sur la face d'un cube par exemple)
+- bonus++: le "mapper" à un objet 3D (sur la face d'un cube par exemple)
 
-### exercices post process
+### Exercices post process
 1. pixellisation
 2. edge detection
 3. toon
+
+
+
+
