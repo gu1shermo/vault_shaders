@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "evaluation.md",
-                "mode": "source",
+                "file": "tunnel/travel - étapes.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "evaluation"
+              "title": "travel - étapes"
             }
           },
           {
@@ -27,16 +27,15 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "prog vendredi.md",
+                "file": "tunnel/travel - report.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "prog vendredi"
+              "title": "travel - report"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -59,7 +58,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "Files"
+              "title": "Explorateur de fichiers"
             }
           },
           {
@@ -109,7 +108,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "prog vendredi.md",
+                "file": "tunnel/travel - étapes.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -119,7 +118,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for prog vendredi"
+              "title": "Rétrolien pour travel - étapes"
             }
           },
           {
@@ -189,20 +188,39 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "daily-notes:Open today's daily note": false,
-      "templates:Insert template": false,
-      "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "switcher:Ouvrir le sélecteur rapide": false,
+      "graph:Ouvrir la vue graphique": false,
+      "canvas:Créer une nouvelle toile": false,
+      "daily-notes:Ouvrir la note quotidienne": false,
+      "templates:Insérer le modèle": false,
+      "command-palette:Ouvrir la palette de commandes": false,
+      "bases:Créer une nouvelle base": false
     }
   },
-  "active": "b89a60efb2c0054e",
+  "active": "3d26268bdfeda57b",
   "lastOpenFiles": [
+    "tunnel/travel - report.md",
+    "tunnel/travel - étapes.md",
+    "tunnel/tunnel1.md",
+    "Pasted image 20260501143205.png",
+    "tunnel/travel - étapes.md.tmp.28932.1777638681000",
+    "tunnel/travel - étapes.md.tmp.28932.1777638333393",
+    "tunnel/travel.md",
+    "tunnel/tunnel2 - étapes.md",
+    "tunnel/tunnel2.md",
+    "tunnel/tunnel1 - étapes.md",
+    "tunnel/etape10.frag",
+    "tunnel/etape9.frag",
+    "tunnel/etape8.frag",
+    "tunnel/etape7.frag",
+    "tunnel/etape6.frag",
+    "tunnel/etape5.frag",
+    "tunnel/etape4.frag",
+    "tunnel/etape3.frag",
+    "evaluation CC.md",
+    "ref shaders.md",
     "evaluation.md",
     "prog vendredi.md",
-    "Welcome.md",
-    "ref shaders.md"
+    "Welcome.md"
   ]
 }
