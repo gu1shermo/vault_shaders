@@ -1103,7 +1103,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ## Étape 16 — Bloom par accumulation pendant la marche
 
-**Notion :** à chaque pas du raymarching, si la cellule courante est une sphère (matID == 0), on accumule un peu de couleur rouge dans `accCol`. Plus la trajectoire du rayon **frôle** des sphères, plus elle s'éclaire. Ajout final en post → faux glow gratuit, pas de seconde passe.
+**Notion :** à chaque pas du raymarching, si la cellule courante est une sphère (matID == 0), on accumule un peu de couleur rouge **pondérée par la proximité** : plus la trajectoire du rayon **frôle** une sphère (`res.x` petit), plus elle s'éclaire. Ajout final en post → faux glow gratuit, pas de seconde passe.
+
+> ⚠️ **Pourquoi pondérer ?** Le test brut `if (res.y == 0.) accCol += k;` semble suffisant, mais reste vrai **même très loin** des sphères : pour un rayon qui part vers le ciel, `length(ps) - 0.5` reste plus petit que `p.y` (le sol), donc `res.y` vaut 0 sur tous les pas et l'accumulation explose → un **pilier rouge vertical** apparaît au centre de l'image. Le facteur `(1. - sat(res.x / 0.5))` annule la contribution dès que la sphère est à plus de `0.5` unité, ce qui colle à la sémantique de "frôler" (cf. la même technique à l'étape 9 de `tunnel1`).
 
 ```glsl
 #define sat(a) clamp(a, 0., 1.)
@@ -1173,7 +1175,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
             }
             break;
         }
-        if (res.y == 0.) accCol += vec3(1., 0., 0.2) * 0.02;  // bloom
+        // bloom pondéré par la proximité de la sphère
+        // weight = 1 quand on touche presque (res.x → 0), 0 quand res.x ≥ 0.5
+        if (res.y == 0.) accCol += vec3(1., 0., 0.2) * (1. - sat(res.x / 0.5)) * 0.05;
 
         p += rd * res.x * 0.4;
     }
@@ -1267,7 +1271,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
             }
             break;
         }
-        if (res.y == 0.) accCol += vec3(1., 0., 0.2) * 0.02;
+        if (res.y == 0.) accCol += vec3(1., 0., 0.2) * (1. - sat(res.x / 0.5)) * 0.05;
         p += rd * res.x * 0.4;
     }
 
@@ -1366,7 +1370,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
             }
             break;
         }
-        if (res.y == 0.) accCol += vec3(1., 0., 0.2) * 0.02;
+        if (res.y == 0.) accCol += vec3(1., 0., 0.2) * (1. - sat(res.x / 0.5)) * 0.05;
         p += rd * res.x * 0.4;
     }
 
@@ -1465,7 +1469,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
             }
             break;
         }
-        if (res.y == 0.) accCol += vec3(1., 0., 0.2) * 0.02;
+        if (res.y == 0.) accCol += vec3(1., 0., 0.2) * (1. - sat(res.x / 0.5)) * 0.05;
         p += rd * res.x * 0.4;
     }
 
@@ -1589,7 +1593,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
         }
 
         if (res.y == 0.)
-            accCol += vec3(1., 0., 0.2) * 0.02;
+            accCol += vec3(1., 0., 0.2) * (1. - sat(res.x / 0.5)) * 0.05;
 
         p += rd * res.x * 0.4;
     }
@@ -1637,7 +1641,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 | 13 | Texture de bruit comme fonction continue |
 | 14 | Modulation latérale par SDF analytique (chemin "way") |
 | 15 | Animation caméra par 3 rotations 2D sur `rd` |
-| 16 | Bloom par accumulation pendant la marche |
+| 16 | Bloom par accumulation pondérée par la proximité |
 | 17 | Skybox gradient procédural |
 | 18 | Étoiles : `pow(noise, n)` |
 | 19 | Brouillard atmosphérique exponentiel |

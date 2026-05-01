@@ -122,9 +122,12 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
             break; // collision trouvée, on sort de la boucle
         }
 
-        // effet bloom : accumulation de couleur si sphère touchée
+        // effet bloom : accumulation pondérée par la proximité de la sphère
+        // sans le facteur (1 - sat(res.x/0.5)), un rayon qui part vers le ciel
+        // resterait dans res.y == 0 (length(ps) reste < p.y) et accumulerait
+        // un pilier rouge "gratuit" — cf. travel - report.md, étape 16.
         if (res.y == 0.)
-            accCol += vec3(1., 0., 0.2) * 0.02;
+            accCol += vec3(1., 0., 0.2) * (1. - sat(res.x / 0.5)) * 0.05;
 
         // avance du rayon (pas proportionnel à la distance pour plus de précision)
         p += rd * res.x * 0.4;

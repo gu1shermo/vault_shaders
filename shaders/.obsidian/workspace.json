@@ -27,15 +27,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "tunnel/travel - report.md",
+                "file": "tunnel/refract - étapes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "travel - report"
+              "title": "refract - étapes"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -67,7 +68,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "path:",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -75,7 +76,7 @@
                 "sortOrder": "alphabetical"
               },
               "icon": "lucide-search",
-              "title": "Search"
+              "title": "Rechercher"
             }
           },
           {
@@ -92,7 +93,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 306.5
   },
   "right": {
     "id": "090815ddab867406",
@@ -108,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "tunnel/travel - étapes.md",
+                "file": "tunnel/refract - étapes.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +119,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Rétrolien pour travel - étapes"
+              "title": "Rétrolien pour refract - étapes"
             }
           },
           {
@@ -197,10 +198,14 @@
       "bases:Créer une nouvelle base": false
     }
   },
-  "active": "3d26268bdfeda57b",
+  "active": "b89a60efb2c0054e",
   "lastOpenFiles": [
+    "tunnel/refract - étapes.md.tmp.28420.1777657748873",
     "tunnel/travel - report.md",
+    "tunnel/refract - étapes.md",
+    "tunnel/refract.md",
     "tunnel/travel - étapes.md",
+    "tunnel/tunnel1 - étapes.md",
     "tunnel/tunnel1.md",
     "Pasted image 20260501143205.png",
     "tunnel/travel - étapes.md.tmp.28932.1777638681000",
@@ -208,7 +213,6 @@
     "tunnel/travel.md",
     "tunnel/tunnel2 - étapes.md",
     "tunnel/tunnel2.md",
-    "tunnel/tunnel1 - étapes.md",
     "tunnel/etape10.frag",
     "tunnel/etape9.frag",
     "tunnel/etape8.frag",
