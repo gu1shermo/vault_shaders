@@ -619,7 +619,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 - `ro` suit l'offset inverse → la caméra reste centrée dans le tunnel
 - réflexion : un second `trace()` depuis le point d'impact
 - brouillard : `mix` vers une couleur violette pondéré par `exp(-dist)`
-- roll caméra : `rot(sin(iTime)*.4)` appliqué aux UV → balancement
+- roll caméra : `rot(sin(iTime)*.4)` appliqué aux UV → balancement2
 
 Ce code = le shader original.
 

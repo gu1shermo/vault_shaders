@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(grep -n \"^## Étape\\\\|^# \\\\|^---$\\\\|^<!--\" \"/c/Users/GuiSh/Documents/GUILLAUME/03_TRAVAIL/ESGI/vault_shaders/shaders/tunnel/refract2 - étapes.md\")"
     ]
   }
 }
