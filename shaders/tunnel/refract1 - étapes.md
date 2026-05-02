@@ -811,34 +811,107 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 **Notion :** pour un effet glossy convaincant, il faut des samples **décorrélés** par pixel ET par frame. On garde un `_seed` global qui s'incrémente à chaque appel de `rand()`, initialisé à partir de `iTime` (décorrélation temporelle) + un sample de bruit dépendant du pixel (décorrélation spatiale).
 
-```glsl
-// Hash 1D simple (qualité moyenne, suffit pour du glossy)
-float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
+> **Setup :** **iChannel0** = `Noise Medium` (sert au seed spatial), **iChannel2** = `Noise Medium` (roughness map), **iChannel3** = `Cubemap`.
 
-// Globale mutable + générateur incrémental
+```glsl
+#define PI 3.14159265
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+// === RNG stateful ===
+float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
 float _seed;
 float rand() { _seed++; return hash11(_seed); }
 
-// Dans mainImage, AVANT tout autre calcul :
-//     _seed = iTime + texture(iChannel0, uv).x;
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
 
-// Dans getMat, on remplace l'offset précédent :
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+// === NOUVEAU : offset glossy via rand() (décorrélé par pixel ET par frame) ===
 vec3 getMat(vec3 p, vec3 n, vec3 rd)
 {
     vec3 refl = reflect(rd, n);
     float rough = texture(iChannel2, p.xy * 0.3).x;
-    vec3 offset = (vec3(rand(), rand(), rand()) - 0.5) * rough;   // 3 samples indépendants par pixel et par frame
+    vec3 offset = (vec3(rand(), rand(), rand()) - 0.5) * rough;
     refl = normalize(refl + offset);
     vec3 col = getEnv(refl);
     col = pow(col, vec3(3.2));
     return col;
 }
-```
 
-Et dans `mainImage`, ajouter au début :
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
 
-```glsl
-_seed = iTime + texture(iChannel0, uv).x;
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+
+    // === Init du RNG : décorrélation spatiale (texture) + temporelle (iTime) ===
+    _seed = iTime + texture(iChannel0, uv).x;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    fragColor = vec4(col, 1.);
+}
 ```
 
 > **Pourquoi `iTime + texture(iChannel0, uv).x` ?**
@@ -859,10 +932,62 @@ _seed = iTime + texture(iChannel0, uv).x;
 
 **Notion :** la **vraie** réfraction (loi de Snell-Descartes : `refract()`) plie le rayon à l'entrée selon les indices de réfraction (n1, n2), puis le re-plie à la sortie. Coût : il faut traverser l'objet pour trouver le point de sortie. Approche bon marché ici : on **ne plie pas** le rayon, on raymarche juste **l'intérieur** du diamant pour trouver la face arrière, en utilisant `-_diamond(p)` (SDF inversée → positive à l'intérieur).
 
+> **Setup :** **iChannel0** = `Noise Medium`, **iChannel2** = `Noise Medium`, **iChannel3** = `Cubemap`.
+
 ```glsl
+#define PI 3.14159265
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
+float _seed;
+float rand() { _seed++; return hash11(_seed); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+// === NOUVEAU : matériau réflexion + réfraction approximée ===
 vec3 getMat(vec3 p, vec3 n, vec3 rd)
 {
-    // === Réflexion (étape 11) ===
+    // --- Réflexion (étape 11) ---
     vec3 refl = reflect(rd, n);
     float rough = texture(iChannel2, p.xy * 0.3).x;
     vec3 offset = (vec3(rand(), rand(), rand()) - 0.5) * rough;
@@ -870,8 +995,8 @@ vec3 getMat(vec3 p, vec3 n, vec3 rd)
     vec3 col = getEnv(refl);
     col = pow(col, vec3(3.2));
 
-    // === Réfraction approximée ===
-    vec3 op = p;                        // origine pour mesurer la distance traversée plus tard
+    // --- Réfraction approximée ---
+    vec3 op = p;                        // origine (utile à l'étape 13 pour mesurer la distance traversée)
     p -= n * 0.05;                      // on se décolle de la surface entrante (sinon on ressort tout de suite)
 
     vec3 transp = vec3(0.);             // accumulateur de la couleur "vue à travers"
@@ -888,6 +1013,41 @@ vec3 getMat(vec3 p, vec3 n, vec3 rd)
     }
     col += transp;                       // on ajoute la couleur transparente par dessus le reflet
     return col;
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+    _seed = iTime + texture(iChannel0, uv).x;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    fragColor = vec4(col, 1.);
 }
 ```
 
@@ -908,10 +1068,63 @@ vec3 getMat(vec3 p, vec3 n, vec3 rd)
 2. Assombrir le bas du diamant (faux GI).
 3. **Tirer** la couleur vers une teinte "absorbée" (magenta saturé) avec une courbe Beer-Lambert exponentielle de la **distance traversée** dans l'objet.
 
+> **Setup :** **iChannel0** = `Noise Medium`, **iChannel2** = `Noise Medium`, **iChannel3** = `Cubemap`.
+
 ```glsl
+#define PI 3.14159265
+#define sat(a) clamp(a, 0., 1.)
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
+float _seed;
+float rand() { _seed++; return hash11(_seed); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+// === NOUVEAU : matériau complet réflexion + réfraction + absorption Beer-Lambert ===
 vec3 getMat(vec3 p, vec3 n, vec3 rd)
 {
-    // === Réflexion ===
+    // --- Réflexion ---
     vec3 refl = reflect(rd, n);
     float rough = texture(iChannel2, p.xy * 0.3).x;
     vec3 offset = (vec3(rand(), rand(), rand()) - 0.5) * rough;
@@ -919,7 +1132,7 @@ vec3 getMat(vec3 p, vec3 n, vec3 rd)
     vec3 col = getEnv(refl);
     col = pow(col, vec3(3.2));
 
-    // === Réfraction + absorption ===
+    // --- Réfraction + absorption ---
     // Roughness "interne" pour fluer un peu rd dans l'objet (verre dépoli)
     float roughtrans = texture(iChannel2, p.xy * 5.1).x;
     rd = normalize(rd + (vec3(rand(), rand(), rand()) - 0.5) * 0.5 * roughtrans);
@@ -953,9 +1166,42 @@ vec3 getMat(vec3 p, vec3 n, vec3 rd)
     col += transp;
     return col;
 }
-```
 
-`sat` : penser à `#define sat(a) clamp(a, 0., 1.)` en début de shader.
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+    _seed = iTime + texture(iChannel0, uv).x;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    fragColor = vec4(sat(col), 1.);
+}
+```
 
 > **Pourquoi `1 - exp(-d * k)` et pas une rampe linéaire ?** La courbe exponentielle est physiquement plausible (loi d'absorption de Beer-Lambert) et reste élégante : démarre à 0 (pas de teinte au point de sortie immédiat), monte rapidement, sature en douceur. Linéaire produirait des transitions visibles aux discontinuités d'épaisseur (cassures aux arêtes du diamant). Le `0.25` règle la "longueur d'absorption" : plus grand = plus opaque vite.
 
@@ -970,41 +1216,151 @@ vec3 getMat(vec3 p, vec3 n, vec3 rd)
 **Notion :** le glossy (étape 11) + la roughness interne (étape 13) font que chaque frame a du bruit (les samples ne se répètent pas). Pour lisser, on utilise un **feedback temporel** : la passe finale (`Image`) écrit le résultat ; à la frame suivante, `Buffer A` lit cette sortie via `iChannel1` et **mixe à 50%** son rendu courant avec celui d'avant. Effet : moyenne mobile exponentielle des dernières frames → bruit divisé par ~√N, ghosting léger sur les mouvements.
 
 > **Setup Shadertoy :**
-> - **Common** : tous les `#define` partagés et les utilitaires (`r2d`, `getCam`, `_min`, `_cube`, `noise`…).
-> - **Buffer A** : le shader principal (raymarching + matériau).
->   - iChannel0 = `Noise Medium`
->   - iChannel1 = **Image** (feedback de la frame précédente)
->   - iChannel2 = `Noise Medium`
+> - **Common** : tous les `#define` partagés et les utilitaires (`r2d`, `getCam`, `_min`, `_cube`, `hash11`).
+> - **Buffer A** : le shader principal (raymarching + matériau + feedback).
+>   - iChannel0 = `Noise Medium` (seed spatial)
+>   - iChannel1 = **Image** (feedback de la frame précédente — boutonner sur "Misc → Image")
+>   - iChannel2 = `Noise Medium` (roughness map)
 >   - iChannel3 = `Cubemap`
-> - **Image** : passe finale qui peut juste afficher Buffer A (`texture(iChannel0, uv)`), ou faire du post (étape 15). iChannel0 = Buffer A.
+> - **Image** : passthrough qui affiche Buffer A. iChannel0 = Buffer A.
 
-### Buffer A (modifications sur étape 13)
+### Common
 
 ```glsl
-// ... tout le code de l'étape 13 ...
+#define PI 3.14159265
+#define sat(a) clamp(a, 0., 1.)
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+```
+
+### Buffer A
+
+```glsl
+float _seed;
+float rand() { _seed++; return hash11(_seed); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+vec3 getMat(vec3 p, vec3 n, vec3 rd)
+{
+    vec3 refl = reflect(rd, n);
+    float rough = texture(iChannel2, p.xy * 0.3).x;
+    vec3 offset = (vec3(rand(), rand(), rand()) - 0.5) * rough;
+    refl = normalize(refl + offset);
+    vec3 col = getEnv(refl);
+    col = pow(col, vec3(3.2));
+
+    float roughtrans = texture(iChannel2, p.xy * 5.1).x;
+    rd = normalize(rd + (vec3(rand(), rand(), rand()) - 0.5) * 0.5 * roughtrans);
+
+    vec3 op = p;
+    p -= n * 0.05;
+    vec3 transp = vec3(0.);
+    for (float i = 0.; i < 32.; i++)
+    {
+        float dist = -_diamond(p);
+        if (dist < 0.01)
+        {
+            transp = mix(
+                vec3(0.200, 0.851, 0.655),
+                vec3(0.106, 0.294, 0.804),
+                texture(iChannel2, p.xy * 0.2).x
+            ) * sat(sat(-p.y + 0.5) + 0.3);
+            transp = mix(transp, vec3(1., 0., 1.), 1. - exp(-distance(p, op) * 0.25));
+            break;
+        }
+        p += rd * dist;
+    }
+    col += transp;
+    return col;
+}
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
     vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
     _seed = iTime + texture(iChannel0, uv).x;
 
-    // ... raymarching + getMat → col ...
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
 
-    col = sat(col);    // clamp avant le mix pour éviter de propager des saturations
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
 
-    // FEEDBACK : on récupère le rendu de la frame précédente (iChannel1 = Image) et on mixe à 50%
+    col = sat(col);    // clamp avant le mix pour ne pas propager les saturations
+    // FEEDBACK : iChannel1 = Image (frame précédente). mix à 50% → moyenne mobile exponentielle.
     col = mix(col, texture(iChannel1, fragCoord / iResolution.xy).xyz, 0.5);
 
     fragColor = vec4(col, 1.);
 }
 ```
 
-### Image (passthrough simple pour cette étape)
+### Image (passthrough simple — iChannel0 = Buffer A)
 
 ```glsl
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    fragColor = texture(iChannel0, fragCoord / iResolution.xy);   // iChannel0 = Buffer A
+    fragColor = texture(iChannel0, fragCoord / iResolution.xy);
 }
 ```
 
@@ -1018,14 +1374,152 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ---
 
-## Étape 15 — Post-process : box blur horizontal (anamorphic flare)
+## Étape 15 — Post-process : box blur séparable 2D (H puis V)
 
-**Notion :** dans la passe `Image`, on échantillonne `N` pixels alignés horizontalement autour de chaque pixel et on moyenne → **flou directionnel**. Combiné au glow déjà présent dans Buffer A, ça donne un effet "anamorphose lumineuse" : les hautes lumières s'étirent en traînées horizontales. Look cinéma.
+**Notion :** un box blur 2D naïf coûte `O(N²)` samples par pixel (`N` rayons par direction). Astuce classique : un box blur est **séparable** → `B(I) = By(Bx(I))`. On enchaîne donc deux passes 1D — `Buffer B` flouté **horizontalement** depuis `Buffer A`, puis `Image` flouté **verticalement** depuis `Buffer B`. Coût `O(2N)`. Combiné au glow latent dans Buffer A, on obtient un halo doux autour des hautes lumières (bloom rectangulaire).
+
+> **Setup Shadertoy :**
+> - **Common** : identique à l'étape 14, plus les `#define` du blur. (Bloc complet ci-dessous.)
+> - **Buffer A** : identique à l'étape 14 (raymarching + feedback).
+>   - iChannel0 = `Noise Medium`, iChannel1 = **Image**, iChannel2 = `Noise Medium`, iChannel3 = `Cubemap`.
+> - **Buffer B** : blur **horizontal** de Buffer A. iChannel0 = Buffer A.
+> - **Image** : blur **vertical** de Buffer B. iChannel0 = Buffer B.
+
+### Common
 
 ```glsl
+#define PI 3.14159265
+#define sat(a) clamp(a, 0., 1.)
+
 #define GLOW_SAMPLES 8
 #define GLOW_DISTANCE 0.05
 
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+```
+
+### Buffer A (identique étape 14)
+
+```glsl
+float _seed;
+float rand() { _seed++; return hash11(_seed); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+vec3 getMat(vec3 p, vec3 n, vec3 rd)
+{
+    vec3 refl = reflect(rd, n);
+    float rough = texture(iChannel2, p.xy * 0.3).x;
+    vec3 offset = (vec3(rand(), rand(), rand()) - 0.5) * rough;
+    refl = normalize(refl + offset);
+    vec3 col = getEnv(refl);
+    col = pow(col, vec3(3.2));
+
+    float roughtrans = texture(iChannel2, p.xy * 5.1).x;
+    rd = normalize(rd + (vec3(rand(), rand(), rand()) - 0.5) * 0.5 * roughtrans);
+
+    vec3 op = p;
+    p -= n * 0.05;
+    vec3 transp = vec3(0.);
+    for (float i = 0.; i < 32.; i++)
+    {
+        float dist = -_diamond(p);
+        if (dist < 0.01)
+        {
+            transp = mix(
+                vec3(0.200, 0.851, 0.655),
+                vec3(0.106, 0.294, 0.804),
+                texture(iChannel2, p.xy * 0.2).x
+            ) * sat(sat(-p.y + 0.5) + 0.3);
+            transp = mix(transp, vec3(1., 0., 1.), 1. - exp(-distance(p, op) * 0.25));
+            break;
+        }
+        p += rd * dist;
+    }
+    col += transp;
+    return col;
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+    _seed = iTime + texture(iChannel0, uv).x;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    col = sat(col);
+    col = mix(col, texture(iChannel1, fragCoord / iResolution.xy).xyz, 0.5);
+    fragColor = vec4(col, 1.);
+}
+```
+
+### Buffer B (blur HORIZONTAL — iChannel0 = Buffer A)
+
+```glsl
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
     vec2 uv = fragCoord / iResolution.xy;
@@ -1039,22 +1533,48 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
         float f = float(i) / float(steps);
         f = (f - 0.5) * 2.;
 
-        vec2 nuv = uv + vec2(f * GLOW_DISTANCE, 0.);   // offset HORIZONTAL uniquement
-        col += texture(iChannel0, nuv).xyz / float(steps);   // iChannel0 = Buffer A
+        vec2 nuv = uv + vec2(f * GLOW_DISTANCE, 0.);   // offset HORIZONTAL
+        col += texture(iChannel0, nuv).xyz / float(steps);
     }
     fragColor = vec4(col, 1.);
 }
 ```
 
-> **Pourquoi horizontal seulement ?** Choix esthétique : évoque les **flares anamorphiques** des objectifs cinéma (les optiques anamorphiques étirent le bokeh horizontalement). Pour un glow rond classique, faites une seconde passe verticale (séparable) : Buffer B = blur vertical de Image, ou inversement.
+### Image (blur VERTICAL — iChannel0 = Buffer B)
 
-> **Vrai blur 2D séparable :** `B(I) = By(Bx(I))` — un blur horizontal puis un blur vertical donnent un blur 2D rectangulaire avec un coût `O(2N)` au lieu de `O(N²)`. Le shader original chaîne deux blurs **horizontaux** (Buffer B et Image identiques) — c'est probablement un copier-coller. Pour un vrai flare anisotrope 2D, faites Buffer B horizontal + Image vertical.
+```glsl
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = fragCoord / iResolution.xy;
+
+    const int steps = GLOW_SAMPLES;
+    vec3 col = vec3(0.);
+
+    for (int i = 0; i < steps; ++i)
+    {
+        float f = float(i) / float(steps);
+        f = (f - 0.5) * 2.;
+
+        // Pour respecter l'aspect-ratio (sinon le halo est ovale en 16:9),
+        // on multiplie par iResolution.x/iResolution.y → la même distance en pixels en X et en Y.
+        vec2 nuv = uv + vec2(0., f * GLOW_DISTANCE * (iResolution.x / iResolution.y));
+        col += texture(iChannel0, nuv).xyz / float(steps);
+    }
+    fragColor = vec4(col, 1.);
+}
+```
+
+> **Pourquoi séparable ?** Un box blur 2D plein coûte `N²` samples (ex: 64 pour `N=8`). Deux passes 1D coûtent `2N` (16). Identité mathématique exacte tant que le filtre est séparable (vrai pour box, gaussien, triangulaire). Limite : un disk blur ou un blur orienté ne sont **pas** séparables.
+
+> **Pourquoi le facteur `iResolution.x / iResolution.y` en V ?** Les UV sont normalisées en `[0,1]` sur les deux axes, mais l'écran n'est pas carré. Sans correction, un offset de `0.05` en Y couvre proportionnellement plus de hauteur que le même offset couvre de largeur en X (en 16:9, 0.05 vertical ≈ 0.089 horizontal en pixels). Résultat : halo aplati horizontalement. La compensation rend le blur visuellement isotrope.
+
+> **Look anamorphique** (rebase si tu veux le grand frère cinéma) : retire la passe verticale → flou horizontal seul, traînées style flare anamorphique. C'est la version 1-passe d'avant.
 
 > **Tests à faire :**
-> - `GLOW_SAMPLES = 32`, `GLOW_DISTANCE = 0.1` → flare exagéré.
-> - `GLOW_SAMPLES = 4`, `GLOW_DISTANCE = 0.02` → effet subtil.
-> - Remplacer `vec2(f * GLOW_DISTANCE, 0.)` par `vec2(0., f * GLOW_DISTANCE)` → flare vertical.
-> - Pondérer par une gaussienne au lieu d'une moyenne uniforme : `weight = exp(-f * f * 4.)` puis normaliser → blur de meilleure qualité visuelle.
+> - `GLOW_SAMPLES = 32`, `GLOW_DISTANCE = 0.1` → bloom massif.
+> - `GLOW_SAMPLES = 4`, `GLOW_DISTANCE = 0.02` → halo subtil.
+> - Pondérer par une gaussienne au lieu d'une moyenne uniforme : `weight = exp(-f * f * 4.)` puis normaliser → meilleure qualité visuelle (pas de "step" perceptible aux extrémités du kernel).
+> - Pour un **bloom** "physique" : ne flouter que les pixels dont la luminance dépasse un seuil → `vec3 hi = max(texture(...).xyz - 1., 0.);` puis blur de `hi`, et add au-dessus de la version non-floutée.
 
 ---
 
@@ -1076,7 +1596,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 | 12 | Réfraction approximée : raymarching de la SDF inversée |
 | 13 | Absorption volumétrique exponentielle (Beer-Lambert stylisé) |
 | 14 | Feedback temporel : Image → Buffer A via iChannel1 (mix 0.5) |
-| 15 | Post-process : box blur directionnel (anamorphic flare) |
+| 15 | Post-process : box blur 2D séparable (Buffer B horizontal → Image vertical) |
 
 ---
 
