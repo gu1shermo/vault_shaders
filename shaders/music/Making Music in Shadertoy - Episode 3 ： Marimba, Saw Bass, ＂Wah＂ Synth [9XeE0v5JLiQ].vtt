@@ -1,0 +1,1580 @@
+WEBVTT
+
+00:00.000 --> 00:07.000
+Bonjour, c'est Alex Citibault et bienvenue à l'épisode 3 de Making Music in Shaded Toy.
+
+00:07.000 --> 00:11.000
+La dernière fois que nous avons regardé la synthèse des modulations de fréquence
+
+00:11.000 --> 00:15.000
+et nous avons créé un couple d'instruments en utilisant ça.
+
+00:15.000 --> 00:21.000
+Nous avons vu comment c'est un outil convenu pour créer des instruments.
+
+00:21.000 --> 00:28.000
+Et aujourd'hui, j'aimerais remplir notre outil de instruments.
+
+00:28.000 --> 00:34.000
+Nous avons créé une chanson avec 100 BPM.
+
+00:34.000 --> 00:44.000
+J'aimerais ajouter un bass, un marimba et un autre synthèse.
+
+00:44.000 --> 00:52.000
+Nous allons donc faire la marimba en utilisant la synthèse de modulation de fréquence.
+
+00:52.000 --> 00:58.000
+Il s'agit d'une sorte de chanson classique dans la modulation de fréquence.
+
+00:58.000 --> 01:10.000
+Et pour le bass et l'autre synthèse, nous allons le faire en utilisant un outil de synthèse de modulation de fréquence.
+
+01:10.000 --> 01:16.000
+C'est un outil de chanson classique.
+
+01:16.000 --> 01:21.000
+C'est un outil de chanson classique.
+
+01:21.000 --> 01:25.000
+C'est un outil de chanson classique.
+
+01:25.000 --> 01:33.000
+La dernière fois que nous avons créé une modulation de fréquence, nous avons créé un outil de chanson
+
+02:04.000 --> 02:14.000
+Nous allons commencer avec la marimba.
+
+02:14.000 --> 02:22.000
+La marimba est une sorte de chanson classique.
+
+02:22.000 --> 02:30.000
+C'est un outil de chanson classique.
+
+02:30.000 --> 02:37.000
+Comment créer ça, c'est très simple.
+
+02:38.000 --> 02:45.000
+Vous voulez jouer une note de marimba à fréquence F avec un temps T.
+
+02:45.000 --> 02:55.000
+Le T ici, comme dans tout le synthèse que j'ai créé, c'est le temps depuis le début de la note.
+
+02:55.000 --> 03:00.000
+Nous faisons une modulation de fréquence avec des fréquences de carrière.
+
+03:01.000 --> 03:06.000
+La modulation de fréquence est ici.
+
+03:06.000 --> 03:09.000
+Nous avons une frequency de carrière et une frequency de modulateur.
+
+03:09.000 --> 03:11.000
+Nous faisons un index de modulation.
+
+03:11.000 --> 03:16.000
+Nous faisons un signage de 2pi fc T.
+
+03:16.000 --> 03:24.000
+Nous faisons un frac ici pour éviter des problèmes avec la précision dans la fonction des signes.
+
+03:24.000 --> 03:34.000
+2pi fc T est juste une frequency de carrière et une frequency de carrière.
+
+03:34.000 --> 03:40.000
+Nous faisons un index de modulation avec une frequency de carrière et une frequency de modulateur.
+
+03:40.000 --> 03:49.000
+Nous faisons un frac ici pour éviter des problèmes avec la fréquence de carrière et une frequency de carrière.
+
+03:49.000 --> 03:53.000
+Nous faisons une frequency de carrière et une frequency de modulateur.
+
+03:53.000 --> 04:08.000
+Si vous vous souvenez de la dernière fois, nous avons vu que le signal de modulation de fréquence contient une frequency de fc plus et moins multiples de fm.
+
+04:08.000 --> 04:13.000
+Donc ici il sera f plus et moins multiples de 7 fois f.
+
+04:14.000 --> 04:24.000
+Le premier signal de modulation sera f plus et plus de 7 fois f, donc 8 fois f, et f minus et plus de 7 fois f, donc moins de 6 fois f,
+
+04:24.000 --> 04:29.000
+ce qui sera un point positif.
+
+04:29.000 --> 04:32.000
+Donc plus de 6 fois f.
+
+04:32.000 --> 04:52.000
+Nous avons une fréquence très étrange, et ça ressemble à un instrument de marimba, comme un xylophone.
+
+04:52.000 --> 05:02.000
+Pour le index de modulation, vous voyez que j'ai mis quelque chose qui commence à 1,5, et puis qui se déclare très rapidement à 0.
+
+05:02.000 --> 05:14.000
+Donc seulement au début de la note, on obtient ces harmoniques, et très rapidement on obtient seulement le component sinusoidal.
+
+05:14.000 --> 05:20.000
+C'est aussi l'une de la façon dont le physique de l'instrument fonctionne.
+
+05:20.000 --> 05:30.000
+C'est un instrument qui joue une très bizarre façon de distraire les harmoniques quand c'est trac,
+
+05:30.000 --> 05:37.000
+mais très rapidement, ces harmoniques se déclarent et vous n'avez qu'une fréquence fondamentale.
+
+05:37.000 --> 05:43.000
+Donc c'est l'idée avec ça. Et puis on met un détail sur ça.
+
+05:43.000 --> 05:46.000
+Un détail simple et exponentiel.
+
+05:46.000 --> 05:52.000
+Donc si on écoute le marimba en itself, ça va sembler comme ça.
+
+05:52.000 --> 05:56.000
+6 plus de 7 fois marimba.
+
+05:57.000 --> 06:03.000
+C'est-à-dire à 440, et on va le jouer à chaque seconde.
+
+06:03.000 --> 06:05.000
+C'est là.
+
+06:08.000 --> 06:12.000
+Donc comme vous le voyez, ça a vraiment une qualité de voie.
+
+06:12.000 --> 06:21.000
+Si vous voulez changer le son, vous pouvez changer comment vite le détail se déclare.
+
+06:21.000 --> 06:25.000
+Nous pouvons mettre un détail plus lent sur le modulation index.
+
+06:27.000 --> 06:32.000
+Et maintenant on est en train d'avoir un son plus glissant.
+
+06:32.000 --> 06:38.000
+Il semble que le matériel est plus lourd ou plus rigide.
+
+06:42.000 --> 06:47.000
+Nous pouvons changer la fréquence modulée.
+
+06:48.000 --> 07:03.000
+Ici, on est en train d'avoir quelque chose qui est similaire à un patch de FN classique appelé EP1.
+
+07:03.000 --> 07:15.000
+Si vous avez la possibilité de jouer avec des emulations de la synthèse DX7 Yamaha,
+
+07:15.000 --> 07:21.000
+c'est un tool vraiment fantastique pour apprendre tout ce que la fréquence modulée est.
+
+07:21.000 --> 07:30.000
+Il y a le texte VST, qui est un free VST, qui émulate le Yamaha DX7.
+
+07:30.000 --> 07:36.000
+C'est vraiment un tool fantastique. Je vais mettre un lien dans la description pour ça.
+
+07:36.000 --> 07:38.000
+Mais j'aime le son comme il est.
+
+07:38.000 --> 07:42.000
+Nous allons juste le mettre comme ça.
+
+07:42.000 --> 07:46.000
+Comment on crée un pattern avec ça ?
+
+07:46.000 --> 07:50.000
+Ici, j'ai créé un pattern.
+
+07:50.000 --> 07:57.000
+Ce que j'aimerais faire, c'est de la pièce marimba, un type de pattern techno.
+
+07:58.000 --> 08:06.000
+L'une des choses que l'on peut faire, c'est de la pièce marimba de 16 beats,
+
+08:06.000 --> 08:12.000
+et puis, on choisit un couple de notes.
+
+08:12.000 --> 08:20.000
+Ces notes vont arriver à être dans la même corde que le patch.
+
+08:20.000 --> 08:28.000
+Si vous vous souvenez, le patch a joué des cordes ici.
+
+08:28.000 --> 08:30.000
+Je vais commenter.
+
+08:30.000 --> 08:33.000
+Nous nous souvenons de ce que ces cordes sont.
+
+08:33.000 --> 08:49.000
+C'était Am, puis Dm7, puis F major, puis C avec un 9 et puis G avec un 6.
+
+08:49.000 --> 08:59.000
+Ce que la marimba peut jouer ici, c'est des notes qui viennent de ce pattern.
+
+08:59.000 --> 09:07.000
+Juste là-bas, tous les notes sont référentes relativement au C.
+
+09:07.000 --> 09:12.000
+Donc 4 signifie 4 semitones sur le C, donc c'est un E.
+
+09:12.000 --> 09:18.000
+12 signifie 1 actif sur le C, donc c'est un C, 1 actif plus haut.
+
+09:19.000 --> 09:24.000
+Et aussi, c'est E et C, c'est F et A.
+
+09:24.000 --> 09:29.000
+Ici, c'est A et C, G et C, G et B.
+
+09:29.000 --> 09:33.000
+C'est le pattern qu'on a joué.
+
+09:33.000 --> 09:38.000
+Je vais offrir le start de ces cordes un peu,
+
+09:38.000 --> 09:45.000
+juste pour qu'elles ne passent pas avec le restart de la note.
+
+09:46.000 --> 09:52.000
+Donc, comment j'ai décidé à quel temps de restart de la note?
+
+09:52.000 --> 09:56.000
+Je fais des choses modèles ici.
+
+09:56.000 --> 09:58.000
+J'ai juste un peu de fun.
+
+09:58.000 --> 10:02.000
+Le plus important est celui-ci.
+
+10:02.000 --> 10:09.000
+L'idée est vraiment de jouer des dottie dates.
+
+10:09.000 --> 10:13.000
+8e note.
+
+10:13.000 --> 10:26.000
+C'est un pattern classique dans le techno et ce genre de musique.
+
+10:26.000 --> 10:29.000
+Ou quelque chose d'électro.
+
+10:29.000 --> 10:32.000
+C'est quand tu as le pulseur.
+
+10:32.000 --> 10:37.000
+Et tu as quelque chose qui va...
+
+10:38.000 --> 10:41.000
+Tu sais?
+
+10:41.000 --> 10:43.000
+Donc, le autre...
+
+10:43.000 --> 10:47.000
+Donc, tu as un peu d'épolléatrice.
+
+10:47.000 --> 10:53.000
+Les autres sont juste pour que ce pattern passe sur le grid.
+
+10:53.000 --> 10:57.000
+Et que nous n'avons rien de place.
+
+10:57.000 --> 11:02.000
+Je définis un signal et ajoute cette note marimba.
+
+11:02.000 --> 11:05.000
+J'ai un peu plus de la note basse.
+
+11:05.000 --> 11:10.000
+La note basse est plus à la gauche et la note basse est plus à la droite.
+
+11:10.000 --> 11:12.000
+Et j'ai juste rétellé ça.
+
+11:12.000 --> 11:23.000
+Donc, on va en faire un éclairage pour ce que ce pattern semble.
+
+11:23.000 --> 11:26.000
+Je vais en mettre ça pour le moment.
+
+11:36.000 --> 11:39.000
+C'est le pulseur.
+
+11:45.000 --> 11:50.000
+Donc, c'est vraiment un sound techno.
+
+11:50.000 --> 11:57.000
+Ce que nous pouvons faire, c'est ajouter le pad au-dessus de ça.
+
+11:57.000 --> 12:00.000
+Pour entendre comment ils se coudent ensemble.
+
+12:05.000 --> 12:19.000
+...
+
+12:19.000 --> 12:21.000
+Donc, oui, c'est ça.
+
+12:21.000 --> 12:27.000
+Donc, c'est ça pour la pattern marimba.
+
+12:27.000 --> 12:31.000
+Il n'y a vraiment rien d'autre que ça.
+
+12:31.000 --> 12:36.000
+...
+
+12:36.000 --> 12:39.000
+Donc, on va en mettre sur la base.
+
+12:39.000 --> 12:47.000
+Pour la base, j'ai voulu faire un sound analog.
+
+12:47.000 --> 12:52.000
+Donc, la dernière fois que nous avons vu que c'est...
+
+12:52.000 --> 12:57.000
+En fait, dans l'un des premiers épisodes, nous avons vu que c'est une bonne idée
+
+12:57.000 --> 13:00.000
+de créer un wave sort-of-wave directement.
+
+13:00.000 --> 13:02.000
+Parce que ça contient beaucoup de haute fréquence.
+
+13:02.000 --> 13:04.000
+C'est en faisant des aléasins.
+
+13:04.000 --> 13:07.000
+Et les aléasins ressemblent très bien.
+
+13:07.000 --> 13:10.000
+Comment nous dealons avec l'aléasin?
+
+13:10.000 --> 13:13.000
+Nous faisons de l'anti-aléasin.
+
+13:13.000 --> 13:15.000
+Donc, comment nous faisons de l'anti-aléasin?
+
+13:15.000 --> 13:18.000
+La idée est de filtrer.
+
+13:19.000 --> 13:29.000
+J'ai créé, dans GraphToy, la forme de wave que nous avons...
+
+13:29.000 --> 13:32.000
+La dernière fois que nous avons vu que c'est notre sort-of-wave.
+
+13:32.000 --> 13:35.000
+C'est là que c'est.
+
+13:35.000 --> 13:41.000
+Donc, nous disons que la valeur du sort-of-wave commence à 1.
+
+13:41.000 --> 13:45.000
+Et puis, quand x vient de 0 à 1,
+
+13:45.000 --> 13:47.000
+il s'agit d'un slope de minus 2 x.
+
+13:47.000 --> 13:51.000
+Donc, quand x vient de 1, il s'agit d'un slope de minus 1.
+
+13:51.000 --> 13:55.000
+Et puis, il se répète.
+
+13:55.000 --> 14:01.000
+Mais le problème avec ça, c'est que nous avons une grande discontinuité
+
+14:01.000 --> 14:05.000
+à x equals 0, x equals 1, etc.
+
+14:05.000 --> 14:07.000
+C'est une bonne idée.
+
+14:07.000 --> 14:10.000
+Donc, nous voulons smoother cette discontinuité.
+
+14:10.000 --> 14:12.000
+Comment pouvons-nous faire ça?
+
+14:12.000 --> 14:21.000
+Bien, ce que nous pouvons faire, c'est que nous avons une bonne fonction ici.
+
+14:21.000 --> 14:24.000
+Nous avons une autre partie, ici.
+
+14:24.000 --> 14:31.000
+Nous allons décider que, d'ici à d'ici, nous allons smoother la transition
+
+14:31.000 --> 14:33.000
+de l'un à l'autre.
+
+14:34.000 --> 14:43.000
+Donc, ceci est minus 1, minus 2 x,
+
+14:43.000 --> 14:48.000
+et ceci est 1, minus 2 x.
+
+14:48.000 --> 14:51.000
+Et comment pouvons-nous faire la transition de l'un à l'autre?
+
+14:51.000 --> 14:54.000
+Nous allons faire une fonction smooth,
+
+14:54.000 --> 15:00.000
+qui est de 0 à 1 x equals minus 0,2
+
+15:00.000 --> 15:06.000
+à 1 à 1 x equals 0,2.
+
+15:06.000 --> 15:13.000
+Et c'est la transition de l'un à l'autre.
+
+15:13.000 --> 15:16.000
+Comment pouvons-nous faire surement que ça répète?
+
+15:17.000 --> 15:19.000
+Maintenant, c'est parti.
+
+15:19.000 --> 15:21.000
+Nous n'avons pas besoin de ça.
+
+15:21.000 --> 15:24.000
+Comment pouvons-nous le répéter?
+
+15:24.000 --> 15:27.000
+Nous allons simplement cliquer...
+
+15:27.000 --> 15:32.000
+Non, pas cliquer, répéter.
+
+15:32.000 --> 15:37.000
+Donc, si nous faisons x, minus x,
+
+15:37.000 --> 15:42.000
+c'est à dire que nous couvons à negative 0,5
+
+15:43.000 --> 15:48.000
+et nous le répéter comme ça.
+
+15:48.000 --> 15:50.000
+C'est ça, vraiment.
+
+15:50.000 --> 15:54.000
+C'est notre fonction de la fonction de l'un à l'autre.
+
+15:54.000 --> 15:58.000
+Il y a beaucoup de meilleures manières à faire.
+
+15:58.000 --> 16:02.000
+Ceci est assez simple, vraiment facile à comprendre.
+
+16:02.000 --> 16:07.000
+Si nous voulons changer ce qui est la fréquence de l'un à l'autre,
+
+16:07.000 --> 16:10.000
+nous pouvons changer de la meer la fréquence.
+
+16:10.000 --> 16:13.000
+Nous pouvons changer de la plus grande fréquence.
+
+16:13.000 --> 16:16.000
+Nous pouvons avoir plus de fréquence,
+
+16:16.000 --> 16:20.000
+en faisant une plus chaude fréquence.
+
+16:24.000 --> 16:28.000
+Peut-être une meilleure façon d'en utiliser
+
+16:28.000 --> 16:33.000
+si nous serons dans des filtres analogues.
+
+16:33.000 --> 16:42.000
+c'est d'avoir un look à des secondes ou des passés de passés de la basse et des choses comme ça
+
+16:42.000 --> 16:48.000
+il se trouve que c'est vraiment pas convainc d'impliquer dans l'échec de l'eau
+
+16:48.000 --> 16:57.000
+ce que vous devez vraiment faire est d'en prendre un papier et déranger la fonction de vous-même
+
+16:58.000 --> 17:01.000
+donc j'ai fait ça en fait
+
+17:01.000 --> 17:10.000
+à un moment j'ai eu un look à comment un second ordre de filter réacte
+
+17:10.000 --> 17:13.000
+à une fonction sortie
+
+17:13.000 --> 17:19.000
+et la solution est une fonction assez compliquée
+
+17:19.000 --> 17:22.000
+donc je vais mettre le lien dans la description
+
+17:22.000 --> 17:27.000
+si vous voulez avoir un look à ça, le bon chose avec ça c'est que vous pouvez avoir des résonances
+
+17:27.000 --> 17:32.000
+si vous êtes en train d'utiliser des sounds acidiques
+
+17:32.000 --> 17:36.000
+c'est une chose très bonne que vous puissiez utiliser
+
+17:36.000 --> 17:40.000
+nous avons ce genre de sound
+
+17:52.000 --> 17:56.000
+donc c'est plutôt riche
+
+17:56.000 --> 18:05.000
+mais je trouve que c'est plus simple et très convainc
+
+18:05.000 --> 18:10.000
+donc c'est ce que j'ai choisi à utiliser pour ce tutoriel
+
+18:10.000 --> 18:14.000
+pour trouver une fonction sortie
+
+18:14.000 --> 18:19.000
+nous aimerions jouer une fréquence F
+
+18:19.000 --> 18:23.000
+pour avoir une certaine fréquence de courant
+
+18:23.000 --> 18:28.000
+et pour jouer à un certain temps T
+
+18:28.000 --> 18:33.000
+donc ce qui correspond à la paramètre X dans notre graphique
+
+18:33.000 --> 18:37.000
+c'est juste une fréquence F x T
+
+18:37.000 --> 18:42.000
+on veut quelque chose d'une fréquence F
+
+18:42.000 --> 18:47.000
+donc on veut une fréquence X
+
+18:47.000 --> 18:51.000
+et ce sera la fin de notre fonction smooth
+
+18:52.000 --> 18:56.000
+ce que nous aimerions avoir
+
+18:56.000 --> 19:00.000
+c'est que si la fréquence T
+
+19:00.000 --> 19:05.000
+s'amuse par une fréquence F
+
+19:05.000 --> 19:09.000
+on veut de ce point à ce point
+
+19:09.000 --> 19:12.000
+être une fréquence F
+
+19:12.000 --> 19:16.000
+d'exception que nous avons décalé la fréquence X
+
+19:16.000 --> 19:21.000
+donc on veut une fréquence F x F
+
+19:21.000 --> 19:25.000
+puis on multiplie ça par une fréquence F
+
+19:25.000 --> 19:29.000
+parce que nous avons la partie négative et la partie positive
+
+19:29.000 --> 19:34.000
+on ne veut absolument pas la fréquence
+
+19:34.000 --> 19:37.000
+pour avoir une fréquence greater que une fréquence
+
+19:37.000 --> 19:41.000
+sinon on va avoir quelque chose qui ressemble très bien
+
+19:41.000 --> 19:44.000
+je vais vous montrer comment ça ressemble
+
+19:44.000 --> 19:47.000
+c'est un smooth step pour trop longtemps
+
+19:47.000 --> 19:50.000
+et quand nous nous sommes dans la fréquence
+
+19:50.000 --> 19:54.000
+on va réintroduire quelque chose de discontinu
+
+19:54.000 --> 19:58.000
+donc nous n'avons vraiment pas besoin d'une fréquence
+
+19:58.000 --> 20:01.000
+d'une fréquence plus ou moins
+
+20:01.000 --> 20:04.000
+et puis nous faisons comme nous l'avons dit
+
+20:04.000 --> 20:11.000
+X-x et nous mixons entre la première et la seconde
+
+20:11.000 --> 20:14.000
+en utilisant un smooth step
+
+20:14.000 --> 20:19.000
+nous pouvons utiliser cette fréquence pour créer un bas syntho
+
+20:19.000 --> 20:22.000
+ce que je voulais faire c'est d'avoir
+
+20:22.000 --> 20:26.000
+une fréquence 80-ish
+
+20:26.000 --> 20:30.000
+donc je voulais utiliser
+
+20:30.000 --> 20:33.000
+des fonctions d'un filtrant
+
+20:33.000 --> 20:37.000
+ici c'est juste le carrière
+
+20:37.000 --> 20:43.000
+je vais jouer le bas syntho
+
+20:43.000 --> 20:46.000
+par itself
+
+20:53.000 --> 20:55.000
+donc ce qui se passe ici
+
+20:55.000 --> 20:59.000
+nous avons choisi une certaine fréquence
+
+20:59.000 --> 21:03.000
+et puis comment nous choisirons
+
+21:03.000 --> 21:05.000
+la fréquence de coude
+
+21:05.000 --> 21:08.000
+la fréquence de coude
+
+21:08.000 --> 21:14.000
+c'est un enveloppe très rapide
+
+21:14.000 --> 21:18.000
+donc la valeur minimum est 100 Hz
+
+21:18.000 --> 21:20.000
+et puis
+
+21:20.000 --> 21:22.000
+sur ce que nous ajoutons
+
+21:22.000 --> 21:26.000
+un enveloppe qui s'adresse à 15 kHz
+
+21:26.000 --> 21:29.000
+qui s'occupe près de l'appareil
+
+21:29.000 --> 21:31.000
+de l'audition humaine
+
+21:31.000 --> 21:33.000
+l'appareil est de 20 kHz
+
+21:33.000 --> 21:36.000
+vous ne voulez vraiment rien dans votre signal
+
+21:36.000 --> 21:39.000
+d'être au-dessus de 20 kHz
+
+21:39.000 --> 21:43.000
+parce que vous ne pourriez vraiment pas entendre
+
+21:43.000 --> 21:45.000
+si c'est là
+
+21:45.000 --> 21:47.000
+et ça pourrait être le cas
+
+21:47.000 --> 21:49.000
+donc en général
+
+21:49.000 --> 21:54.000
+ne faites pas de fréquences à plus de 20 kHz
+
+21:54.000 --> 21:58.000
+donc ici nous avons cet enveloppe de decayation
+
+21:58.000 --> 22:00.000
+très rapide
+
+22:00.000 --> 22:03.000
+et ce que j'ai fait c'était de diviser la fréquence de coude
+
+22:03.000 --> 22:06.000
+pour avoir cette fréquence sub-base
+
+22:06.000 --> 22:09.000
+la fréquence actuelle que je fais
+
+22:09.000 --> 22:12.000
+va dans cette fonction ici
+
+22:12.000 --> 22:15.000
+donc ça va dans la gauche
+
+22:15.000 --> 22:17.000
+gauche
+
+22:17.000 --> 22:19.000
+je fais
+
+22:19.000 --> 22:21.000
+ce que je fais ici
+
+22:21.000 --> 22:23.000
+c'est des détenus
+
+22:23.000 --> 22:26.000
+j'utilise un T+, juste parce que
+
+22:26.000 --> 22:29.000
+sinon on ne peut pas entendre
+
+22:29.000 --> 22:31.000
+la détenue
+
+22:31.000 --> 22:34.000
+si la fréquence a commencé
+
+22:34.000 --> 22:37.000
+si la fréquence a commencé à phase equals 0
+
+22:37.000 --> 22:39.000
+donc si vous voulez entendre la détenue
+
+22:39.000 --> 22:42.000
+vous devez commencer à une phase normale
+
+22:42.000 --> 22:45.000
+donc c'est juste ce que la plus 1 est
+
+22:45.000 --> 22:47.000
+pour ici
+
+22:47.000 --> 22:50.000
+oui, on va le entendre en stereo
+
+22:51.000 --> 22:54.000
+oui, c'est...
+
+22:54.000 --> 22:56.000
+c'est ça
+
+22:56.000 --> 22:59.000
+j'ai ajouté la sub-base
+
+23:02.000 --> 23:06.000
+et maintenant on est vraiment, vraiment dans l'80s
+
+23:06.000 --> 23:09.000
+et j'ai ressenti que c'était
+
+23:09.000 --> 23:11.000
+un petit peu lourd
+
+23:11.000 --> 23:14.000
+d'un très bas sub-base
+
+23:14.000 --> 23:16.000
+donc j'ai ajouté
+
+23:16.000 --> 23:18.000
+juste la fréquence fondamentale
+
+23:18.000 --> 23:20.000
+de la fréquence
+
+23:27.000 --> 23:29.000
+donc c'est ça
+
+23:29.000 --> 23:31.000
+comment j'ai créé le pattern
+
+23:31.000 --> 23:33.000
+pour le pattern
+
+23:33.000 --> 23:35.000
+vous pouvez
+
+23:35.000 --> 23:37.000
+avoir
+
+23:37.000 --> 23:39.000
+un pattern
+
+23:39.000 --> 23:41.000
+que loupent tous les 4 barres
+
+23:41.000 --> 23:43.000
+juste le même
+
+23:43.000 --> 23:45.000
+et puis
+
+23:45.000 --> 23:48.000
+on choisit un numérique basé sur
+
+23:48.000 --> 23:50.000
+quand nous sommes dans ces 4 barres
+
+23:50.000 --> 23:52.000
+donc dans la première barre
+
+23:52.000 --> 23:55.000
+nous voulons jouer un A
+
+23:55.000 --> 23:57.000
+dans la seconde barre
+
+23:57.000 --> 23:59.000
+nous voulons jouer un D
+
+23:59.000 --> 24:01.000
+puis un F
+
+24:01.000 --> 24:03.000
+puis dans la dernière barre
+
+24:03.000 --> 24:05.000
+nous voulons changer deux fois
+
+24:05.000 --> 24:07.000
+nous voulons changer un F
+
+24:07.000 --> 24:09.000
+deux beat
+
+24:09.000 --> 24:11.000
+donc les premières 2 beats sont
+
+24:11.000 --> 24:13.000
+C et les dernières 2 beats sont
+
+24:13.000 --> 24:15.000
+G
+
+24:15.000 --> 24:17.000
+quand vous choisissez
+
+24:17.000 --> 24:19.000
+la fréquence fondamentale
+
+24:19.000 --> 24:21.000
+vous devez être careful
+
+24:21.000 --> 24:23.000
+de ce qui est le plus bas
+
+24:23.000 --> 24:25.000
+que vous vouliez jouer
+
+24:25.000 --> 24:27.000
+c'est
+
+24:27.000 --> 24:29.000
+je vais
+
+24:29.000 --> 24:31.000
+expliquer
+
+24:31.000 --> 24:33.000
+dans plus de détails
+
+24:33.000 --> 24:35.000
+vous voulez
+
+24:35.000 --> 24:37.000
+le plus bas
+
+24:37.000 --> 24:39.000
+pour être
+
+24:39.000 --> 24:41.000
+entre 40
+
+24:41.000 --> 24:43.000
+et 100
+
+24:45.000 --> 24:47.000
+vous ne voulez pas jouer
+
+24:47.000 --> 24:49.000
+trop bas
+
+24:49.000 --> 24:51.000
+ce n'est pas un bas
+
+24:51.000 --> 24:53.000
+fort
+
+24:53.000 --> 24:55.000
+et vous ne voulez pas le plus bas
+
+24:55.000 --> 24:57.000
+sinon ce sera
+
+24:57.000 --> 24:59.000
+moitié
+
+24:59.000 --> 25:01.000
+ici
+
+25:01.000 --> 25:03.000
+je vais jouer un nocturne basé
+
+25:03.000 --> 25:05.000
+juste pour que vous voient
+
+25:05.000 --> 25:07.000
+que c'est une mauvaise idée
+
+25:07.000 --> 25:09.000
+quand vous jouez trop bas
+
+25:11.000 --> 25:13.000
+ce n'est pas
+
+25:19.000 --> 25:21.000
+c'est à votre taste
+
+25:21.000 --> 25:23.000
+mais quand c'est trop bas
+
+25:23.000 --> 25:25.000
+vous ne verrez pas
+
+25:25.000 --> 25:27.000
+ce que c'est
+
+25:27.000 --> 25:29.000
+ce n'est pas
+
+25:29.000 --> 25:31.000
+le plus bas
+
+25:31.000 --> 25:33.000
+nous avons
+
+25:33.000 --> 25:35.000
+ce nocturne basé
+
+25:35.000 --> 25:37.000
+ici
+
+25:37.000 --> 25:39.000
+le nocturne basé
+
+25:39.000 --> 25:41.000
+ici c'est
+
+25:41.000 --> 25:43.000
+le nocturne basé
+
+25:43.000 --> 25:45.000
+donc c'est le nocturne basé
+
+25:45.000 --> 25:47.000
+220
+
+25:47.000 --> 25:49.000
+d'excepter que nous nous diviserons
+
+25:49.000 --> 25:51.000
+par 2
+
+25:51.000 --> 25:53.000
+donc nous nous disons que nous voulons jouer
+
+25:53.000 --> 25:55.000
+à 110 Hz
+
+25:55.000 --> 25:57.000
+d'excepter
+
+25:57.000 --> 25:59.000
+que dans notre signal
+
+25:59.000 --> 26:01.000
+nous avons le sub
+
+26:01.000 --> 26:03.000
+qui est maintenant joué à 55 Hz
+
+26:03.000 --> 26:05.000
+donc c'est exactement où nous voulons
+
+26:05.000 --> 26:07.000
+le plus bas
+
+26:07.000 --> 26:09.000
+donc
+
+26:11.000 --> 26:13.000
+maintenant
+
+26:13.000 --> 26:15.000
+avec ce bas
+
+26:15.000 --> 26:17.000
+j'aimerais
+
+26:17.000 --> 26:19.000
+avoir le nocturne basé
+
+26:19.000 --> 26:21.000
+donc une façon
+
+26:21.000 --> 26:23.000
+d'avoir
+
+26:23.000 --> 26:25.000
+le nocturne basé
+
+26:25.000 --> 26:27.000
+qui est très très souvent
+
+26:27.000 --> 26:29.000
+utilisé
+
+26:29.000 --> 26:31.000
+en techno
+
+26:31.000 --> 26:33.000
+et maintenant
+
+26:33.000 --> 26:35.000
+aussi très bien
+
+26:35.000 --> 26:37.000
+une sorte de musique
+
+26:37.000 --> 26:39.000
+c'est d'utiliser la compression de la main
+
+26:39.000 --> 26:41.000
+donc imaginez
+
+26:41.000 --> 26:43.000
+que vous avez des trompes
+
+26:43.000 --> 26:45.000
+en
+
+26:45.000 --> 26:47.000
+faisant des hits très lourds
+
+26:47.000 --> 26:49.000
+comment vous le faites
+
+26:49.000 --> 26:51.000
+que ces hits sont très lourds
+
+26:51.000 --> 26:53.000
+mais il y a un truc
+
+26:53.000 --> 26:55.000
+qui est très convaincu
+
+26:55.000 --> 26:57.000
+c'est que si vous décollez tout le reste
+
+26:57.000 --> 26:59.000
+de ces trucs
+
+26:59.000 --> 27:01.000
+nos oreilles
+
+27:01.000 --> 27:03.000
+nous percevons ces hits comme être super lourds
+
+27:03.000 --> 27:05.000
+et puis quand les sons
+
+27:05.000 --> 27:07.000
+sont revenus
+
+27:07.000 --> 27:09.000
+nous percevons aussi ces sounds
+
+27:09.000 --> 27:11.000
+comme être lourds
+
+27:11.000 --> 27:13.000
+pas comme être lourds
+
+27:13.000 --> 27:15.000
+donc
+
+27:15.000 --> 27:17.000
+même si nous n'avons pas
+
+27:17.000 --> 27:19.000
+encore des trompes
+
+27:19.000 --> 27:21.000
+c'est ce que je veux faire pour le bas
+
+27:21.000 --> 27:23.000
+donc imaginez qu'on a un trompe
+
+27:23.000 --> 27:25.000
+en faisant un boom
+
+27:25.000 --> 27:27.000
+à chaque beat
+
+27:27.000 --> 27:29.000
+alors ce que nous pouvons
+
+27:29.000 --> 27:31.000
+faire
+
+27:31.000 --> 27:33.000
+c'est ce type d'enveloppement
+
+27:33.000 --> 27:35.000
+donc qu'est-ce que c'est
+
+27:35.000 --> 27:37.000
+ce type d'enveloppement
+
+27:37.000 --> 27:39.000
+j'appelle le bump
+
+27:39.000 --> 27:41.000
+c'est vraiment une compression
+
+27:41.000 --> 27:43.000
+de la main
+
+27:43.000 --> 27:45.000
+donc
+
+27:45.000 --> 27:47.000
+qu'est-ce que ça fait
+
+27:47.000 --> 27:49.000
+quand ça va
+
+27:49.000 --> 27:51.000
+de 0 à 1
+
+27:51.000 --> 27:53.000
+à peu près de 0,2
+
+27:53.000 --> 27:55.000
+à chaque beat
+
+27:55.000 --> 27:57.000
+et puis ça va
+
+27:57.000 --> 27:59.000
+à la fin
+
+27:59.000 --> 28:01.000
+à chaque beat
+
+28:01.000 --> 28:03.000
+ok
+
+28:05.000 --> 28:07.000
+donc si nous appliquons
+
+28:07.000 --> 28:09.000
+directement
+
+28:09.000 --> 28:11.000
+à notre bas synth pattern
+
+28:11.000 --> 28:13.000
+vous devez entendre
+
+28:13.000 --> 28:15.000
+que ces notes
+
+28:15.000 --> 28:17.000
+donc les notes ailes
+
+28:17.000 --> 28:19.000
+que nous étions en train
+
+28:19.000 --> 28:21.000
+sont maintenant
+
+28:21.000 --> 28:23.000
+chaque
+
+28:23.000 --> 28:25.000
+première est
+
+28:25.000 --> 28:27.000
+en train
+
+28:27.000 --> 28:29.000
+d'être complètement inaudible
+
+28:29.000 --> 28:31.000
+c'est ce que ça semble
+
+28:35.000 --> 28:37.000
+donc c'est
+
+28:37.000 --> 28:39.000
+trop bien évidemment
+
+28:39.000 --> 28:41.000
+que ça montre
+
+28:41.000 --> 28:43.000
+l'idée et maintenant
+
+28:43.000 --> 28:45.000
+si nous
+
+28:45.000 --> 28:47.000
+mixons
+
+28:47.000 --> 28:49.000
+mixons le bump
+
+28:49.000 --> 28:51.000
+pour que
+
+28:51.000 --> 28:53.000
+l'enveloppe
+
+28:53.000 --> 28:55.000
+s'entraîne à 0,2
+
+28:55.000 --> 28:57.000
+à 1
+
+28:57.000 --> 28:59.000
+c'est ce que nous avons
+
+29:03.000 --> 29:05.000
+donc nous avons des dynamiques
+
+29:05.000 --> 29:07.000
+dans notre son
+
+29:07.000 --> 29:09.000
+et nous pouvons ajouter
+
+29:09.000 --> 29:11.000
+le pattern de la pâte
+
+29:11.000 --> 29:13.000
+aussi
+
+29:13.000 --> 29:15.000
+et aussi faire
+
+29:15.000 --> 29:17.000
+une compression de la main
+
+29:17.000 --> 29:19.000
+alors que nous allons faire
+
+29:19.000 --> 29:21.000
+un peu moins
+
+29:21.000 --> 29:23.000
+sur ça
+
+29:23.000 --> 29:25.000
+et la même chose
+
+29:25.000 --> 29:27.000
+pour la marimba et nous
+
+29:27.000 --> 29:29.000
+faisons seulement un petit bit
+
+29:29.000 --> 29:31.000
+de compression de la main
+
+29:31.000 --> 29:33.000
+pour la marimba
+
+29:51.000 --> 29:53.000
+donc maintenant on est vraiment
+
+29:53.000 --> 29:55.000
+quelque chose qui est
+
+29:55.000 --> 29:57.000
+assez musical
+
+29:57.000 --> 29:59.000
+je pense
+
+29:59.000 --> 30:01.000
+nous allons
+
+30:01.000 --> 30:03.000
+faire
+
+30:03.000 --> 30:05.000
+le dernier
+
+30:05.000 --> 30:07.000
+instrument
+
+30:07.000 --> 30:09.000
+que je voulais ajouter
+
+30:09.000 --> 30:11.000
+dans cet épisode
+
+30:11.000 --> 30:13.000
+je l'ai appelé Waleed
+
+30:13.000 --> 30:15.000
+c'est juste un syntho
+
+30:15.000 --> 30:17.000
+il y a
+
+30:17.000 --> 30:19.000
+des petites interventions
+
+30:19.000 --> 30:21.000
+maintenant et après
+
+30:21.000 --> 30:23.000
+ce genre d'idée
+
+30:23.000 --> 30:25.000
+donc je voulais être
+
+30:25.000 --> 30:27.000
+je veux
+
+30:27.000 --> 30:29.000
+avoir une longue duration
+
+30:29.000 --> 30:31.000
+donc
+
+30:31.000 --> 30:33.000
+j'ai utilisé 0,1
+
+30:33.000 --> 30:35.000
+ici mais
+
+30:35.000 --> 30:37.000
+c'est juste d'avoir quelque chose de facile
+
+30:37.000 --> 30:39.000
+à changer et j'ai créé
+
+30:39.000 --> 30:41.000
+un premier enveloppe
+
+30:41.000 --> 30:43.000
+que va de 0 à 1
+
+30:43.000 --> 30:45.000
+dans Dure Over 2
+
+30:45.000 --> 30:47.000
+et puis de 1 à 0
+
+30:47.000 --> 30:49.000
+dans Dure Over 2
+
+30:49.000 --> 30:51.000
+cet enveloppe
+
+30:51.000 --> 30:53.000
+j'ai utilisé
+
+30:53.000 --> 30:55.000
+dans le code de la fréquence
+
+30:55.000 --> 30:57.000
+faite
+
+30:57.000 --> 30:59.000
+filtrée de la function
+
+31:01.000 --> 31:03.000
+je dis que c'est faite
+
+31:03.000 --> 31:05.000
+c'est un vrai filtre
+
+31:05.000 --> 31:07.000
+c'est juste pas
+
+31:07.000 --> 31:09.000
+un filtre traditionnel
+
+31:11.000 --> 31:13.000
+dans le sens
+
+31:13.000 --> 31:15.000
+c'est
+
+31:15.000 --> 31:17.000
+un
+
+31:17.000 --> 31:19.000
+filtre finit
+
+31:19.000 --> 31:21.000
+de la fréquence
+
+31:21.000 --> 31:31.400
+Le deuxième enveloppe que j'ai décidé de moduler l'amplitude de notre synthèse.
+
+31:31.400 --> 31:40.800
+Donc j'ai voulu l'amplitude s'entraîner rapidement et then go back down a little more slowly.
+
+31:41.800 --> 31:48.800
+La fréquence de l'amplitude, j'ai voulu être pas trop bas à la start,
+
+31:48.800 --> 31:55.800
+donc 400 Hz c'est très, très medium, et puis aller par seulement 10 kHz,
+
+31:55.800 --> 32:03.400
+donc pas tout de la way, pas tout de la way up to the extremes of the hearing range.
+
+32:03.400 --> 32:11.400
+J'ai juste voulu l'amplitude s'entraîner un peu, mais pas trop s'entraîner.
+
+32:11.400 --> 32:18.400
+Et puis c'est juste la matière de créer cette fonction de sol filter.
+
+32:18.400 --> 32:28.400
+Et puis la pattern, cette pattern est juste bizarre.
+
+32:28.400 --> 32:32.400
+Donc c'est répétant tous les 4 barres.
+
+32:32.400 --> 32:40.400
+Nous avons choisi une note qui justifie, c'est juste vraiment la même chose que l'avant.
+
+32:40.400 --> 32:51.400
+Ici nous avons choisi de jouer une E, et puis une F, et puis une E, et puis une D,
+
+32:51.400 --> 33:02.400
+pour que ces notes soient dans les quarts que nous jouons, et qu'elles complètent avec les autres instruments.
+
+33:02.400 --> 33:08.400
+Donc elles ne classent pas trop.
+
+33:09.400 --> 33:16.400
+Et puis, cette chose ici, je ne peux vraiment pas expliquer.
+
+33:16.400 --> 33:26.400
+C'était tout pour jouer avec la durée de la note.
+
+33:26.400 --> 33:33.400
+C'est tout pour restarter la note, pour avoir une pattern intéressante
+
+33:33.400 --> 33:39.400
+pour que ce soit le début et le début.
+
+33:39.400 --> 33:42.400
+Je vais jouer pour vous.
+
+33:42.400 --> 33:48.400
+Ici, c'est tout.
+
+33:48.400 --> 33:58.400
+Nous mérстрons de ces cheveux de vache et déjà unerique.
+
+33:58.400 --> 34:09.900
+On va aller rentrer ici, et maintenant on va déjeuner la chaine dielle pour ahora.
+
+34:09.900 --> 34:19.500
+Fast repeating notes are due to this kind of thing here, and then the octave shift is due to this clause here.
+
+34:22.940 --> 34:24.940
+Yeah.
+
+34:25.500 --> 34:32.780
+The idea is just, yeah, just get creative with patterns, don't hesitate to play with mod, don't hesitate to play with
+
+34:33.740 --> 34:36.100
+that kind of weird stuff.
+
+34:37.060 --> 34:39.060
+Juste, see what comes out.
+
+34:40.100 --> 34:42.100
+Then I wanted to add a
+
+34:43.860 --> 34:45.860
+fake reverb on top of it as well.
+
+34:48.300 --> 34:50.300
+So here
+
+34:50.380 --> 34:57.180
+the left channel of the signal will be the pattern, the right channel will be the pattern with some delay and
+
+34:57.820 --> 35:03.180
+then we also have the pattern repeat with more delay.
+
+35:06.220 --> 35:09.500
+So if we hear it, it's going to sound like this.
+
+35:19.820 --> 35:22.580
+So yeah, it gets kind of crazy.
+
+35:25.540 --> 35:33.660
+Let me play it along with only the pad and I also added a
+
+35:33.660 --> 35:37.940
+fake sidechain on top of it, because why not?
+
+35:57.180 --> 36:00.620
+So yeah, we're getting almost a nostalgic kind of feeling here.
+
+36:00.620 --> 36:05.660
+Yeah, I think that's about it for today.
+
+36:07.340 --> 36:10.940
+Let me just play the whole thing for you.
+
+36:17.060 --> 36:19.060
+Sorry, restart it.
+
+36:30.620 --> 36:54.900
+So yeah, that's it for today guys. I hope that that gave you some ideas of stuff you can play with.
+
+36:55.900 --> 37:03.740
+Next time we will be playing with some percussion to add a basic drum loop to our song.
+
+37:05.100 --> 37:07.100
+That's it.
+
+37:07.660 --> 37:09.660
+I will see you next time. Bye.
+

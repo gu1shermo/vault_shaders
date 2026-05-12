@@ -1,0 +1,698 @@
+start	end	text
+0	6880	Bonjour et bienvenue à Making Music in ShaderToy.
+6880	13480	Je m'appelle Alexis Thibault et aujourd'hui, je vais parler de comment on peut utiliser ShaderToy
+13480	19920	pour créer des waveforms, des enveloppes et commencer à faire de la musique en utilisant
+19920	22680	l'application du son.
+22680	28380	Si vous ne connaissez pas ShaderToy déjà, c'est un site pour créer des shaders pixels
+28380	38420	qui compilent en parallèle sur le GPU le couleur de chaque pixel sur l'écran en utilisant
+38420	42740	la même pièce de code pour chaque pixel.
+42740	48020	Si vous êtes intéressé par les graphiques de computers, les effets visuels, les scènes
+48020	55060	de démon, le rendement ou autre chose comme ça, je vous recommande de les voir.
+55060	61900	Mais ce que nous sommes intéressés aujourd'hui est en particulier les capacités de son son.
+61900	66500	Donc, allons-y et créons un nouveau shader.
+66500	74340	Donc, ici, nous avons la partie visuelle dans laquelle la fonction principale est appelée
+74340	84100	mainImage et prend des coordonnées et exécutent un bunch de codes pour chaque de ces coordonnées.
+84140	90700	Le tab de son, que vous pouvez ajouter en cliquant sur ce petit « plus » ici,
+90700	100580	crée un nouveau morceau de codes dans lequel la fonction est appelée mainSound et, à l'inverse,
+100580	103100	prend du temps.
+103100	114500	Et donc, pour chaque morceau, il exécutera un morceau de codes pour calculer le valeur du son
+114500	118900	à ce morceau, à ce morceau particulier.
+118900	123980	Alors, qu'est-ce qu'on a ici ? C'est supposé être un vecteur 2.
+123980	128140	Donc, vecteur 2 signifie un vecteur avec deux coordonnées.
+128180	134380	La coordonnée X correspond à l'écran de gauche et la coordonnée Y à l'écran de droite.
+134380	141580	En ce cas, nous avons quelque chose qui n'est qu'un valeur flottante.
+141580	146700	Ce que vous obtenez, c'est le même valeur pour X et Y, et donc vous obtenez un signe mono.
+146700	150860	Maintenant, allons-y faire un regard plus proche de cet exemple.
+150860	157300	Il dit « une vague de 440 Hz qui s'atténue rapidement à travers le temps. »
+157460	158460	Allons-y écouter.
+163460	169820	Alors, ce qu'on entend, c'est une vague avec une fréquence définie claire et une enveloppe
+169820	170820	décalée.
+170820	179180	Alors, qu'est-ce qu'on peut lire dans le code ? Nous avons une vague de signe, avec ce numéro,
+179180	186940	qui apparaît être 2 pi, et nous l'utiliserons beaucoup, donc allons-y directement créer
+186940	194860	un macro pour ça, « Define 2 pi ».
+194860	202060	Et ensuite, nous obtenons une fréquence de 440 Hz, et ensuite le temps.
+202060	208260	J'aime le nom de temps T parce que c'est plus court.
+208260	212660	Donc ici, si nous changeons la valeur de la fréquence, nous aurons différentes notes.
+212860	214620	Allons-y essayer ça.
+214620	216900	Allons-y essayer une valeur plus élevée.
+224900	233100	Donc, nous entendons que la note est plus élevée en pitch quand nous utilisons des valeurs plus élevées
+233100	234100	pour la fréquence.
+234100	248740	Conversement, si nous mettons des valeurs plus élevées, nous pouvons obtenir des notes plus élevées,
+248740	255140	qui peut être ou ne peut pas être possible d'entendre, dépendant du système d'audio que vous utilisez.
+255140	260660	Ok, allons-y revenir à la fréquence de 440 Hz.
+260660	262660	Et maintenant, qu'est-ce que c'est ?
+262660	265660	C'est l'enveloppe.
+265660	272660	Et pour visualiser l'enveloppe, ce que j'aime utiliser, c'est le GraphToy.
+272660	283660	graphtoy.com est un autre site par le même créateur que shader-toy.com, qui est à Inigoculars.
+284660	291660	GraphToy permet de placer des fonctions différentes, comme vous le souhaitez.
+291660	297660	Et c'est très pratique quand vous codez ce genre de choses.
+297660	301660	Alors, allons-y placer notre enveloppe.
+301660	306660	Je vais zoomer pour avoir un 0 et un 1 ici.
+306660	312660	Et allons-y placer l'exponential minus 3 x x.
+312660	315660	Donc, ce qu'on obtient, c'est une enveloppe de décalage,
+315660	319660	qui commence, comme x equal à 0, à 1,
+319660	323660	puis décale et s'envole jusqu'à 0 assez rapidement.
+323660	332660	Elle ne s'envole pas assez, mais elle devient inaudible après quelques secondes.
+332660	337660	Ce genre de décalage apparaît très naturel,
+337660	340660	parce que c'est comme ça qu'il se passe dans le monde réel,
+340660	344660	quand vous avez presque n'importe quoi.
+344660	350660	Si vous avez un cordon de guitare ou un instrument de percussion,
+350660	355660	la plupart du temps, le décalage va tendre à être exponentiel dans le temps.
+355660	359660	Alors, qu'est-ce que la coefficient 3 fait ici ?
+359660	362660	Elle nous dit la vitesse de la décalage.
+362660	365660	Si nous mettons un numéro plus haut,
+365660	368660	nous aurons quelque chose qui décale très rapidement.
+368660	371660	Et si nous mettons un numéro plus bas,
+371660	374660	nous aurons quelque chose qui décale plus lentement.
+376660	381660	Donc, nous pouvons faire ça et essayer d'entendre ce qu'elle fait.
+381660	384660	On fait un décalage rapide
+386660	388660	et un décalage lent.
+388660	392660	OK. Vous avez peut-être remarqué que ce son est assez lourd.
+392660	397660	La raison est qu'il atteint en fait le minus 1 et le plus 1,
+397660	402660	les valeurs minimales et maximales possibles,
+402660	407660	autorisées pour les outputs de son son.
+407660	411660	Si nous mettons un numéro plus bas,
+411660	415660	nous aurons quelque chose qui décale très rapidement.
+416660	422660	Si nous essayons de mettre des valeurs plus grosses que 1
+422660	425660	ou plus petites que le minus 1,
+425660	428660	nous aurons quelque chose qui décale plus lentement.
+428660	431660	Et en général, c'est une mauvaise idée.
+431660	436660	Il détorte le son et il a tendance à sonner très mal.
+439660	442660	C'est inconvénient si nous aimerions
+442660	445660	que plusieurs sons soient joués en même temps,
+445660	448660	parce que cela pourrait décaler.
+449660	453660	Donc, on décale l'amplitude de ce signal.
+453660	456660	On le multiplie par 0,1.
+456660	459660	Et c'est le terme de l'amplitude,
+459660	463660	qui peut être considéré comme une partie de l'enveloppe, si vous le voulez.
+466660	469660	Maintenant, il joue tranquillement.
+469660	472660	D'accord.
+472660	475660	J'aime cet exemple.
+475660	478660	Faisons-le une fonction.
+478660	481660	C'est une float.
+481660	485660	Je vais l'appeler float et je vais l'appeler signplug,
+485660	489660	parce que ça ressemble à plugger un string.
+489660	492660	D'accord.
+498660	504660	Disons que nous ferons que ce soit dépendant d'une fréquence, F.
+504660	507660	Donc, on va le remplacer par F.
+507660	510660	Et un temps en T.
+510660	515660	Et on va laisser l'amplitude être un décalé médium.
+516660	519660	D'accord, maintenant, ce que j'aime faire
+519660	522660	pour pouvoir ajouter plusieurs sons ensemble,
+522660	524660	c'est de définir l'effet 2,
+524660	526660	que j'appelle sig,
+526660	529660	et que j'initialise en 0.
+529660	532660	Et ensuite, nous pouvons ajouter des choses à sig,
+532660	534660	et retourner au sig.
+534660	537660	Alors, qu'est-ce que je mets dans mon signal ?
+537660	541660	Je peux mettre un signplug
+541660	546660	à la fréquence de 440 Hz en temps en T.
+546660	551660	Et ça nous donnera le son que nous avons déjà entendu avant.
+554660	560660	Et je peux aussi mettre un autre son.
+562660	567660	Disons que j'ai 660 Hz.
+568660	572660	D'accord, maintenant, nous entendons un intervalle.
+572660	576660	Nous entendons deux notes en même temps.
+576660	580660	Cela se passe par la note A,
+580660	585660	et c'est la note E, qui est au-dessus.
+585660	592660	Nous pouvons jouer des notes différentes.
+593660	597660	Nous allons jouer aussi la note E au-dessous.
+599660	600660	D'accord.
+600660	602660	Mais c'est assez drôle.
+602660	605660	Nous jouons seulement une note.
+605660	609660	Alors, essayons de jouer avec le timing.
+609660	612660	Ce que nous pouvons faire,
+612660	615660	vous voyez que ce signplug
+615660	618660	commence à jouer,
+618660	621660	l'enveloppe commence à jouer
+621660	624660	quand T est à 0.
+624660	626660	Donc, ce que nous pouvons faire,
+626660	629660	c'est que T commence à 0,
+629660	632660	puis s'éteint progressivement,
+632660	634660	puis retourne à 0 à chaque minute
+634660	637660	pour dire que nous commençons une nouvelle note.
+637660	640660	Une façon de faire cela
+640660	644660	serait d'utiliser la fonction mode.
+644660	647660	Si nous faisons mode X1,
+647660	650660	nous voyons X,
+650660	653660	et il monte, monte, monte,
+653660	655660	jusqu'à ce qu'il arrive à 1,
+655660	657660	à ce moment-là, il retourne à 0,
+657660	660660	et il commence à nouveau.
+660660	661660	Si nous voulons,
+661660	663660	au lieu d'aller jusqu'à 1,
+663660	665660	aller jusqu'à 2,
+665660	667660	et donc répéter à chaque 2 secondes,
+667660	669660	nous pouvons aussi le faire
+669660	672660	en éteignant ce nombre.
+672660	675660	Donc, faisons-le dans notre exemple.
+675660	678660	Ici, au lieu de T,
+678660	681660	nous allons mettre le mode T1.
+681660	683660	Je vais faire attention
+683660	685660	d'utiliser 1 dot.
+685660	687660	Je ne l'ai pas mentionné avant,
+687660	689660	mais c'est toujours les nombres
+689660	690660	du point flottant
+690660	692660	que nous parlons ici,
+692660	694660	et GLSL n'aime pas
+694660	696660	d'implicites conversion,
+696660	698660	mais si vous ne connaissez pas
+698660	700660	Shaded or EU,
+700660	702660	vous êtes habitués à ça.
+705660	707660	Maintenant, nous entendons
+707660	711660	le son répéter à chaque seconde.
+711660	714660	Ok, fantastique.
+714660	717660	Nous pouvons avoir
+717660	719660	notre A et E
+719660	722660	en jouant à chaque seconde.
+725660	727660	Mais c'est un peu drôle.
+728660	730660	Ok, mais c'est un peu drôle.
+730660	733660	Essayons d'offrir
+733660	735660	les nombres relative à l'autre.
+739660	741660	Si nous faisons
+741660	743660	une petite modification ici,
+743660	745660	nous pouvons offrir
+745660	747660	cela en temps.
+747660	749660	Disons que nous voulons
+749660	751660	que la note commence
+751660	753660	une demi seconde plus tard.
+753660	756660	Nous voulons que cela soit 0
+756660	758660	quand x est equal à 0,5.
+758660	760660	Ce que nous pouvons faire,
+760660	762660	c'est que
+762660	764660	quand x est equal à 0,5,
+764660	766660	c'est 0,
+766660	768660	et quand il arrive à 1,
+768660	770660	il rentre à 0.
+772660	774660	Si nous voulons
+774660	776660	qu'on l'offre
+776660	778660	par une demi seconde,
+778660	780660	on met juste 0,25 ici,
+780660	782660	et il est tard
+782660	784660	par seulement une demi seconde.
+786660	788660	Essayons d'offrir
+788660	790660	0,5.
+796660	798660	Et si nous voulons
+798660	800660	que la note seconde
+800660	802660	vienne un peu plus tôt,
+802660	804660	nous pouvons faire cela.
+810660	812660	Maintenant,
+812660	814660	la note première arrive juste après.
+814660	816660	Nous allons jouer
+816660	818660	avec le panning.
+818660	820660	Si vous avez un système
+820660	822660	qui est stéréo,
+822660	824660	vous pourrez
+824660	826660	noter que tout
+826660	828660	est dans le milieu.
+828660	830660	Mais nous pouvons
+830660	832660	utiliser les capacités
+832660	834660	stéréo
+834660	836660	de ce système.
+836660	838660	Nous avons un VEC2,
+838660	840660	donc nous pourrions
+840660	842660	avoir différents
+842660	844660	canaux à gauche et à droite.
+844660	846660	Nous allons faire cela.
+846660	848660	Nous pouvons
+848660	850660	multiplier
+850660	852660	cela
+852660	853660	et
+853660	855660	ajouter
+855660	856660	les différents signaux
+856660	858660	avec une autre amplitude
+858660	860660	pour les canaux à gauche et à droite.
+860660	862660	Nous allons multiplier
+862660	864660	cela par un VEC2,
+864660	866660	qui pourrait être 1
+866660	868660	à gauche et 0 à droite,
+868660	870660	et ici,
+870660	872660	0 à gauche et 1 à droite.
+872660	874660	Donc, la note basse,
+874660	876660	la note A,
+876660	878660	ne sera que entendue sur le canal à gauche
+878660	880660	et la note E
+880660	882660	ne sera que entendue sur le canal à droite.
+882660	884660	Nous l'entendons.
+888660	890660	Excellent.
+890660	892660	Vous pouvez
+892660	894660	faire quelque chose de moins extrême
+894660	896660	par avoir
+896660	898660	des numéros positifs,
+898660	900660	ici et ici.
+900660	902660	Ce sera
+902660	904660	plus à gauche,
+904660	906660	mais pas complètement
+906660	908660	uniquement dans le canal à gauche.
+908660	910660	Ce sera plus à droite.
+910660	912660	Nous l'entendons.
+916660	918660	C'est l'une des façons de le faire.
+918660	920660	Ce que j'aime
+920660	922660	faire, c'est une fonction panning.
+922660	924660	Je définirai une fonction
+924660	926660	qui constructe
+926660	928660	ces choses pour moi.
+930660	932660	Alors, allons-y.
+932660	934660	Définir
+934660	936660	une fonction panning,
+936660	938660	qui donne une valeur positionnelle
+938660	940660	qui range
+940660	942660	de minus 1 à 1,
+942660	944660	qui nous donne un VEC2
+944660	946660	qui devrait être normalisé
+946660	948660	et
+948660	950660	qui, bien,
+950660	952660	quand la position est de 0,
+952660	954660	elle devrait être à gauche du milieu,
+954660	956660	quand la position est de minus 1,
+956660	958660	elle devrait être à gauche du milieu,
+958660	960660	et quand la position est de plus 1,
+960660	962660	elle devrait être à gauche du milieu.
+962660	964660	Comment faire?
+964660	966660	On l'appelle E.
+966660	968660	Si nous faisons
+968660	970660	1 minus pass et 1 plus pass,
+970660	972660	ce que nous obtenons
+972660	974660	est exactement ce que j'ai dit.
+974660	976660	Quand la position est de 0,
+976660	978660	nous obtenons 1 1,
+978660	980660	quand la position est de minus 1,
+980660	982660	nous obtenons 2 0,
+982660	984660	quand la position est de plus 1,
+984660	986660	nous obtenons 2 0,
+986660	988660	donc complètement à droite.
+988660	990660	Maintenant, allons-y normaliser
+990660	992660	pour éviter d'avoir des différences
+992660	994660	en volume, dépendant du panning.
+1002660	1004660	Donc, si on utilise cette fonction pan,
+1004660	1006660	dans cet exemple,
+1006660	1008660	on pourrait faire quelque chose comme pan,
+1008660	1010660	peut-être 50 % à gauche,
+1010660	1012660	50 % à gauche,
+1012660	1014660	et ici,
+1014660	1016660	pan 50 % à droite,
+1016660	1018660	et nous obtenons
+1018660	1020660	presque la même chose.
+1022660	1024660	Maintenant, commençons
+1024660	1026660	à jouer avec différentes waveforms.
+1028660	1030660	Les fonctions de signe
+1030660	1032660	que nous avons écoutées jusqu'à maintenant
+1032660	1034660	sont très bonnes, mais
+1034660	1036660	si nous aimerions avoir
+1036660	1038660	différents instruments,
+1038660	1040660	différentes waveforms,
+1040660	1042660	lesquels nous pouvons utiliser
+1042660	1044660	pour simuler
+1044660	1046660	une basse,
+1046660	1048660	une guitare,
+1048660	1050660	une flûte, ou quoi que ce soit.
+1050660	1052660	Ce que j'ai tendance à voir
+1052660	1054660	beaucoup
+1054660	1056660	sur Shader Toy,
+1056660	1058660	c'est que les gens utilisent
+1058660	1060660	des fonctions de signe square
+1060660	1062660	ou des fonctions de sawtooth.
+1062660	1064660	Alors, allons-y regarder
+1064660	1066660	elles, et je vais expliquer
+1066660	1068660	pourquoi je pense
+1068660	1070660	que je ne les aime pas trop
+1070660	1072660	et que j'ai préféré utiliser
+1072660	1074660	d'autres types de fonctions.
+1076660	1078660	Alors, allons-y définir
+1078660	1080660	une flûte square.
+1080660	1082660	Alors, comment
+1082660	1084660	on transforme une flûte sine
+1084660	1086660	en une flûte square ?
+1086660	1088660	C'est très simple.
+1088660	1090660	Sine x, ici.
+1092660	1094660	Et si vous connaissez
+1094660	1096660	une fonction signe,
+1098660	1100660	vous pourriez avoir su que
+1100660	1102660	c'est une façon possible
+1102660	1104660	de transformer une flûte sine
+1104660	1106660	en une flûte square.
+1106660	1108660	En fait, la fonction sine
+1108660	1110660	retient la flûte positive
+1110660	1112660	quand
+1112660	1114660	tout ce qui est fait est positif,
+1114660	1116660	et la flûte négative
+1116660	1118660	est négative.
+1120660	1122660	Et donc, quand la flûte sine est positive,
+1122660	1124660	on reçoit plus 1,
+1124660	1126660	et quand la flûte sine est négative,
+1126660	1128660	on reçoit minus 1.
+1128660	1130660	Et donc, on a une flûte square.
+1130660	1132660	Alors, allons-y
+1132660	1134660	coder.
+1136660	1138660	Maintenant, allons-y utiliser la flûte square
+1138660	1140660	au lieu
+1140660	1142660	et la entendre.
+1142660	1144660	Alors, vous pourriez noter
+1144660	1146660	que
+1146660	1148660	on reçoit une signal
+1148660	1150660	qui est beaucoup
+1150660	1152660	plus riche
+1152660	1154660	en termes de timbre
+1154660	1156660	que ce qu'on avait auparavant.
+1156660	1158660	C'est un peu
+1158660	1160660	fort
+1160660	1162660	et piquant.
+1162660	1164660	Mais
+1164660	1166660	vous pourriez aussi noter
+1166660	1168660	que
+1168660	1170660	cela
+1170660	1172660	est
+1172660	1174660	un peu froid
+1174660	1176660	aussi.
+1176660	1178660	La raison
+1178660	1180660	est
+1180660	1182660	de l'AES,
+1182660	1184660	qui est
+1184660	1186660	un sujet
+1186660	1188660	assez compliqué
+1188660	1190660	concernant
+1190660	1192660	l'approximation des fonctions
+1192660	1194660	et le sampler.
+1194660	1196660	Donc, l'idée est
+1196660	1198660	que, puisqu'on a
+1198660	1200660	un contenu de haute fréquence
+1200660	1202660	dans cette fonction
+1202660	1204660	square block,
+1204660	1206660	certains de ces contenus
+1206660	1208660	de haute fréquence
+1208660	1210660	ne peuvent pas
+1210660	1212660	être représentés exactement
+1212660	1214660	juste en le samplant
+1214660	1216660	à chaque
+1216660	1218660	sample
+1218660	1220660	qui est pris.
+1220660	1222660	Ici,
+1222660	1224660	la fonction évalue
+1224660	1226660	44.1
+1226660	1228660	mille
+1228660	1230660	fois par seconde.
+1230660	1232660	Et donc,
+1232660	1234660	quelles que
+1234660	1236660	la fréquence
+1236660	1238660	soit plus de la moitié,
+1238660	1240660	elle sera
+1240660	1242660	représentée
+1242660	1244660	comme si elle
+1244660	1246660	était reflétée.
+1246660	1248660	C'est un peu la même chose
+1248660	1250660	que si vous avez un vidéo
+1250660	1252660	d'une roue
+1252660	1254660	qui tourne trop vite
+1254660	1256660	et qu'elle
+1256660	1258660	commence à ressembler
+1258660	1260660	comme si la roue
+1260660	1262660	tournait en arrière.
+1262660	1264660	C'est la même idée ici.
+1264660	1266660	C'est pourquoi
+1266660	1268660	je n'utilise pas trop
+1268660	1270660	les fonctions square.
+1270660	1272660	Mais
+1272660	1274660	continuons
+1274660	1276660	notre voyage
+1276660	1278660	sur les différentes
+1278660	1280660	waveformes que vous pouvez utiliser.
+1280660	1282660	Regardons la fonction
+1282660	1284660	d'un samplant.
+1284660	1286660	On va définir
+1286660	1288660	un samplac
+1288660	1290660	floatF, floatT.
+1290660	1292660	Comment
+1292660	1294660	créons-nous une fonction de samplac ?
+1294660	1296660	Nous aimerions que
+1296660	1298660	la fonction commence
+1298660	1300660	à negative 1, puis à positive 1,
+1300660	1302660	et qu'elle commence à nouveau.
+1302660	1304660	Ça
+1304660	1306660	ressemble à
+1306660	1308660	mod X1.
+1308660	1310660	Mais nous voulions
+1310660	1312660	commencer à negative 1.
+1312660	1314660	Nous faisons
+1314660	1316660	minus 1, et
+1316660	1318660	nous voulions qu'elle fasse plus 1,
+1318660	1320660	donc que nous multiplions par 2.
+1320660	1322660	Ici,
+1322660	1324660	nous avons une sorte de fonction
+1324660	1326660	avec période 1.
+1326660	1328660	Si nous voulions
+1328660	1330660	qu'elle ait une autre fréquence,
+1330660	1332660	nous pouvons
+1332660	1334660	la multiplier par une autre valeur.
+1334660	1336660	2, 3...
+1336660	1338660	Typiquement, nous ferons 440 Hz
+1338660	1340660	ou quelque chose comme ça.
+1342660	1344660	OK, c'est parti.
+1352660	1354660	Mod Tf
+1354660	1356660	1
+1356660	1358660	x 2-1
+1358660	1360660	et
+1360660	1362660	nous multiplions par l'enveloppe.
+1362660	1364660	Laissez-nous
+1364660	1366660	l'envelopper
+1366660	1368660	dans notre
+1368660	1370660	signal generation
+1370660	1372660	et la entendre.
+1378660	1380660	C'est un timbre
+1380660	1382660	complètement différent,
+1382660	1384660	qui peut être
+1384660	1386660	ou peut-être pas.
+1386660	1388660	C'est un
+1388660	1390660	très bon timbre.
+1390660	1392660	Encore une fois, c'est assez
+1392660	1394660	basé à cause de l'aliasing.
+1396660	1398660	La famille
+1398660	1400660	de signals
+1400660	1402660	que j'utilise beaucoup
+1402660	1404660	sur ShaderToys
+1404660	1406660	est appelée Frequency Modulation.
+1406660	1408660	J'aime
+1408660	1410660	vous en parler
+1410660	1412660	parce que je trouve
+1412660	1414660	que c'est vraiment facile
+1414660	1416660	à coder, c'est très versatile
+1416660	1418660	et
+1418660	1420660	très facile à utiliser.
+1420660	1422660	Ça ne l'aliase pas
+1422660	1424660	jusqu'à ce que vous l'appuiez trop dur.
+1424660	1426660	Vous pouvez faire beaucoup de choses
+1426660	1428660	avec ça.
+1428660	1430660	Alors, voyons
+1430660	1432660	la Frequency Modulation.
+1432660	1434660	On définit un
+1434660	1436660	signal FM-Pluck.
+1438660	1440660	La Frequency Modulation,
+1440660	1442660	l'idée est
+1442660	1444660	que vous avez une carrière
+1444660	1446660	de Frequency.
+1446660	1448660	Pour le moment, on va juste la mettre
+1448660	1450660	à F.
+1450660	1452660	Et une Frequency Modulation,
+1452660	1454660	qu'on va mettre à F aussi.
+1454660	1456660	Et vous avez un troisième paramètre,
+1456660	1458660	qui est l'Index of Modulation,
+1458660	1460660	qu'on va mettre
+1460660	1462660	à 1 pour le moment.
+1462660	1464660	C'est la Carrière Frequency.
+1464660	1466660	C'est la
+1466660	1468660	Modulation Frequency.
+1468660	1470660	Et c'est
+1470660	1472660	l'Index
+1472660	1474660	of Modulation.
+1476660	1478660	Techniquement, ce qu'on va faire ici
+1478660	1480660	est appelé Phase Modulation.
+1480660	1482660	Mais c'est
+1482660	1484660	très, très proche.
+1486660	1488660	Alors, qu'est-ce qu'on va faire ensuite ?
+1488660	1490660	Le signal
+1490660	1492660	qu'on va utiliser
+1492660	1494660	sera
+1494660	1496660	une fonction de signe,
+1496660	1498660	2 pi x
+1498660	1500660	Carrière Frequency x t.
+1500660	1502660	C'est
+1502660	1504660	si on
+1504660	1506660	n'a pas de Frequency Modulation,
+1506660	1508660	mais si on a
+1508660	1510660	Frequency Modulation,
+1510660	1512660	le signe
+1512660	1514660	a un terme additionnel
+1514660	1516660	dans son argument,
+1516660	1518660	c'est l'Index of Modulation
+1518660	1520660	x une autre fonction de signe,
+1520660	1522660	2 pi x
+1522660	1524660	Modulating Frequency
+1524660	1526660	x t.
+1526660	1528660	Et on va multiplier
+1528660	1530660	cela par l'enveloppe.
+1530660	1532660	On va dire
+1532660	1534660	que l'enveloppe
+1534660	1536660	est cette chose de nouveau.
+1540660	1542660	Ok.
+1542660	1544660	Alors, voyons-le.
+1548660	1550660	Ce son est
+1550660	1552660	très typique
+1552660	1554660	de Frequency Modulation.
+1554660	1556660	C'est
+1556660	1558660	assez lisse
+1558660	1560660	et encore plus riche
+1560660	1562660	que la fonction de signe.
+1566660	1568660	Alors, qu'est-ce qui change
+1568660	1570660	quand on change la Frequency Carrière,
+1570660	1572660	la Frequency Modulation
+1572660	1574660	et l'Index of Modulation ?
+1574660	1576660	Bien, si on change
+1576660	1578660	l'Index of Modulation,
+1578660	1580660	qui est vraiment
+1580660	1582660	le paramètre le plus important
+1582660	1584660	dans cette chose,
+1584660	1586660	on va changer
+1586660	1588660	combien riche le timbre est.
+1588660	1590660	Donc, si on
+1590660	1592660	utilise 2 au lieu de 1,
+1596660	1598660	on obtient quelque chose
+1598660	1600660	qui s'extend un peu
+1600660	1602660	au-delà de sa fréquence initiale.
+1602660	1604660	On peut utiliser
+1604660	1606660	des numéros non integer,
+1606660	1608660	on peut utiliser, par exemple, 2,7.
+1612660	1614660	Si on commence à essayer
+1614660	1616660	des valeurs plus hautes,
+1616660	1618660	ça devient vraiment
+1618660	1620660	un peu sharp.
+1622660	1624660	On va essayer 20.
+1626660	1628660	Maintenant, ça commence à
+1628660	1630660	vraiment
+1630660	1632660	à ressembler
+1632660	1634660	à un matériau très, très dur,
+1634660	1636660	comme du verre, ou quelque chose comme ça.
+1638660	1640660	On retourne
+1640660	1642660	à une modulation plus raisonnable
+1642660	1644660	dans l'Index of Modulation,
+1644660	1646660	en jouant avec la fréquence modulatrice.
+1648660	1650660	Si on multiplie par 2,
+1652660	1654660	on obtient quelque chose
+1654660	1656660	qui ressemble à un courant.
+1656660	1658660	Et c'est à cause de la
+1658660	1660660	structure harmonique
+1660660	1662660	qu'on obtient en utilisant
+1662660	1664660	cette fréquence modulatrice.
+1666660	1668660	Je ne vais pas trop loin
+1668660	1670660	dans les détails,
+1670660	1672660	mais c'est un sujet vraiment intéressant.
+1672660	1674660	On va essayer 3.
+1680660	1682660	Vous pouvez faire toutes sortes
+1682660	1684660	de structures harmoniques avec ça.
+1684660	1686660	Je ne vais pas trop loin
+1686660	1688660	dans les détails,
+1688660	1690660	vous pouvez y jouer.
+1690660	1692660	Si vous utilisez
+1692660	1694660	un numéro non integer,
+1694660	1696660	ça va commencer à ressembler
+1696660	1698660	assez bizarre.
+1698660	1700660	On va essayer 4.
+1702660	1704660	C'est quelque chose
+1704660	1706660	qui ressemble à un caudel
+1706660	1708660	qui est aussi
+1708660	1710660	quelque chose dont
+1710660	1712660	la fréquence modulatrice est fameuse.
+1718660	1720660	Ok, on va juste utiliser
+1720660	1722660	ces choses.
+1724660	1726660	Ce que vous pouvez faire aussi
+1726660	1728660	c'est de commencer
+1728660	1730660	à utiliser la fréquence modulatrice
+1730660	1742660	En fait, je définirai une fonction de modulation fréquente pour pouvoir l'utiliser d'une manière plus convaincante.
+1743660	1751660	IOM et FlowT, et on va juste retourner ce truc.
+1751660	1757660	Donc maintenant, c'est juste Fm, Fc, Fm, IOM et T.
+1758660	1759660	Ok.
+1760660	1766660	Et maintenant, on va pouvoir l'utiliser d'une manière plus convaincante.
+1767660	1771660	Et on va juste retourner ce truc.
+1771660	1777660	Donc maintenant, c'est juste Fm, Fc, Fm, IOM et T.
+1778660	1779660	Ok.
+1782660	1790660	On va faire la fonction Sig.
+1791660	1793660	En fait, on va faire ce Stereo.
+1794660	1799660	Donc, on fait cette fonction Vec2. Vec2Sig == Vec2Zero.
+1802660	1809660	Et ce que l'on peut faire, c'est que le signal soit différent dans le canal gauche et droit.
+1810660	1815660	Donc on peut dire que Sig.X == Fm de...
+1816660	1818660	On va dire F1.
+1819660	1820660	F1.
+1824660	1826660	Quelle devrait être l'index de modulation?
+1827660	1832660	Bon, je vais commencer avec juste F1 et T.
+1833660	1835660	Encore une fois l'enveloppe principale.
+1836660	1840660	Et pour le canal gauche, c'est le minus 1.
+1843660	1845660	Et qu'est-ce que ça ressemble à?
+1848660	1852660	Vous avez ce beau effet de phasing de Stereo.
+1856660	1860660	Si vous voulez que l'attaque soit un peu plus forte,
+1861660	1869660	ce que vous pouvez faire, c'est ajouter quelque chose avec un index de modulation plus élevé.
+1870660	1873660	On va dire, je ne sais pas, 15. T.
+1874660	1877660	Et ensuite, vous le multipliez par une enveloppe qui décale plus vite.
+1878660	1880660	On va dire que c'est le minus 10 x T.
+1880660	1885660	Et que ce soit pas trop lourd, juste pour qu'il fasse l'attaque.
+1891660	1893660	Vous pouvez le faire décaler plus vite.
+1898660	1900660	Et balancez-le un peu.
+1901660	1903660	C'est vraiment assez solide.
+1904660	1909660	Et maintenant, on commence à obtenir quelque chose qui est assez musical, je pense.
+1910660	1921660	Donc, pour terminer, ce que je suggère, c'est que nous composons un simple jingle.
+1922660	1930660	Donc, ce qu'il faut faire pour commencer à faire de la musique, c'est de définir les fréquences de nos notes.
+1931660	1939660	La fréquence est un sujet assez compliqué dans la musique, parce que ce n'est absolument pas évident pour n'importe qui.
+1940660	1943660	La fréquence doit être pour une certaine note.
+1944660	1951660	Il y a beaucoup de débats dans la musique sur cette chose qui s'appelle le tempérament,
+1952660	1958660	qui est donné comme un nom de note, la fréquence et l'assignement.
+1959660	1963660	Donc, la solution qu'on utilise souvent maintenant, c'est d'utiliser le tempérament égal.
+1964660	1969660	Dans le tempérament égal, nous disons que tous les semitones sont de la même taille.
+1970660	1976660	Il y a 12 semitones dans une octave, et une octave correspond à un doublement de fréquence.
+1977660	1981660	Donc, si nous mettons ça mathématiquement, où est-ce que nous sommes?
+1982660	1989660	Nous disons l'intervalle, donné le nombre de semitones.
+1990660	2001660	L'intervalle est un ratio de deux fréquences, et ce ratio de fréquences sera de la taille de deux,
+2003660	2008660	qui correspond à le nombre de semitones divisé par 12.
+2009660	2017660	Donc, si nous obtenons zéro semitone, c'est juste la même note, donc l'intervalle, la fréquence sera de la même taille.
+2018660	2024660	Si nous obtenons 12 semitones, c'est une octave, donc nous multiplierons la fréquence par deux.
+2025660	2028660	Si nous obtenons moins de 12 semitones, nous les divisons par deux,
+2029660	2036660	et entre les deux, nous multiplierons ou les divisons par une certaine puissance de deux.
+2037660	2047660	Ok, nous allons définir un bunch de notes que nous aimerions jouer.
+2048660	2050660	Float notes.
+2051660	2054660	Nous faisons ce const array.
+2056660	2060660	Et disons que nous avons six notes.
+2061660	2085660	On dirait que c'est un A, un E, un B, un E, un C, et un D.
+2086660	2088660	Nous allons faire ça.
+2089660	2093660	Maintenant, le jingle.
+2094660	2099660	Nous allons juste combiner ces notes et les jouer un après l'autre.
+2100660	2104660	Alors, comment le faisons-nous ? Nous définissons une fonction signal.
+2107660	2109660	Une variable signal, en fait.
+2109660	2124660	Et pour chaque note, donc pour i equals 0 à 6, nous allons ajouter une nouvelle note à notre signal.
+2125660	2131660	Alors, quel est le nombre de notes de cette note ?
+2131660	2134660	C'est juste une note à i.
+2135660	2139660	Quelle est la fréquence de la note i ?
+2140660	2151660	C'est 440 Hz, c'est-à-dire la note A, multipliée par la ratio qui correspond à cette intervalle.
+2152660	2160660	Oui, les notes ici, j'ai choisi de les définir relative à la middle A.
+2161660	2167660	Donc, l'intervalle correspond à la note.
+2167660	2173660	Qu'est-ce que c'est le temps initial ? T0 i.
+2174660	2177660	A quel temps la note i commence ?
+2178660	2183660	Nous allons dire que nous changeons chaque note par 0,25 secondes.
+2184660	2188660	C'est 0,25 fois la fréquence de la note i.
+2188660	2191660	C'est 0,25 fois la fréquence de la note i.
+2192660	2206660	Et nous allons dire que le temps actuel est modtime minus le temps initial de cette note.
+2207660	2210660	Et nous allons répéter le pattern chaque 2 secondes.
+2211660	2214660	C'est exactement la même idée que nous avons vu ici.
+2215660	2231660	Et maintenant nous faisons sig plus equals fmplug de fi ti, et retournons sig.
+2231660	2248660	Nous faisons sig plus equals jingle of t, et c'est tout.
+2248660	2249660	C'est tout.
+2257660	2258660	Maintenant, c'est bien.
+2259660	2261660	Que se passe-t-il à la panning ?
+2262660	2270660	Nous pouvons, par exemple, avoir une position pour chaque note.
+2271660	2273660	Et cette position pourrait être...
+2274660	2280660	Nous voulons que la première note soit dans le milieu, puis à droite, puis à gauche, puis au milieu, puis à droite.
+2281660	2296660	Une possible formule pour cela serait imat3 plus 1, minus 1.
+2300660	2304660	Maintenant, c'est imat3 plus 1.
+2307660	2311660	Et nous pouvons faire une pause de temps.
+2316660	2322660	Maintenant, si vous avez du stereo, vous allez entendre que le signal est entouré.
+2323660	2324660	Fantastique.
+2325660	2330660	La dernière chose que j'aimerais faire, c'est changer l'octave de cette note.
+2334660	2336660	Pour avoir une bonne mélodie.
+2338660	2340660	C'est tout pour aujourd'hui.
+2340660	2347660	La prochaine fois, j'espère que je vais vous montrer comment faire de la percussion,
+2348660	2353660	puis des effets, et commencer à parler de la structure de la chanson.
+2354660	2355660	Au revoir.

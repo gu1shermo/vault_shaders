@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:/Users/GuiSh/Documents/GUILLAUME/03_TRAVAIL/ESGI/vault_shaders\" rev-parse --show-toplevel)",
+      "Bash(git -C \"C:/Users/GuiSh/Documents/GUILLAUME/03_TRAVAIL/ESGI/vault_shaders\" ls-files --error-unmatch \"shaders/music/Making Music in Shadertoy - Episode 1 ： Basics, Waveforms, and a Simple Tune [3mteFftC7fE].mp3\")",
+      "Bash(git *)"
+    ]
+  }
+}

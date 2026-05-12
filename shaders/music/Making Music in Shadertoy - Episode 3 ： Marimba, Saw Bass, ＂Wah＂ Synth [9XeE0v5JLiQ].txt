@@ -1,0 +1,526 @@
+Bonjour, c'est Alex Citibault et bienvenue à l'épisode 3 de Making Music in Shaded Toy.
+La dernière fois que nous avons regardé la synthèse des modulations de fréquence
+et nous avons créé un couple d'instruments en utilisant ça.
+Nous avons vu comment c'est un outil convenu pour créer des instruments.
+Et aujourd'hui, j'aimerais remplir notre outil de instruments.
+Nous avons créé une chanson avec 100 BPM.
+J'aimerais ajouter un bass, un marimba et un autre synthèse.
+Nous allons donc faire la marimba en utilisant la synthèse de modulation de fréquence.
+Il s'agit d'une sorte de chanson classique dans la modulation de fréquence.
+Et pour le bass et l'autre synthèse, nous allons le faire en utilisant un outil de synthèse de modulation de fréquence.
+C'est un outil de chanson classique.
+C'est un outil de chanson classique.
+C'est un outil de chanson classique.
+La dernière fois que nous avons créé une modulation de fréquence, nous avons créé un outil de chanson
+Nous allons commencer avec la marimba.
+La marimba est une sorte de chanson classique.
+C'est un outil de chanson classique.
+Comment créer ça, c'est très simple.
+Vous voulez jouer une note de marimba à fréquence F avec un temps T.
+Le T ici, comme dans tout le synthèse que j'ai créé, c'est le temps depuis le début de la note.
+Nous faisons une modulation de fréquence avec des fréquences de carrière.
+La modulation de fréquence est ici.
+Nous avons une frequency de carrière et une frequency de modulateur.
+Nous faisons un index de modulation.
+Nous faisons un signage de 2pi fc T.
+Nous faisons un frac ici pour éviter des problèmes avec la précision dans la fonction des signes.
+2pi fc T est juste une frequency de carrière et une frequency de carrière.
+Nous faisons un index de modulation avec une frequency de carrière et une frequency de modulateur.
+Nous faisons un frac ici pour éviter des problèmes avec la fréquence de carrière et une frequency de carrière.
+Nous faisons une frequency de carrière et une frequency de modulateur.
+Si vous vous souvenez de la dernière fois, nous avons vu que le signal de modulation de fréquence contient une frequency de fc plus et moins multiples de fm.
+Donc ici il sera f plus et moins multiples de 7 fois f.
+Le premier signal de modulation sera f plus et plus de 7 fois f, donc 8 fois f, et f minus et plus de 7 fois f, donc moins de 6 fois f,
+ce qui sera un point positif.
+Donc plus de 6 fois f.
+Nous avons une fréquence très étrange, et ça ressemble à un instrument de marimba, comme un xylophone.
+Pour le index de modulation, vous voyez que j'ai mis quelque chose qui commence à 1,5, et puis qui se déclare très rapidement à 0.
+Donc seulement au début de la note, on obtient ces harmoniques, et très rapidement on obtient seulement le component sinusoidal.
+C'est aussi l'une de la façon dont le physique de l'instrument fonctionne.
+C'est un instrument qui joue une très bizarre façon de distraire les harmoniques quand c'est trac,
+mais très rapidement, ces harmoniques se déclarent et vous n'avez qu'une fréquence fondamentale.
+Donc c'est l'idée avec ça. Et puis on met un détail sur ça.
+Un détail simple et exponentiel.
+Donc si on écoute le marimba en itself, ça va sembler comme ça.
+6 plus de 7 fois marimba.
+C'est-à-dire à 440, et on va le jouer à chaque seconde.
+C'est là.
+Donc comme vous le voyez, ça a vraiment une qualité de voie.
+Si vous voulez changer le son, vous pouvez changer comment vite le détail se déclare.
+Nous pouvons mettre un détail plus lent sur le modulation index.
+Et maintenant on est en train d'avoir un son plus glissant.
+Il semble que le matériel est plus lourd ou plus rigide.
+Nous pouvons changer la fréquence modulée.
+Ici, on est en train d'avoir quelque chose qui est similaire à un patch de FN classique appelé EP1.
+Si vous avez la possibilité de jouer avec des emulations de la synthèse DX7 Yamaha,
+c'est un tool vraiment fantastique pour apprendre tout ce que la fréquence modulée est.
+Il y a le texte VST, qui est un free VST, qui émulate le Yamaha DX7.
+C'est vraiment un tool fantastique. Je vais mettre un lien dans la description pour ça.
+Mais j'aime le son comme il est.
+Nous allons juste le mettre comme ça.
+Comment on crée un pattern avec ça ?
+Ici, j'ai créé un pattern.
+Ce que j'aimerais faire, c'est de la pièce marimba, un type de pattern techno.
+L'une des choses que l'on peut faire, c'est de la pièce marimba de 16 beats,
+et puis, on choisit un couple de notes.
+Ces notes vont arriver à être dans la même corde que le patch.
+Si vous vous souvenez, le patch a joué des cordes ici.
+Je vais commenter.
+Nous nous souvenons de ce que ces cordes sont.
+C'était Am, puis Dm7, puis F major, puis C avec un 9 et puis G avec un 6.
+Ce que la marimba peut jouer ici, c'est des notes qui viennent de ce pattern.
+Juste là-bas, tous les notes sont référentes relativement au C.
+Donc 4 signifie 4 semitones sur le C, donc c'est un E.
+12 signifie 1 actif sur le C, donc c'est un C, 1 actif plus haut.
+Et aussi, c'est E et C, c'est F et A.
+Ici, c'est A et C, G et C, G et B.
+C'est le pattern qu'on a joué.
+Je vais offrir le start de ces cordes un peu,
+juste pour qu'elles ne passent pas avec le restart de la note.
+Donc, comment j'ai décidé à quel temps de restart de la note?
+Je fais des choses modèles ici.
+J'ai juste un peu de fun.
+Le plus important est celui-ci.
+L'idée est vraiment de jouer des dottie dates.
+8e note.
+C'est un pattern classique dans le techno et ce genre de musique.
+Ou quelque chose d'électro.
+C'est quand tu as le pulseur.
+Et tu as quelque chose qui va...
+Tu sais?
+Donc, le autre...
+Donc, tu as un peu d'épolléatrice.
+Les autres sont juste pour que ce pattern passe sur le grid.
+Et que nous n'avons rien de place.
+Je définis un signal et ajoute cette note marimba.
+J'ai un peu plus de la note basse.
+La note basse est plus à la gauche et la note basse est plus à la droite.
+Et j'ai juste rétellé ça.
+Donc, on va en faire un éclairage pour ce que ce pattern semble.
+Je vais en mettre ça pour le moment.
+C'est le pulseur.
+Donc, c'est vraiment un sound techno.
+Ce que nous pouvons faire, c'est ajouter le pad au-dessus de ça.
+Pour entendre comment ils se coudent ensemble.
+...
+Donc, oui, c'est ça.
+Donc, c'est ça pour la pattern marimba.
+Il n'y a vraiment rien d'autre que ça.
+...
+Donc, on va en mettre sur la base.
+Pour la base, j'ai voulu faire un sound analog.
+Donc, la dernière fois que nous avons vu que c'est...
+En fait, dans l'un des premiers épisodes, nous avons vu que c'est une bonne idée
+de créer un wave sort-of-wave directement.
+Parce que ça contient beaucoup de haute fréquence.
+C'est en faisant des aléasins.
+Et les aléasins ressemblent très bien.
+Comment nous dealons avec l'aléasin?
+Nous faisons de l'anti-aléasin.
+Donc, comment nous faisons de l'anti-aléasin?
+La idée est de filtrer.
+J'ai créé, dans GraphToy, la forme de wave que nous avons...
+La dernière fois que nous avons vu que c'est notre sort-of-wave.
+C'est là que c'est.
+Donc, nous disons que la valeur du sort-of-wave commence à 1.
+Et puis, quand x vient de 0 à 1,
+il s'agit d'un slope de minus 2 x.
+Donc, quand x vient de 1, il s'agit d'un slope de minus 1.
+Et puis, il se répète.
+Mais le problème avec ça, c'est que nous avons une grande discontinuité
+à x equals 0, x equals 1, etc.
+C'est une bonne idée.
+Donc, nous voulons smoother cette discontinuité.
+Comment pouvons-nous faire ça?
+Bien, ce que nous pouvons faire, c'est que nous avons une bonne fonction ici.
+Nous avons une autre partie, ici.
+Nous allons décider que, d'ici à d'ici, nous allons smoother la transition
+de l'un à l'autre.
+Donc, ceci est minus 1, minus 2 x,
+et ceci est 1, minus 2 x.
+Et comment pouvons-nous faire la transition de l'un à l'autre?
+Nous allons faire une fonction smooth,
+qui est de 0 à 1 x equals minus 0,2
+à 1 à 1 x equals 0,2.
+Et c'est la transition de l'un à l'autre.
+Comment pouvons-nous faire surement que ça répète?
+Maintenant, c'est parti.
+Nous n'avons pas besoin de ça.
+Comment pouvons-nous le répéter?
+Nous allons simplement cliquer...
+Non, pas cliquer, répéter.
+Donc, si nous faisons x, minus x,
+c'est à dire que nous couvons à negative 0,5
+et nous le répéter comme ça.
+C'est ça, vraiment.
+C'est notre fonction de la fonction de l'un à l'autre.
+Il y a beaucoup de meilleures manières à faire.
+Ceci est assez simple, vraiment facile à comprendre.
+Si nous voulons changer ce qui est la fréquence de l'un à l'autre,
+nous pouvons changer de la meer la fréquence.
+Nous pouvons changer de la plus grande fréquence.
+Nous pouvons avoir plus de fréquence,
+en faisant une plus chaude fréquence.
+Peut-être une meilleure façon d'en utiliser
+si nous serons dans des filtres analogues.
+c'est d'avoir un look à des secondes ou des passés de passés de la basse et des choses comme ça
+il se trouve que c'est vraiment pas convainc d'impliquer dans l'échec de l'eau
+ce que vous devez vraiment faire est d'en prendre un papier et déranger la fonction de vous-même
+donc j'ai fait ça en fait
+à un moment j'ai eu un look à comment un second ordre de filter réacte
+à une fonction sortie
+et la solution est une fonction assez compliquée
+donc je vais mettre le lien dans la description
+si vous voulez avoir un look à ça, le bon chose avec ça c'est que vous pouvez avoir des résonances
+si vous êtes en train d'utiliser des sounds acidiques
+c'est une chose très bonne que vous puissiez utiliser
+nous avons ce genre de sound
+donc c'est plutôt riche
+mais je trouve que c'est plus simple et très convainc
+donc c'est ce que j'ai choisi à utiliser pour ce tutoriel
+pour trouver une fonction sortie
+nous aimerions jouer une fréquence F
+pour avoir une certaine fréquence de courant
+et pour jouer à un certain temps T
+donc ce qui correspond à la paramètre X dans notre graphique
+c'est juste une fréquence F x T
+on veut quelque chose d'une fréquence F
+donc on veut une fréquence X
+et ce sera la fin de notre fonction smooth
+ce que nous aimerions avoir
+c'est que si la fréquence T
+s'amuse par une fréquence F
+on veut de ce point à ce point
+être une fréquence F
+d'exception que nous avons décalé la fréquence X
+donc on veut une fréquence F x F
+puis on multiplie ça par une fréquence F
+parce que nous avons la partie négative et la partie positive
+on ne veut absolument pas la fréquence
+pour avoir une fréquence greater que une fréquence
+sinon on va avoir quelque chose qui ressemble très bien
+je vais vous montrer comment ça ressemble
+c'est un smooth step pour trop longtemps
+et quand nous nous sommes dans la fréquence
+on va réintroduire quelque chose de discontinu
+donc nous n'avons vraiment pas besoin d'une fréquence
+d'une fréquence plus ou moins
+et puis nous faisons comme nous l'avons dit
+X-x et nous mixons entre la première et la seconde
+en utilisant un smooth step
+nous pouvons utiliser cette fréquence pour créer un bas syntho
+ce que je voulais faire c'est d'avoir
+une fréquence 80-ish
+donc je voulais utiliser
+des fonctions d'un filtrant
+ici c'est juste le carrière
+je vais jouer le bas syntho
+par itself
+donc ce qui se passe ici
+nous avons choisi une certaine fréquence
+et puis comment nous choisirons
+la fréquence de coude
+la fréquence de coude
+c'est un enveloppe très rapide
+donc la valeur minimum est 100 Hz
+et puis
+sur ce que nous ajoutons
+un enveloppe qui s'adresse à 15 kHz
+qui s'occupe près de l'appareil
+de l'audition humaine
+l'appareil est de 20 kHz
+vous ne voulez vraiment rien dans votre signal
+d'être au-dessus de 20 kHz
+parce que vous ne pourriez vraiment pas entendre
+si c'est là
+et ça pourrait être le cas
+donc en général
+ne faites pas de fréquences à plus de 20 kHz
+donc ici nous avons cet enveloppe de decayation
+très rapide
+et ce que j'ai fait c'était de diviser la fréquence de coude
+pour avoir cette fréquence sub-base
+la fréquence actuelle que je fais
+va dans cette fonction ici
+donc ça va dans la gauche
+gauche
+je fais
+ce que je fais ici
+c'est des détenus
+j'utilise un T+, juste parce que
+sinon on ne peut pas entendre
+la détenue
+si la fréquence a commencé
+si la fréquence a commencé à phase equals 0
+donc si vous voulez entendre la détenue
+vous devez commencer à une phase normale
+donc c'est juste ce que la plus 1 est
+pour ici
+oui, on va le entendre en stereo
+oui, c'est...
+c'est ça
+j'ai ajouté la sub-base
+et maintenant on est vraiment, vraiment dans l'80s
+et j'ai ressenti que c'était
+un petit peu lourd
+d'un très bas sub-base
+donc j'ai ajouté
+juste la fréquence fondamentale
+de la fréquence
+donc c'est ça
+comment j'ai créé le pattern
+pour le pattern
+vous pouvez
+avoir
+un pattern
+que loupent tous les 4 barres
+juste le même
+et puis
+on choisit un numérique basé sur
+quand nous sommes dans ces 4 barres
+donc dans la première barre
+nous voulons jouer un A
+dans la seconde barre
+nous voulons jouer un D
+puis un F
+puis dans la dernière barre
+nous voulons changer deux fois
+nous voulons changer un F
+deux beat
+donc les premières 2 beats sont
+C et les dernières 2 beats sont
+G
+quand vous choisissez
+la fréquence fondamentale
+vous devez être careful
+de ce qui est le plus bas
+que vous vouliez jouer
+c'est
+je vais
+expliquer
+dans plus de détails
+vous voulez
+le plus bas
+pour être
+entre 40
+et 100
+vous ne voulez pas jouer
+trop bas
+ce n'est pas un bas
+fort
+et vous ne voulez pas le plus bas
+sinon ce sera
+moitié
+ici
+je vais jouer un nocturne basé
+juste pour que vous voient
+que c'est une mauvaise idée
+quand vous jouez trop bas
+ce n'est pas
+c'est à votre taste
+mais quand c'est trop bas
+vous ne verrez pas
+ce que c'est
+ce n'est pas
+le plus bas
+nous avons
+ce nocturne basé
+ici
+le nocturne basé
+ici c'est
+le nocturne basé
+donc c'est le nocturne basé
+220
+d'excepter que nous nous diviserons
+par 2
+donc nous nous disons que nous voulons jouer
+à 110 Hz
+d'excepter
+que dans notre signal
+nous avons le sub
+qui est maintenant joué à 55 Hz
+donc c'est exactement où nous voulons
+le plus bas
+donc
+maintenant
+avec ce bas
+j'aimerais
+avoir le nocturne basé
+donc une façon
+d'avoir
+le nocturne basé
+qui est très très souvent
+utilisé
+en techno
+et maintenant
+aussi très bien
+une sorte de musique
+c'est d'utiliser la compression de la main
+donc imaginez
+que vous avez des trompes
+en
+faisant des hits très lourds
+comment vous le faites
+que ces hits sont très lourds
+mais il y a un truc
+qui est très convaincu
+c'est que si vous décollez tout le reste
+de ces trucs
+nos oreilles
+nous percevons ces hits comme être super lourds
+et puis quand les sons
+sont revenus
+nous percevons aussi ces sounds
+comme être lourds
+pas comme être lourds
+donc
+même si nous n'avons pas
+encore des trompes
+c'est ce que je veux faire pour le bas
+donc imaginez qu'on a un trompe
+en faisant un boom
+à chaque beat
+alors ce que nous pouvons
+faire
+c'est ce type d'enveloppement
+donc qu'est-ce que c'est
+ce type d'enveloppement
+j'appelle le bump
+c'est vraiment une compression
+de la main
+donc
+qu'est-ce que ça fait
+quand ça va
+de 0 à 1
+à peu près de 0,2
+à chaque beat
+et puis ça va
+à la fin
+à chaque beat
+ok
+donc si nous appliquons
+directement
+à notre bas synth pattern
+vous devez entendre
+que ces notes
+donc les notes ailes
+que nous étions en train
+sont maintenant
+chaque
+première est
+en train
+d'être complètement inaudible
+c'est ce que ça semble
+donc c'est
+trop bien évidemment
+que ça montre
+l'idée et maintenant
+si nous
+mixons
+mixons le bump
+pour que
+l'enveloppe
+s'entraîne à 0,2
+à 1
+c'est ce que nous avons
+donc nous avons des dynamiques
+dans notre son
+et nous pouvons ajouter
+le pattern de la pâte
+aussi
+et aussi faire
+une compression de la main
+alors que nous allons faire
+un peu moins
+sur ça
+et la même chose
+pour la marimba et nous
+faisons seulement un petit bit
+de compression de la main
+pour la marimba
+donc maintenant on est vraiment
+quelque chose qui est
+assez musical
+je pense
+nous allons
+faire
+le dernier
+instrument
+que je voulais ajouter
+dans cet épisode
+je l'ai appelé Waleed
+c'est juste un syntho
+il y a
+des petites interventions
+maintenant et après
+ce genre d'idée
+donc je voulais être
+je veux
+avoir une longue duration
+donc
+j'ai utilisé 0,1
+ici mais
+c'est juste d'avoir quelque chose de facile
+à changer et j'ai créé
+un premier enveloppe
+que va de 0 à 1
+dans Dure Over 2
+et puis de 1 à 0
+dans Dure Over 2
+cet enveloppe
+j'ai utilisé
+dans le code de la fréquence
+faite
+filtrée de la function
+je dis que c'est faite
+c'est un vrai filtre
+c'est juste pas
+un filtre traditionnel
+dans le sens
+c'est
+un
+filtre finit
+de la fréquence
+Le deuxième enveloppe que j'ai décidé de moduler l'amplitude de notre synthèse.
+Donc j'ai voulu l'amplitude s'entraîner rapidement et then go back down a little more slowly.
+La fréquence de l'amplitude, j'ai voulu être pas trop bas à la start,
+donc 400 Hz c'est très, très medium, et puis aller par seulement 10 kHz,
+donc pas tout de la way, pas tout de la way up to the extremes of the hearing range.
+J'ai juste voulu l'amplitude s'entraîner un peu, mais pas trop s'entraîner.
+Et puis c'est juste la matière de créer cette fonction de sol filter.
+Et puis la pattern, cette pattern est juste bizarre.
+Donc c'est répétant tous les 4 barres.
+Nous avons choisi une note qui justifie, c'est juste vraiment la même chose que l'avant.
+Ici nous avons choisi de jouer une E, et puis une F, et puis une E, et puis une D,
+pour que ces notes soient dans les quarts que nous jouons, et qu'elles complètent avec les autres instruments.
+Donc elles ne classent pas trop.
+Et puis, cette chose ici, je ne peux vraiment pas expliquer.
+C'était tout pour jouer avec la durée de la note.
+C'est tout pour restarter la note, pour avoir une pattern intéressante
+pour que ce soit le début et le début.
+Je vais jouer pour vous.
+Ici, c'est tout.
+Nous mérстрons de ces cheveux de vache et déjà unerique.
+On va aller rentrer ici, et maintenant on va déjeuner la chaine dielle pour ahora.
+Fast repeating notes are due to this kind of thing here, and then the octave shift is due to this clause here.
+Yeah.
+The idea is just, yeah, just get creative with patterns, don't hesitate to play with mod, don't hesitate to play with
+that kind of weird stuff.
+Juste, see what comes out.
+Then I wanted to add a
+fake reverb on top of it as well.
+So here
+the left channel of the signal will be the pattern, the right channel will be the pattern with some delay and
+then we also have the pattern repeat with more delay.
+So if we hear it, it's going to sound like this.
+So yeah, it gets kind of crazy.
+Let me play it along with only the pad and I also added a
+fake sidechain on top of it, because why not?
+So yeah, we're getting almost a nostalgic kind of feeling here.
+Yeah, I think that's about it for today.
+Let me just play the whole thing for you.
+Sorry, restart it.
+So yeah, that's it for today guys. I hope that that gave you some ideas of stuff you can play with.
+Next time we will be playing with some percussion to add a basic drum loop to our song.
+That's it.
+I will see you next time. Bye.

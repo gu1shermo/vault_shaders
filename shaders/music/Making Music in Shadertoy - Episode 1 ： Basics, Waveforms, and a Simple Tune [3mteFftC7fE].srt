@@ -1,0 +1,2788 @@
+1
+00:00:00,000 --> 00:00:06,880
+Bonjour et bienvenue à Making Music in ShaderToy.
+
+2
+00:00:06,880 --> 00:00:13,480
+Je m'appelle Alexis Thibault et aujourd'hui, je vais parler de comment on peut utiliser ShaderToy
+
+3
+00:00:13,480 --> 00:00:19,920
+pour créer des waveforms, des enveloppes et commencer à faire de la musique en utilisant
+
+4
+00:00:19,920 --> 00:00:22,680
+l'application du son.
+
+5
+00:00:22,680 --> 00:00:28,380
+Si vous ne connaissez pas ShaderToy déjà, c'est un site pour créer des shaders pixels
+
+6
+00:00:28,380 --> 00:00:38,420
+qui compilent en parallèle sur le GPU le couleur de chaque pixel sur l'écran en utilisant
+
+7
+00:00:38,420 --> 00:00:42,740
+la même pièce de code pour chaque pixel.
+
+8
+00:00:42,740 --> 00:00:48,020
+Si vous êtes intéressé par les graphiques de computers, les effets visuels, les scènes
+
+9
+00:00:48,020 --> 00:00:55,060
+de démon, le rendement ou autre chose comme ça, je vous recommande de les voir.
+
+10
+00:00:55,060 --> 00:01:01,900
+Mais ce que nous sommes intéressés aujourd'hui est en particulier les capacités de son son.
+
+11
+00:01:01,900 --> 00:01:06,500
+Donc, allons-y et créons un nouveau shader.
+
+12
+00:01:06,500 --> 00:01:14,340
+Donc, ici, nous avons la partie visuelle dans laquelle la fonction principale est appelée
+
+13
+00:01:14,340 --> 00:01:24,100
+mainImage et prend des coordonnées et exécutent un bunch de codes pour chaque de ces coordonnées.
+
+14
+00:01:24,140 --> 00:01:30,700
+Le tab de son, que vous pouvez ajouter en cliquant sur ce petit « plus » ici,
+
+15
+00:01:30,700 --> 00:01:40,580
+crée un nouveau morceau de codes dans lequel la fonction est appelée mainSound et, à l'inverse,
+
+16
+00:01:40,580 --> 00:01:43,100
+prend du temps.
+
+17
+00:01:43,100 --> 00:01:54,500
+Et donc, pour chaque morceau, il exécutera un morceau de codes pour calculer le valeur du son
+
+18
+00:01:54,500 --> 00:01:58,900
+à ce morceau, à ce morceau particulier.
+
+19
+00:01:58,900 --> 00:02:03,980
+Alors, qu'est-ce qu'on a ici ? C'est supposé être un vecteur 2.
+
+20
+00:02:03,980 --> 00:02:08,140
+Donc, vecteur 2 signifie un vecteur avec deux coordonnées.
+
+21
+00:02:08,180 --> 00:02:14,380
+La coordonnée X correspond à l'écran de gauche et la coordonnée Y à l'écran de droite.
+
+22
+00:02:14,380 --> 00:02:21,580
+En ce cas, nous avons quelque chose qui n'est qu'un valeur flottante.
+
+23
+00:02:21,580 --> 00:02:26,700
+Ce que vous obtenez, c'est le même valeur pour X et Y, et donc vous obtenez un signe mono.
+
+24
+00:02:26,700 --> 00:02:30,860
+Maintenant, allons-y faire un regard plus proche de cet exemple.
+
+25
+00:02:30,860 --> 00:02:37,300
+Il dit « une vague de 440 Hz qui s'atténue rapidement à travers le temps. »
+
+26
+00:02:37,460 --> 00:02:38,460
+Allons-y écouter.
+
+27
+00:02:43,460 --> 00:02:49,820
+Alors, ce qu'on entend, c'est une vague avec une fréquence définie claire et une enveloppe
+
+28
+00:02:49,820 --> 00:02:50,820
+décalée.
+
+29
+00:02:50,820 --> 00:02:59,180
+Alors, qu'est-ce qu'on peut lire dans le code ? Nous avons une vague de signe, avec ce numéro,
+
+30
+00:02:59,180 --> 00:03:06,940
+qui apparaît être 2 pi, et nous l'utiliserons beaucoup, donc allons-y directement créer
+
+31
+00:03:06,940 --> 00:03:14,860
+un macro pour ça, « Define 2 pi ».
+
+32
+00:03:14,860 --> 00:03:22,060
+Et ensuite, nous obtenons une fréquence de 440 Hz, et ensuite le temps.
+
+33
+00:03:22,060 --> 00:03:28,260
+J'aime le nom de temps T parce que c'est plus court.
+
+34
+00:03:28,260 --> 00:03:32,660
+Donc ici, si nous changeons la valeur de la fréquence, nous aurons différentes notes.
+
+35
+00:03:32,860 --> 00:03:34,620
+Allons-y essayer ça.
+
+36
+00:03:34,620 --> 00:03:36,900
+Allons-y essayer une valeur plus élevée.
+
+37
+00:03:44,900 --> 00:03:53,100
+Donc, nous entendons que la note est plus élevée en pitch quand nous utilisons des valeurs plus élevées
+
+38
+00:03:53,100 --> 00:03:54,100
+pour la fréquence.
+
+39
+00:03:54,100 --> 00:04:08,740
+Conversement, si nous mettons des valeurs plus élevées, nous pouvons obtenir des notes plus élevées,
+
+40
+00:04:08,740 --> 00:04:15,140
+qui peut être ou ne peut pas être possible d'entendre, dépendant du système d'audio que vous utilisez.
+
+41
+00:04:15,140 --> 00:04:20,660
+Ok, allons-y revenir à la fréquence de 440 Hz.
+
+42
+00:04:20,660 --> 00:04:22,660
+Et maintenant, qu'est-ce que c'est ?
+
+43
+00:04:22,660 --> 00:04:25,660
+C'est l'enveloppe.
+
+44
+00:04:25,660 --> 00:04:32,660
+Et pour visualiser l'enveloppe, ce que j'aime utiliser, c'est le GraphToy.
+
+45
+00:04:32,660 --> 00:04:43,660
+graphtoy.com est un autre site par le même créateur que shader-toy.com, qui est à Inigoculars.
+
+46
+00:04:44,660 --> 00:04:51,660
+GraphToy permet de placer des fonctions différentes, comme vous le souhaitez.
+
+47
+00:04:51,660 --> 00:04:57,660
+Et c'est très pratique quand vous codez ce genre de choses.
+
+48
+00:04:57,660 --> 00:05:01,660
+Alors, allons-y placer notre enveloppe.
+
+49
+00:05:01,660 --> 00:05:06,660
+Je vais zoomer pour avoir un 0 et un 1 ici.
+
+50
+00:05:06,660 --> 00:05:12,660
+Et allons-y placer l'exponential minus 3 x x.
+
+51
+00:05:12,660 --> 00:05:15,660
+Donc, ce qu'on obtient, c'est une enveloppe de décalage,
+
+52
+00:05:15,660 --> 00:05:19,660
+qui commence, comme x equal à 0, à 1,
+
+53
+00:05:19,660 --> 00:05:23,660
+puis décale et s'envole jusqu'à 0 assez rapidement.
+
+54
+00:05:23,660 --> 00:05:32,660
+Elle ne s'envole pas assez, mais elle devient inaudible après quelques secondes.
+
+55
+00:05:32,660 --> 00:05:37,660
+Ce genre de décalage apparaît très naturel,
+
+56
+00:05:37,660 --> 00:05:40,660
+parce que c'est comme ça qu'il se passe dans le monde réel,
+
+57
+00:05:40,660 --> 00:05:44,660
+quand vous avez presque n'importe quoi.
+
+58
+00:05:44,660 --> 00:05:50,660
+Si vous avez un cordon de guitare ou un instrument de percussion,
+
+59
+00:05:50,660 --> 00:05:55,660
+la plupart du temps, le décalage va tendre à être exponentiel dans le temps.
+
+60
+00:05:55,660 --> 00:05:59,660
+Alors, qu'est-ce que la coefficient 3 fait ici ?
+
+61
+00:05:59,660 --> 00:06:02,660
+Elle nous dit la vitesse de la décalage.
+
+62
+00:06:02,660 --> 00:06:05,660
+Si nous mettons un numéro plus haut,
+
+63
+00:06:05,660 --> 00:06:08,660
+nous aurons quelque chose qui décale très rapidement.
+
+64
+00:06:08,660 --> 00:06:11,660
+Et si nous mettons un numéro plus bas,
+
+65
+00:06:11,660 --> 00:06:14,660
+nous aurons quelque chose qui décale plus lentement.
+
+66
+00:06:16,660 --> 00:06:21,660
+Donc, nous pouvons faire ça et essayer d'entendre ce qu'elle fait.
+
+67
+00:06:21,660 --> 00:06:24,660
+On fait un décalage rapide
+
+68
+00:06:26,660 --> 00:06:28,660
+et un décalage lent.
+
+69
+00:06:28,660 --> 00:06:32,660
+OK. Vous avez peut-être remarqué que ce son est assez lourd.
+
+70
+00:06:32,660 --> 00:06:37,660
+La raison est qu'il atteint en fait le minus 1 et le plus 1,
+
+71
+00:06:37,660 --> 00:06:42,660
+les valeurs minimales et maximales possibles,
+
+72
+00:06:42,660 --> 00:06:47,660
+autorisées pour les outputs de son son.
+
+73
+00:06:47,660 --> 00:06:51,660
+Si nous mettons un numéro plus bas,
+
+74
+00:06:51,660 --> 00:06:55,660
+nous aurons quelque chose qui décale très rapidement.
+
+75
+00:06:56,660 --> 00:07:02,660
+Si nous essayons de mettre des valeurs plus grosses que 1
+
+76
+00:07:02,660 --> 00:07:05,660
+ou plus petites que le minus 1,
+
+77
+00:07:05,660 --> 00:07:08,660
+nous aurons quelque chose qui décale plus lentement.
+
+78
+00:07:08,660 --> 00:07:11,660
+Et en général, c'est une mauvaise idée.
+
+79
+00:07:11,660 --> 00:07:16,660
+Il détorte le son et il a tendance à sonner très mal.
+
+80
+00:07:19,660 --> 00:07:22,660
+C'est inconvénient si nous aimerions
+
+81
+00:07:22,660 --> 00:07:25,660
+que plusieurs sons soient joués en même temps,
+
+82
+00:07:25,660 --> 00:07:28,660
+parce que cela pourrait décaler.
+
+83
+00:07:29,660 --> 00:07:33,660
+Donc, on décale l'amplitude de ce signal.
+
+84
+00:07:33,660 --> 00:07:36,660
+On le multiplie par 0,1.
+
+85
+00:07:36,660 --> 00:07:39,660
+Et c'est le terme de l'amplitude,
+
+86
+00:07:39,660 --> 00:07:43,660
+qui peut être considéré comme une partie de l'enveloppe, si vous le voulez.
+
+87
+00:07:46,660 --> 00:07:49,660
+Maintenant, il joue tranquillement.
+
+88
+00:07:49,660 --> 00:07:52,660
+D'accord.
+
+89
+00:07:52,660 --> 00:07:55,660
+J'aime cet exemple.
+
+90
+00:07:55,660 --> 00:07:58,660
+Faisons-le une fonction.
+
+91
+00:07:58,660 --> 00:08:01,660
+C'est une float.
+
+92
+00:08:01,660 --> 00:08:05,660
+Je vais l'appeler float et je vais l'appeler signplug,
+
+93
+00:08:05,660 --> 00:08:09,660
+parce que ça ressemble à plugger un string.
+
+94
+00:08:09,660 --> 00:08:12,660
+D'accord.
+
+95
+00:08:18,660 --> 00:08:24,660
+Disons que nous ferons que ce soit dépendant d'une fréquence, F.
+
+96
+00:08:24,660 --> 00:08:27,660
+Donc, on va le remplacer par F.
+
+97
+00:08:27,660 --> 00:08:30,660
+Et un temps en T.
+
+98
+00:08:30,660 --> 00:08:35,660
+Et on va laisser l'amplitude être un décalé médium.
+
+99
+00:08:36,660 --> 00:08:39,660
+D'accord, maintenant, ce que j'aime faire
+
+100
+00:08:39,660 --> 00:08:42,660
+pour pouvoir ajouter plusieurs sons ensemble,
+
+101
+00:08:42,660 --> 00:08:44,660
+c'est de définir l'effet 2,
+
+102
+00:08:44,660 --> 00:08:46,660
+que j'appelle sig,
+
+103
+00:08:46,660 --> 00:08:49,660
+et que j'initialise en 0.
+
+104
+00:08:49,660 --> 00:08:52,660
+Et ensuite, nous pouvons ajouter des choses à sig,
+
+105
+00:08:52,660 --> 00:08:54,660
+et retourner au sig.
+
+106
+00:08:54,660 --> 00:08:57,660
+Alors, qu'est-ce que je mets dans mon signal ?
+
+107
+00:08:57,660 --> 00:09:01,660
+Je peux mettre un signplug
+
+108
+00:09:01,660 --> 00:09:06,660
+à la fréquence de 440 Hz en temps en T.
+
+109
+00:09:06,660 --> 00:09:11,660
+Et ça nous donnera le son que nous avons déjà entendu avant.
+
+110
+00:09:14,660 --> 00:09:20,660
+Et je peux aussi mettre un autre son.
+
+111
+00:09:22,660 --> 00:09:27,660
+Disons que j'ai 660 Hz.
+
+112
+00:09:28,660 --> 00:09:32,660
+D'accord, maintenant, nous entendons un intervalle.
+
+113
+00:09:32,660 --> 00:09:36,660
+Nous entendons deux notes en même temps.
+
+114
+00:09:36,660 --> 00:09:40,660
+Cela se passe par la note A,
+
+115
+00:09:40,660 --> 00:09:45,660
+et c'est la note E, qui est au-dessus.
+
+116
+00:09:45,660 --> 00:09:52,660
+Nous pouvons jouer des notes différentes.
+
+117
+00:09:53,660 --> 00:09:57,660
+Nous allons jouer aussi la note E au-dessous.
+
+118
+00:09:59,660 --> 00:10:00,660
+D'accord.
+
+119
+00:10:00,660 --> 00:10:02,660
+Mais c'est assez drôle.
+
+120
+00:10:02,660 --> 00:10:05,660
+Nous jouons seulement une note.
+
+121
+00:10:05,660 --> 00:10:09,660
+Alors, essayons de jouer avec le timing.
+
+122
+00:10:09,660 --> 00:10:12,660
+Ce que nous pouvons faire,
+
+123
+00:10:12,660 --> 00:10:15,660
+vous voyez que ce signplug
+
+124
+00:10:15,660 --> 00:10:18,660
+commence à jouer,
+
+125
+00:10:18,660 --> 00:10:21,660
+l'enveloppe commence à jouer
+
+126
+00:10:21,660 --> 00:10:24,660
+quand T est à 0.
+
+127
+00:10:24,660 --> 00:10:26,660
+Donc, ce que nous pouvons faire,
+
+128
+00:10:26,660 --> 00:10:29,660
+c'est que T commence à 0,
+
+129
+00:10:29,660 --> 00:10:32,660
+puis s'éteint progressivement,
+
+130
+00:10:32,660 --> 00:10:34,660
+puis retourne à 0 à chaque minute
+
+131
+00:10:34,660 --> 00:10:37,660
+pour dire que nous commençons une nouvelle note.
+
+132
+00:10:37,660 --> 00:10:40,660
+Une façon de faire cela
+
+133
+00:10:40,660 --> 00:10:44,660
+serait d'utiliser la fonction mode.
+
+134
+00:10:44,660 --> 00:10:47,660
+Si nous faisons mode X1,
+
+135
+00:10:47,660 --> 00:10:50,660
+nous voyons X,
+
+136
+00:10:50,660 --> 00:10:53,660
+et il monte, monte, monte,
+
+137
+00:10:53,660 --> 00:10:55,660
+jusqu'à ce qu'il arrive à 1,
+
+138
+00:10:55,660 --> 00:10:57,660
+à ce moment-là, il retourne à 0,
+
+139
+00:10:57,660 --> 00:11:00,660
+et il commence à nouveau.
+
+140
+00:11:00,660 --> 00:11:01,660
+Si nous voulons,
+
+141
+00:11:01,660 --> 00:11:03,660
+au lieu d'aller jusqu'à 1,
+
+142
+00:11:03,660 --> 00:11:05,660
+aller jusqu'à 2,
+
+143
+00:11:05,660 --> 00:11:07,660
+et donc répéter à chaque 2 secondes,
+
+144
+00:11:07,660 --> 00:11:09,660
+nous pouvons aussi le faire
+
+145
+00:11:09,660 --> 00:11:12,660
+en éteignant ce nombre.
+
+146
+00:11:12,660 --> 00:11:15,660
+Donc, faisons-le dans notre exemple.
+
+147
+00:11:15,660 --> 00:11:18,660
+Ici, au lieu de T,
+
+148
+00:11:18,660 --> 00:11:21,660
+nous allons mettre le mode T1.
+
+149
+00:11:21,660 --> 00:11:23,660
+Je vais faire attention
+
+150
+00:11:23,660 --> 00:11:25,660
+d'utiliser 1 dot.
+
+151
+00:11:25,660 --> 00:11:27,660
+Je ne l'ai pas mentionné avant,
+
+152
+00:11:27,660 --> 00:11:29,660
+mais c'est toujours les nombres
+
+153
+00:11:29,660 --> 00:11:30,660
+du point flottant
+
+154
+00:11:30,660 --> 00:11:32,660
+que nous parlons ici,
+
+155
+00:11:32,660 --> 00:11:34,660
+et GLSL n'aime pas
+
+156
+00:11:34,660 --> 00:11:36,660
+d'implicites conversion,
+
+157
+00:11:36,660 --> 00:11:38,660
+mais si vous ne connaissez pas
+
+158
+00:11:38,660 --> 00:11:40,660
+Shaded or EU,
+
+159
+00:11:40,660 --> 00:11:42,660
+vous êtes habitués à ça.
+
+160
+00:11:45,660 --> 00:11:47,660
+Maintenant, nous entendons
+
+161
+00:11:47,660 --> 00:11:51,660
+le son répéter à chaque seconde.
+
+162
+00:11:51,660 --> 00:11:54,660
+Ok, fantastique.
+
+163
+00:11:54,660 --> 00:11:57,660
+Nous pouvons avoir
+
+164
+00:11:57,660 --> 00:11:59,660
+notre A et E
+
+165
+00:11:59,660 --> 00:12:02,660
+en jouant à chaque seconde.
+
+166
+00:12:05,660 --> 00:12:07,660
+Mais c'est un peu drôle.
+
+167
+00:12:08,660 --> 00:12:10,660
+Ok, mais c'est un peu drôle.
+
+168
+00:12:10,660 --> 00:12:13,660
+Essayons d'offrir
+
+169
+00:12:13,660 --> 00:12:15,660
+les nombres relative à l'autre.
+
+170
+00:12:19,660 --> 00:12:21,660
+Si nous faisons
+
+171
+00:12:21,660 --> 00:12:23,660
+une petite modification ici,
+
+172
+00:12:23,660 --> 00:12:25,660
+nous pouvons offrir
+
+173
+00:12:25,660 --> 00:12:27,660
+cela en temps.
+
+174
+00:12:27,660 --> 00:12:29,660
+Disons que nous voulons
+
+175
+00:12:29,660 --> 00:12:31,660
+que la note commence
+
+176
+00:12:31,660 --> 00:12:33,660
+une demi seconde plus tard.
+
+177
+00:12:33,660 --> 00:12:36,660
+Nous voulons que cela soit 0
+
+178
+00:12:36,660 --> 00:12:38,660
+quand x est equal à 0,5.
+
+179
+00:12:38,660 --> 00:12:40,660
+Ce que nous pouvons faire,
+
+180
+00:12:40,660 --> 00:12:42,660
+c'est que
+
+181
+00:12:42,660 --> 00:12:44,660
+quand x est equal à 0,5,
+
+182
+00:12:44,660 --> 00:12:46,660
+c'est 0,
+
+183
+00:12:46,660 --> 00:12:48,660
+et quand il arrive à 1,
+
+184
+00:12:48,660 --> 00:12:50,660
+il rentre à 0.
+
+185
+00:12:52,660 --> 00:12:54,660
+Si nous voulons
+
+186
+00:12:54,660 --> 00:12:56,660
+qu'on l'offre
+
+187
+00:12:56,660 --> 00:12:58,660
+par une demi seconde,
+
+188
+00:12:58,660 --> 00:13:00,660
+on met juste 0,25 ici,
+
+189
+00:13:00,660 --> 00:13:02,660
+et il est tard
+
+190
+00:13:02,660 --> 00:13:04,660
+par seulement une demi seconde.
+
+191
+00:13:06,660 --> 00:13:08,660
+Essayons d'offrir
+
+192
+00:13:08,660 --> 00:13:10,660
+0,5.
+
+193
+00:13:16,660 --> 00:13:18,660
+Et si nous voulons
+
+194
+00:13:18,660 --> 00:13:20,660
+que la note seconde
+
+195
+00:13:20,660 --> 00:13:22,660
+vienne un peu plus tôt,
+
+196
+00:13:22,660 --> 00:13:24,660
+nous pouvons faire cela.
+
+197
+00:13:30,660 --> 00:13:32,660
+Maintenant,
+
+198
+00:13:32,660 --> 00:13:34,660
+la note première arrive juste après.
+
+199
+00:13:34,660 --> 00:13:36,660
+Nous allons jouer
+
+200
+00:13:36,660 --> 00:13:38,660
+avec le panning.
+
+201
+00:13:38,660 --> 00:13:40,660
+Si vous avez un système
+
+202
+00:13:40,660 --> 00:13:42,660
+qui est stéréo,
+
+203
+00:13:42,660 --> 00:13:44,660
+vous pourrez
+
+204
+00:13:44,660 --> 00:13:46,660
+noter que tout
+
+205
+00:13:46,660 --> 00:13:48,660
+est dans le milieu.
+
+206
+00:13:48,660 --> 00:13:50,660
+Mais nous pouvons
+
+207
+00:13:50,660 --> 00:13:52,660
+utiliser les capacités
+
+208
+00:13:52,660 --> 00:13:54,660
+stéréo
+
+209
+00:13:54,660 --> 00:13:56,660
+de ce système.
+
+210
+00:13:56,660 --> 00:13:58,660
+Nous avons un VEC2,
+
+211
+00:13:58,660 --> 00:14:00,660
+donc nous pourrions
+
+212
+00:14:00,660 --> 00:14:02,660
+avoir différents
+
+213
+00:14:02,660 --> 00:14:04,660
+canaux à gauche et à droite.
+
+214
+00:14:04,660 --> 00:14:06,660
+Nous allons faire cela.
+
+215
+00:14:06,660 --> 00:14:08,660
+Nous pouvons
+
+216
+00:14:08,660 --> 00:14:10,660
+multiplier
+
+217
+00:14:10,660 --> 00:14:12,660
+cela
+
+218
+00:14:12,660 --> 00:14:13,660
+et
+
+219
+00:14:13,660 --> 00:14:15,660
+ajouter
+
+220
+00:14:15,660 --> 00:14:16,660
+les différents signaux
+
+221
+00:14:16,660 --> 00:14:18,660
+avec une autre amplitude
+
+222
+00:14:18,660 --> 00:14:20,660
+pour les canaux à gauche et à droite.
+
+223
+00:14:20,660 --> 00:14:22,660
+Nous allons multiplier
+
+224
+00:14:22,660 --> 00:14:24,660
+cela par un VEC2,
+
+225
+00:14:24,660 --> 00:14:26,660
+qui pourrait être 1
+
+226
+00:14:26,660 --> 00:14:28,660
+à gauche et 0 à droite,
+
+227
+00:14:28,660 --> 00:14:30,660
+et ici,
+
+228
+00:14:30,660 --> 00:14:32,660
+0 à gauche et 1 à droite.
+
+229
+00:14:32,660 --> 00:14:34,660
+Donc, la note basse,
+
+230
+00:14:34,660 --> 00:14:36,660
+la note A,
+
+231
+00:14:36,660 --> 00:14:38,660
+ne sera que entendue sur le canal à gauche
+
+232
+00:14:38,660 --> 00:14:40,660
+et la note E
+
+233
+00:14:40,660 --> 00:14:42,660
+ne sera que entendue sur le canal à droite.
+
+234
+00:14:42,660 --> 00:14:44,660
+Nous l'entendons.
+
+235
+00:14:48,660 --> 00:14:50,660
+Excellent.
+
+236
+00:14:50,660 --> 00:14:52,660
+Vous pouvez
+
+237
+00:14:52,660 --> 00:14:54,660
+faire quelque chose de moins extrême
+
+238
+00:14:54,660 --> 00:14:56,660
+par avoir
+
+239
+00:14:56,660 --> 00:14:58,660
+des numéros positifs,
+
+240
+00:14:58,660 --> 00:15:00,660
+ici et ici.
+
+241
+00:15:00,660 --> 00:15:02,660
+Ce sera
+
+242
+00:15:02,660 --> 00:15:04,660
+plus à gauche,
+
+243
+00:15:04,660 --> 00:15:06,660
+mais pas complètement
+
+244
+00:15:06,660 --> 00:15:08,660
+uniquement dans le canal à gauche.
+
+245
+00:15:08,660 --> 00:15:10,660
+Ce sera plus à droite.
+
+246
+00:15:10,660 --> 00:15:12,660
+Nous l'entendons.
+
+247
+00:15:16,660 --> 00:15:18,660
+C'est l'une des façons de le faire.
+
+248
+00:15:18,660 --> 00:15:20,660
+Ce que j'aime
+
+249
+00:15:20,660 --> 00:15:22,660
+faire, c'est une fonction panning.
+
+250
+00:15:22,660 --> 00:15:24,660
+Je définirai une fonction
+
+251
+00:15:24,660 --> 00:15:26,660
+qui constructe
+
+252
+00:15:26,660 --> 00:15:28,660
+ces choses pour moi.
+
+253
+00:15:30,660 --> 00:15:32,660
+Alors, allons-y.
+
+254
+00:15:32,660 --> 00:15:34,660
+Définir
+
+255
+00:15:34,660 --> 00:15:36,660
+une fonction panning,
+
+256
+00:15:36,660 --> 00:15:38,660
+qui donne une valeur positionnelle
+
+257
+00:15:38,660 --> 00:15:40,660
+qui range
+
+258
+00:15:40,660 --> 00:15:42,660
+de minus 1 à 1,
+
+259
+00:15:42,660 --> 00:15:44,660
+qui nous donne un VEC2
+
+260
+00:15:44,660 --> 00:15:46,660
+qui devrait être normalisé
+
+261
+00:15:46,660 --> 00:15:48,660
+et
+
+262
+00:15:48,660 --> 00:15:50,660
+qui, bien,
+
+263
+00:15:50,660 --> 00:15:52,660
+quand la position est de 0,
+
+264
+00:15:52,660 --> 00:15:54,660
+elle devrait être à gauche du milieu,
+
+265
+00:15:54,660 --> 00:15:56,660
+quand la position est de minus 1,
+
+266
+00:15:56,660 --> 00:15:58,660
+elle devrait être à gauche du milieu,
+
+267
+00:15:58,660 --> 00:16:00,660
+et quand la position est de plus 1,
+
+268
+00:16:00,660 --> 00:16:02,660
+elle devrait être à gauche du milieu.
+
+269
+00:16:02,660 --> 00:16:04,660
+Comment faire?
+
+270
+00:16:04,660 --> 00:16:06,660
+On l'appelle E.
+
+271
+00:16:06,660 --> 00:16:08,660
+Si nous faisons
+
+272
+00:16:08,660 --> 00:16:10,660
+1 minus pass et 1 plus pass,
+
+273
+00:16:10,660 --> 00:16:12,660
+ce que nous obtenons
+
+274
+00:16:12,660 --> 00:16:14,660
+est exactement ce que j'ai dit.
+
+275
+00:16:14,660 --> 00:16:16,660
+Quand la position est de 0,
+
+276
+00:16:16,660 --> 00:16:18,660
+nous obtenons 1 1,
+
+277
+00:16:18,660 --> 00:16:20,660
+quand la position est de minus 1,
+
+278
+00:16:20,660 --> 00:16:22,660
+nous obtenons 2 0,
+
+279
+00:16:22,660 --> 00:16:24,660
+quand la position est de plus 1,
+
+280
+00:16:24,660 --> 00:16:26,660
+nous obtenons 2 0,
+
+281
+00:16:26,660 --> 00:16:28,660
+donc complètement à droite.
+
+282
+00:16:28,660 --> 00:16:30,660
+Maintenant, allons-y normaliser
+
+283
+00:16:30,660 --> 00:16:32,660
+pour éviter d'avoir des différences
+
+284
+00:16:32,660 --> 00:16:34,660
+en volume, dépendant du panning.
+
+285
+00:16:42,660 --> 00:16:44,660
+Donc, si on utilise cette fonction pan,
+
+286
+00:16:44,660 --> 00:16:46,660
+dans cet exemple,
+
+287
+00:16:46,660 --> 00:16:48,660
+on pourrait faire quelque chose comme pan,
+
+288
+00:16:48,660 --> 00:16:50,660
+peut-être 50 % à gauche,
+
+289
+00:16:50,660 --> 00:16:52,660
+50 % à gauche,
+
+290
+00:16:52,660 --> 00:16:54,660
+et ici,
+
+291
+00:16:54,660 --> 00:16:56,660
+pan 50 % à droite,
+
+292
+00:16:56,660 --> 00:16:58,660
+et nous obtenons
+
+293
+00:16:58,660 --> 00:17:00,660
+presque la même chose.
+
+294
+00:17:02,660 --> 00:17:04,660
+Maintenant, commençons
+
+295
+00:17:04,660 --> 00:17:06,660
+à jouer avec différentes waveforms.
+
+296
+00:17:08,660 --> 00:17:10,660
+Les fonctions de signe
+
+297
+00:17:10,660 --> 00:17:12,660
+que nous avons écoutées jusqu'à maintenant
+
+298
+00:17:12,660 --> 00:17:14,660
+sont très bonnes, mais
+
+299
+00:17:14,660 --> 00:17:16,660
+si nous aimerions avoir
+
+300
+00:17:16,660 --> 00:17:18,660
+différents instruments,
+
+301
+00:17:18,660 --> 00:17:20,660
+différentes waveforms,
+
+302
+00:17:20,660 --> 00:17:22,660
+lesquels nous pouvons utiliser
+
+303
+00:17:22,660 --> 00:17:24,660
+pour simuler
+
+304
+00:17:24,660 --> 00:17:26,660
+une basse,
+
+305
+00:17:26,660 --> 00:17:28,660
+une guitare,
+
+306
+00:17:28,660 --> 00:17:30,660
+une flûte, ou quoi que ce soit.
+
+307
+00:17:30,660 --> 00:17:32,660
+Ce que j'ai tendance à voir
+
+308
+00:17:32,660 --> 00:17:34,660
+beaucoup
+
+309
+00:17:34,660 --> 00:17:36,660
+sur Shader Toy,
+
+310
+00:17:36,660 --> 00:17:38,660
+c'est que les gens utilisent
+
+311
+00:17:38,660 --> 00:17:40,660
+des fonctions de signe square
+
+312
+00:17:40,660 --> 00:17:42,660
+ou des fonctions de sawtooth.
+
+313
+00:17:42,660 --> 00:17:44,660
+Alors, allons-y regarder
+
+314
+00:17:44,660 --> 00:17:46,660
+elles, et je vais expliquer
+
+315
+00:17:46,660 --> 00:17:48,660
+pourquoi je pense
+
+316
+00:17:48,660 --> 00:17:50,660
+que je ne les aime pas trop
+
+317
+00:17:50,660 --> 00:17:52,660
+et que j'ai préféré utiliser
+
+318
+00:17:52,660 --> 00:17:54,660
+d'autres types de fonctions.
+
+319
+00:17:56,660 --> 00:17:58,660
+Alors, allons-y définir
+
+320
+00:17:58,660 --> 00:18:00,660
+une flûte square.
+
+321
+00:18:00,660 --> 00:18:02,660
+Alors, comment
+
+322
+00:18:02,660 --> 00:18:04,660
+on transforme une flûte sine
+
+323
+00:18:04,660 --> 00:18:06,660
+en une flûte square ?
+
+324
+00:18:06,660 --> 00:18:08,660
+C'est très simple.
+
+325
+00:18:08,660 --> 00:18:10,660
+Sine x, ici.
+
+326
+00:18:12,660 --> 00:18:14,660
+Et si vous connaissez
+
+327
+00:18:14,660 --> 00:18:16,660
+une fonction signe,
+
+328
+00:18:18,660 --> 00:18:20,660
+vous pourriez avoir su que
+
+329
+00:18:20,660 --> 00:18:22,660
+c'est une façon possible
+
+330
+00:18:22,660 --> 00:18:24,660
+de transformer une flûte sine
+
+331
+00:18:24,660 --> 00:18:26,660
+en une flûte square.
+
+332
+00:18:26,660 --> 00:18:28,660
+En fait, la fonction sine
+
+333
+00:18:28,660 --> 00:18:30,660
+retient la flûte positive
+
+334
+00:18:30,660 --> 00:18:32,660
+quand
+
+335
+00:18:32,660 --> 00:18:34,660
+tout ce qui est fait est positif,
+
+336
+00:18:34,660 --> 00:18:36,660
+et la flûte négative
+
+337
+00:18:36,660 --> 00:18:38,660
+est négative.
+
+338
+00:18:40,660 --> 00:18:42,660
+Et donc, quand la flûte sine est positive,
+
+339
+00:18:42,660 --> 00:18:44,660
+on reçoit plus 1,
+
+340
+00:18:44,660 --> 00:18:46,660
+et quand la flûte sine est négative,
+
+341
+00:18:46,660 --> 00:18:48,660
+on reçoit minus 1.
+
+342
+00:18:48,660 --> 00:18:50,660
+Et donc, on a une flûte square.
+
+343
+00:18:50,660 --> 00:18:52,660
+Alors, allons-y
+
+344
+00:18:52,660 --> 00:18:54,660
+coder.
+
+345
+00:18:56,660 --> 00:18:58,660
+Maintenant, allons-y utiliser la flûte square
+
+346
+00:18:58,660 --> 00:19:00,660
+au lieu
+
+347
+00:19:00,660 --> 00:19:02,660
+et la entendre.
+
+348
+00:19:02,660 --> 00:19:04,660
+Alors, vous pourriez noter
+
+349
+00:19:04,660 --> 00:19:06,660
+que
+
+350
+00:19:06,660 --> 00:19:08,660
+on reçoit une signal
+
+351
+00:19:08,660 --> 00:19:10,660
+qui est beaucoup
+
+352
+00:19:10,660 --> 00:19:12,660
+plus riche
+
+353
+00:19:12,660 --> 00:19:14,660
+en termes de timbre
+
+354
+00:19:14,660 --> 00:19:16,660
+que ce qu'on avait auparavant.
+
+355
+00:19:16,660 --> 00:19:18,660
+C'est un peu
+
+356
+00:19:18,660 --> 00:19:20,660
+fort
+
+357
+00:19:20,660 --> 00:19:22,660
+et piquant.
+
+358
+00:19:22,660 --> 00:19:24,660
+Mais
+
+359
+00:19:24,660 --> 00:19:26,660
+vous pourriez aussi noter
+
+360
+00:19:26,660 --> 00:19:28,660
+que
+
+361
+00:19:28,660 --> 00:19:30,660
+cela
+
+362
+00:19:30,660 --> 00:19:32,660
+est
+
+363
+00:19:32,660 --> 00:19:34,660
+un peu froid
+
+364
+00:19:34,660 --> 00:19:36,660
+aussi.
+
+365
+00:19:36,660 --> 00:19:38,660
+La raison
+
+366
+00:19:38,660 --> 00:19:40,660
+est
+
+367
+00:19:40,660 --> 00:19:42,660
+de l'AES,
+
+368
+00:19:42,660 --> 00:19:44,660
+qui est
+
+369
+00:19:44,660 --> 00:19:46,660
+un sujet
+
+370
+00:19:46,660 --> 00:19:48,660
+assez compliqué
+
+371
+00:19:48,660 --> 00:19:50,660
+concernant
+
+372
+00:19:50,660 --> 00:19:52,660
+l'approximation des fonctions
+
+373
+00:19:52,660 --> 00:19:54,660
+et le sampler.
+
+374
+00:19:54,660 --> 00:19:56,660
+Donc, l'idée est
+
+375
+00:19:56,660 --> 00:19:58,660
+que, puisqu'on a
+
+376
+00:19:58,660 --> 00:20:00,660
+un contenu de haute fréquence
+
+377
+00:20:00,660 --> 00:20:02,660
+dans cette fonction
+
+378
+00:20:02,660 --> 00:20:04,660
+square block,
+
+379
+00:20:04,660 --> 00:20:06,660
+certains de ces contenus
+
+380
+00:20:06,660 --> 00:20:08,660
+de haute fréquence
+
+381
+00:20:08,660 --> 00:20:10,660
+ne peuvent pas
+
+382
+00:20:10,660 --> 00:20:12,660
+être représentés exactement
+
+383
+00:20:12,660 --> 00:20:14,660
+juste en le samplant
+
+384
+00:20:14,660 --> 00:20:16,660
+à chaque
+
+385
+00:20:16,660 --> 00:20:18,660
+sample
+
+386
+00:20:18,660 --> 00:20:20,660
+qui est pris.
+
+387
+00:20:20,660 --> 00:20:22,660
+Ici,
+
+388
+00:20:22,660 --> 00:20:24,660
+la fonction évalue
+
+389
+00:20:24,660 --> 00:20:26,660
+44.1
+
+390
+00:20:26,660 --> 00:20:28,660
+mille
+
+391
+00:20:28,660 --> 00:20:30,660
+fois par seconde.
+
+392
+00:20:30,660 --> 00:20:32,660
+Et donc,
+
+393
+00:20:32,660 --> 00:20:34,660
+quelles que
+
+394
+00:20:34,660 --> 00:20:36,660
+la fréquence
+
+395
+00:20:36,660 --> 00:20:38,660
+soit plus de la moitié,
+
+396
+00:20:38,660 --> 00:20:40,660
+elle sera
+
+397
+00:20:40,660 --> 00:20:42,660
+représentée
+
+398
+00:20:42,660 --> 00:20:44,660
+comme si elle
+
+399
+00:20:44,660 --> 00:20:46,660
+était reflétée.
+
+400
+00:20:46,660 --> 00:20:48,660
+C'est un peu la même chose
+
+401
+00:20:48,660 --> 00:20:50,660
+que si vous avez un vidéo
+
+402
+00:20:50,660 --> 00:20:52,660
+d'une roue
+
+403
+00:20:52,660 --> 00:20:54,660
+qui tourne trop vite
+
+404
+00:20:54,660 --> 00:20:56,660
+et qu'elle
+
+405
+00:20:56,660 --> 00:20:58,660
+commence à ressembler
+
+406
+00:20:58,660 --> 00:21:00,660
+comme si la roue
+
+407
+00:21:00,660 --> 00:21:02,660
+tournait en arrière.
+
+408
+00:21:02,660 --> 00:21:04,660
+C'est la même idée ici.
+
+409
+00:21:04,660 --> 00:21:06,660
+C'est pourquoi
+
+410
+00:21:06,660 --> 00:21:08,660
+je n'utilise pas trop
+
+411
+00:21:08,660 --> 00:21:10,660
+les fonctions square.
+
+412
+00:21:10,660 --> 00:21:12,660
+Mais
+
+413
+00:21:12,660 --> 00:21:14,660
+continuons
+
+414
+00:21:14,660 --> 00:21:16,660
+notre voyage
+
+415
+00:21:16,660 --> 00:21:18,660
+sur les différentes
+
+416
+00:21:18,660 --> 00:21:20,660
+waveformes que vous pouvez utiliser.
+
+417
+00:21:20,660 --> 00:21:22,660
+Regardons la fonction
+
+418
+00:21:22,660 --> 00:21:24,660
+d'un samplant.
+
+419
+00:21:24,660 --> 00:21:26,660
+On va définir
+
+420
+00:21:26,660 --> 00:21:28,660
+un samplac
+
+421
+00:21:28,660 --> 00:21:30,660
+floatF, floatT.
+
+422
+00:21:30,660 --> 00:21:32,660
+Comment
+
+423
+00:21:32,660 --> 00:21:34,660
+créons-nous une fonction de samplac ?
+
+424
+00:21:34,660 --> 00:21:36,660
+Nous aimerions que
+
+425
+00:21:36,660 --> 00:21:38,660
+la fonction commence
+
+426
+00:21:38,660 --> 00:21:40,660
+à negative 1, puis à positive 1,
+
+427
+00:21:40,660 --> 00:21:42,660
+et qu'elle commence à nouveau.
+
+428
+00:21:42,660 --> 00:21:44,660
+Ça
+
+429
+00:21:44,660 --> 00:21:46,660
+ressemble à
+
+430
+00:21:46,660 --> 00:21:48,660
+mod X1.
+
+431
+00:21:48,660 --> 00:21:50,660
+Mais nous voulions
+
+432
+00:21:50,660 --> 00:21:52,660
+commencer à negative 1.
+
+433
+00:21:52,660 --> 00:21:54,660
+Nous faisons
+
+434
+00:21:54,660 --> 00:21:56,660
+minus 1, et
+
+435
+00:21:56,660 --> 00:21:58,660
+nous voulions qu'elle fasse plus 1,
+
+436
+00:21:58,660 --> 00:22:00,660
+donc que nous multiplions par 2.
+
+437
+00:22:00,660 --> 00:22:02,660
+Ici,
+
+438
+00:22:02,660 --> 00:22:04,660
+nous avons une sorte de fonction
+
+439
+00:22:04,660 --> 00:22:06,660
+avec période 1.
+
+440
+00:22:06,660 --> 00:22:08,660
+Si nous voulions
+
+441
+00:22:08,660 --> 00:22:10,660
+qu'elle ait une autre fréquence,
+
+442
+00:22:10,660 --> 00:22:12,660
+nous pouvons
+
+443
+00:22:12,660 --> 00:22:14,660
+la multiplier par une autre valeur.
+
+444
+00:22:14,660 --> 00:22:16,660
+2, 3...
+
+445
+00:22:16,660 --> 00:22:18,660
+Typiquement, nous ferons 440 Hz
+
+446
+00:22:18,660 --> 00:22:20,660
+ou quelque chose comme ça.
+
+447
+00:22:22,660 --> 00:22:24,660
+OK, c'est parti.
+
+448
+00:22:32,660 --> 00:22:34,660
+Mod Tf
+
+449
+00:22:34,660 --> 00:22:36,660
+1
+
+450
+00:22:36,660 --> 00:22:38,660
+x 2-1
+
+451
+00:22:38,660 --> 00:22:40,660
+et
+
+452
+00:22:40,660 --> 00:22:42,660
+nous multiplions par l'enveloppe.
+
+453
+00:22:42,660 --> 00:22:44,660
+Laissez-nous
+
+454
+00:22:44,660 --> 00:22:46,660
+l'envelopper
+
+455
+00:22:46,660 --> 00:22:48,660
+dans notre
+
+456
+00:22:48,660 --> 00:22:50,660
+signal generation
+
+457
+00:22:50,660 --> 00:22:52,660
+et la entendre.
+
+458
+00:22:58,660 --> 00:23:00,660
+C'est un timbre
+
+459
+00:23:00,660 --> 00:23:02,660
+complètement différent,
+
+460
+00:23:02,660 --> 00:23:04,660
+qui peut être
+
+461
+00:23:04,660 --> 00:23:06,660
+ou peut-être pas.
+
+462
+00:23:06,660 --> 00:23:08,660
+C'est un
+
+463
+00:23:08,660 --> 00:23:10,660
+très bon timbre.
+
+464
+00:23:10,660 --> 00:23:12,660
+Encore une fois, c'est assez
+
+465
+00:23:12,660 --> 00:23:14,660
+basé à cause de l'aliasing.
+
+466
+00:23:16,660 --> 00:23:18,660
+La famille
+
+467
+00:23:18,660 --> 00:23:20,660
+de signals
+
+468
+00:23:20,660 --> 00:23:22,660
+que j'utilise beaucoup
+
+469
+00:23:22,660 --> 00:23:24,660
+sur ShaderToys
+
+470
+00:23:24,660 --> 00:23:26,660
+est appelée Frequency Modulation.
+
+471
+00:23:26,660 --> 00:23:28,660
+J'aime
+
+472
+00:23:28,660 --> 00:23:30,660
+vous en parler
+
+473
+00:23:30,660 --> 00:23:32,660
+parce que je trouve
+
+474
+00:23:32,660 --> 00:23:34,660
+que c'est vraiment facile
+
+475
+00:23:34,660 --> 00:23:36,660
+à coder, c'est très versatile
+
+476
+00:23:36,660 --> 00:23:38,660
+et
+
+477
+00:23:38,660 --> 00:23:40,660
+très facile à utiliser.
+
+478
+00:23:40,660 --> 00:23:42,660
+Ça ne l'aliase pas
+
+479
+00:23:42,660 --> 00:23:44,660
+jusqu'à ce que vous l'appuiez trop dur.
+
+480
+00:23:44,660 --> 00:23:46,660
+Vous pouvez faire beaucoup de choses
+
+481
+00:23:46,660 --> 00:23:48,660
+avec ça.
+
+482
+00:23:48,660 --> 00:23:50,660
+Alors, voyons
+
+483
+00:23:50,660 --> 00:23:52,660
+la Frequency Modulation.
+
+484
+00:23:52,660 --> 00:23:54,660
+On définit un
+
+485
+00:23:54,660 --> 00:23:56,660
+signal FM-Pluck.
+
+486
+00:23:58,660 --> 00:24:00,660
+La Frequency Modulation,
+
+487
+00:24:00,660 --> 00:24:02,660
+l'idée est
+
+488
+00:24:02,660 --> 00:24:04,660
+que vous avez une carrière
+
+489
+00:24:04,660 --> 00:24:06,660
+de Frequency.
+
+490
+00:24:06,660 --> 00:24:08,660
+Pour le moment, on va juste la mettre
+
+491
+00:24:08,660 --> 00:24:10,660
+à F.
+
+492
+00:24:10,660 --> 00:24:12,660
+Et une Frequency Modulation,
+
+493
+00:24:12,660 --> 00:24:14,660
+qu'on va mettre à F aussi.
+
+494
+00:24:14,660 --> 00:24:16,660
+Et vous avez un troisième paramètre,
+
+495
+00:24:16,660 --> 00:24:18,660
+qui est l'Index of Modulation,
+
+496
+00:24:18,660 --> 00:24:20,660
+qu'on va mettre
+
+497
+00:24:20,660 --> 00:24:22,660
+à 1 pour le moment.
+
+498
+00:24:22,660 --> 00:24:24,660
+C'est la Carrière Frequency.
+
+499
+00:24:24,660 --> 00:24:26,660
+C'est la
+
+500
+00:24:26,660 --> 00:24:28,660
+Modulation Frequency.
+
+501
+00:24:28,660 --> 00:24:30,660
+Et c'est
+
+502
+00:24:30,660 --> 00:24:32,660
+l'Index
+
+503
+00:24:32,660 --> 00:24:34,660
+of Modulation.
+
+504
+00:24:36,660 --> 00:24:38,660
+Techniquement, ce qu'on va faire ici
+
+505
+00:24:38,660 --> 00:24:40,660
+est appelé Phase Modulation.
+
+506
+00:24:40,660 --> 00:24:42,660
+Mais c'est
+
+507
+00:24:42,660 --> 00:24:44,660
+très, très proche.
+
+508
+00:24:46,660 --> 00:24:48,660
+Alors, qu'est-ce qu'on va faire ensuite ?
+
+509
+00:24:48,660 --> 00:24:50,660
+Le signal
+
+510
+00:24:50,660 --> 00:24:52,660
+qu'on va utiliser
+
+511
+00:24:52,660 --> 00:24:54,660
+sera
+
+512
+00:24:54,660 --> 00:24:56,660
+une fonction de signe,
+
+513
+00:24:56,660 --> 00:24:58,660
+2 pi x
+
+514
+00:24:58,660 --> 00:25:00,660
+Carrière Frequency x t.
+
+515
+00:25:00,660 --> 00:25:02,660
+C'est
+
+516
+00:25:02,660 --> 00:25:04,660
+si on
+
+517
+00:25:04,660 --> 00:25:06,660
+n'a pas de Frequency Modulation,
+
+518
+00:25:06,660 --> 00:25:08,660
+mais si on a
+
+519
+00:25:08,660 --> 00:25:10,660
+Frequency Modulation,
+
+520
+00:25:10,660 --> 00:25:12,660
+le signe
+
+521
+00:25:12,660 --> 00:25:14,660
+a un terme additionnel
+
+522
+00:25:14,660 --> 00:25:16,660
+dans son argument,
+
+523
+00:25:16,660 --> 00:25:18,660
+c'est l'Index of Modulation
+
+524
+00:25:18,660 --> 00:25:20,660
+x une autre fonction de signe,
+
+525
+00:25:20,660 --> 00:25:22,660
+2 pi x
+
+526
+00:25:22,660 --> 00:25:24,660
+Modulating Frequency
+
+527
+00:25:24,660 --> 00:25:26,660
+x t.
+
+528
+00:25:26,660 --> 00:25:28,660
+Et on va multiplier
+
+529
+00:25:28,660 --> 00:25:30,660
+cela par l'enveloppe.
+
+530
+00:25:30,660 --> 00:25:32,660
+On va dire
+
+531
+00:25:32,660 --> 00:25:34,660
+que l'enveloppe
+
+532
+00:25:34,660 --> 00:25:36,660
+est cette chose de nouveau.
+
+533
+00:25:40,660 --> 00:25:42,660
+Ok.
+
+534
+00:25:42,660 --> 00:25:44,660
+Alors, voyons-le.
+
+535
+00:25:48,660 --> 00:25:50,660
+Ce son est
+
+536
+00:25:50,660 --> 00:25:52,660
+très typique
+
+537
+00:25:52,660 --> 00:25:54,660
+de Frequency Modulation.
+
+538
+00:25:54,660 --> 00:25:56,660
+C'est
+
+539
+00:25:56,660 --> 00:25:58,660
+assez lisse
+
+540
+00:25:58,660 --> 00:26:00,660
+et encore plus riche
+
+541
+00:26:00,660 --> 00:26:02,660
+que la fonction de signe.
+
+542
+00:26:06,660 --> 00:26:08,660
+Alors, qu'est-ce qui change
+
+543
+00:26:08,660 --> 00:26:10,660
+quand on change la Frequency Carrière,
+
+544
+00:26:10,660 --> 00:26:12,660
+la Frequency Modulation
+
+545
+00:26:12,660 --> 00:26:14,660
+et l'Index of Modulation ?
+
+546
+00:26:14,660 --> 00:26:16,660
+Bien, si on change
+
+547
+00:26:16,660 --> 00:26:18,660
+l'Index of Modulation,
+
+548
+00:26:18,660 --> 00:26:20,660
+qui est vraiment
+
+549
+00:26:20,660 --> 00:26:22,660
+le paramètre le plus important
+
+550
+00:26:22,660 --> 00:26:24,660
+dans cette chose,
+
+551
+00:26:24,660 --> 00:26:26,660
+on va changer
+
+552
+00:26:26,660 --> 00:26:28,660
+combien riche le timbre est.
+
+553
+00:26:28,660 --> 00:26:30,660
+Donc, si on
+
+554
+00:26:30,660 --> 00:26:32,660
+utilise 2 au lieu de 1,
+
+555
+00:26:36,660 --> 00:26:38,660
+on obtient quelque chose
+
+556
+00:26:38,660 --> 00:26:40,660
+qui s'extend un peu
+
+557
+00:26:40,660 --> 00:26:42,660
+au-delà de sa fréquence initiale.
+
+558
+00:26:42,660 --> 00:26:44,660
+On peut utiliser
+
+559
+00:26:44,660 --> 00:26:46,660
+des numéros non integer,
+
+560
+00:26:46,660 --> 00:26:48,660
+on peut utiliser, par exemple, 2,7.
+
+561
+00:26:52,660 --> 00:26:54,660
+Si on commence à essayer
+
+562
+00:26:54,660 --> 00:26:56,660
+des valeurs plus hautes,
+
+563
+00:26:56,660 --> 00:26:58,660
+ça devient vraiment
+
+564
+00:26:58,660 --> 00:27:00,660
+un peu sharp.
+
+565
+00:27:02,660 --> 00:27:04,660
+On va essayer 20.
+
+566
+00:27:06,660 --> 00:27:08,660
+Maintenant, ça commence à
+
+567
+00:27:08,660 --> 00:27:10,660
+vraiment
+
+568
+00:27:10,660 --> 00:27:12,660
+à ressembler
+
+569
+00:27:12,660 --> 00:27:14,660
+à un matériau très, très dur,
+
+570
+00:27:14,660 --> 00:27:16,660
+comme du verre, ou quelque chose comme ça.
+
+571
+00:27:18,660 --> 00:27:20,660
+On retourne
+
+572
+00:27:20,660 --> 00:27:22,660
+à une modulation plus raisonnable
+
+573
+00:27:22,660 --> 00:27:24,660
+dans l'Index of Modulation,
+
+574
+00:27:24,660 --> 00:27:26,660
+en jouant avec la fréquence modulatrice.
+
+575
+00:27:28,660 --> 00:27:30,660
+Si on multiplie par 2,
+
+576
+00:27:32,660 --> 00:27:34,660
+on obtient quelque chose
+
+577
+00:27:34,660 --> 00:27:36,660
+qui ressemble à un courant.
+
+578
+00:27:36,660 --> 00:27:38,660
+Et c'est à cause de la
+
+579
+00:27:38,660 --> 00:27:40,660
+structure harmonique
+
+580
+00:27:40,660 --> 00:27:42,660
+qu'on obtient en utilisant
+
+581
+00:27:42,660 --> 00:27:44,660
+cette fréquence modulatrice.
+
+582
+00:27:46,660 --> 00:27:48,660
+Je ne vais pas trop loin
+
+583
+00:27:48,660 --> 00:27:50,660
+dans les détails,
+
+584
+00:27:50,660 --> 00:27:52,660
+mais c'est un sujet vraiment intéressant.
+
+585
+00:27:52,660 --> 00:27:54,660
+On va essayer 3.
+
+586
+00:28:00,660 --> 00:28:02,660
+Vous pouvez faire toutes sortes
+
+587
+00:28:02,660 --> 00:28:04,660
+de structures harmoniques avec ça.
+
+588
+00:28:04,660 --> 00:28:06,660
+Je ne vais pas trop loin
+
+589
+00:28:06,660 --> 00:28:08,660
+dans les détails,
+
+590
+00:28:08,660 --> 00:28:10,660
+vous pouvez y jouer.
+
+591
+00:28:10,660 --> 00:28:12,660
+Si vous utilisez
+
+592
+00:28:12,660 --> 00:28:14,660
+un numéro non integer,
+
+593
+00:28:14,660 --> 00:28:16,660
+ça va commencer à ressembler
+
+594
+00:28:16,660 --> 00:28:18,660
+assez bizarre.
+
+595
+00:28:18,660 --> 00:28:20,660
+On va essayer 4.
+
+596
+00:28:22,660 --> 00:28:24,660
+C'est quelque chose
+
+597
+00:28:24,660 --> 00:28:26,660
+qui ressemble à un caudel
+
+598
+00:28:26,660 --> 00:28:28,660
+qui est aussi
+
+599
+00:28:28,660 --> 00:28:30,660
+quelque chose dont
+
+600
+00:28:30,660 --> 00:28:32,660
+la fréquence modulatrice est fameuse.
+
+601
+00:28:38,660 --> 00:28:40,660
+Ok, on va juste utiliser
+
+602
+00:28:40,660 --> 00:28:42,660
+ces choses.
+
+603
+00:28:44,660 --> 00:28:46,660
+Ce que vous pouvez faire aussi
+
+604
+00:28:46,660 --> 00:28:48,660
+c'est de commencer
+
+605
+00:28:48,660 --> 00:28:50,660
+à utiliser la fréquence modulatrice
+
+606
+00:28:50,660 --> 00:29:02,660
+En fait, je définirai une fonction de modulation fréquente pour pouvoir l'utiliser d'une manière plus convaincante.
+
+607
+00:29:03,660 --> 00:29:11,660
+IOM et FlowT, et on va juste retourner ce truc.
+
+608
+00:29:11,660 --> 00:29:17,660
+Donc maintenant, c'est juste Fm, Fc, Fm, IOM et T.
+
+609
+00:29:18,660 --> 00:29:19,660
+Ok.
+
+610
+00:29:20,660 --> 00:29:26,660
+Et maintenant, on va pouvoir l'utiliser d'une manière plus convaincante.
+
+611
+00:29:27,660 --> 00:29:31,660
+Et on va juste retourner ce truc.
+
+612
+00:29:31,660 --> 00:29:37,660
+Donc maintenant, c'est juste Fm, Fc, Fm, IOM et T.
+
+613
+00:29:38,660 --> 00:29:39,660
+Ok.
+
+614
+00:29:42,660 --> 00:29:50,660
+On va faire la fonction Sig.
+
+615
+00:29:51,660 --> 00:29:53,660
+En fait, on va faire ce Stereo.
+
+616
+00:29:54,660 --> 00:29:59,660
+Donc, on fait cette fonction Vec2. Vec2Sig == Vec2Zero.
+
+617
+00:30:02,660 --> 00:30:09,660
+Et ce que l'on peut faire, c'est que le signal soit différent dans le canal gauche et droit.
+
+618
+00:30:10,660 --> 00:30:15,660
+Donc on peut dire que Sig.X == Fm de...
+
+619
+00:30:16,660 --> 00:30:18,660
+On va dire F1.
+
+620
+00:30:19,660 --> 00:30:20,660
+F1.
+
+621
+00:30:24,660 --> 00:30:26,660
+Quelle devrait être l'index de modulation?
+
+622
+00:30:27,660 --> 00:30:32,660
+Bon, je vais commencer avec juste F1 et T.
+
+623
+00:30:33,660 --> 00:30:35,660
+Encore une fois l'enveloppe principale.
+
+624
+00:30:36,660 --> 00:30:40,660
+Et pour le canal gauche, c'est le minus 1.
+
+625
+00:30:43,660 --> 00:30:45,660
+Et qu'est-ce que ça ressemble à?
+
+626
+00:30:48,660 --> 00:30:52,660
+Vous avez ce beau effet de phasing de Stereo.
+
+627
+00:30:56,660 --> 00:31:00,660
+Si vous voulez que l'attaque soit un peu plus forte,
+
+628
+00:31:01,660 --> 00:31:09,660
+ce que vous pouvez faire, c'est ajouter quelque chose avec un index de modulation plus élevé.
+
+629
+00:31:10,660 --> 00:31:13,660
+On va dire, je ne sais pas, 15. T.
+
+630
+00:31:14,660 --> 00:31:17,660
+Et ensuite, vous le multipliez par une enveloppe qui décale plus vite.
+
+631
+00:31:18,660 --> 00:31:20,660
+On va dire que c'est le minus 10 x T.
+
+632
+00:31:20,660 --> 00:31:25,660
+Et que ce soit pas trop lourd, juste pour qu'il fasse l'attaque.
+
+633
+00:31:31,660 --> 00:31:33,660
+Vous pouvez le faire décaler plus vite.
+
+634
+00:31:38,660 --> 00:31:40,660
+Et balancez-le un peu.
+
+635
+00:31:41,660 --> 00:31:43,660
+C'est vraiment assez solide.
+
+636
+00:31:44,660 --> 00:31:49,660
+Et maintenant, on commence à obtenir quelque chose qui est assez musical, je pense.
+
+637
+00:31:50,660 --> 00:32:01,660
+Donc, pour terminer, ce que je suggère, c'est que nous composons un simple jingle.
+
+638
+00:32:02,660 --> 00:32:10,660
+Donc, ce qu'il faut faire pour commencer à faire de la musique, c'est de définir les fréquences de nos notes.
+
+639
+00:32:11,660 --> 00:32:19,660
+La fréquence est un sujet assez compliqué dans la musique, parce que ce n'est absolument pas évident pour n'importe qui.
+
+640
+00:32:20,660 --> 00:32:23,660
+La fréquence doit être pour une certaine note.
+
+641
+00:32:24,660 --> 00:32:31,660
+Il y a beaucoup de débats dans la musique sur cette chose qui s'appelle le tempérament,
+
+642
+00:32:32,660 --> 00:32:38,660
+qui est donné comme un nom de note, la fréquence et l'assignement.
+
+643
+00:32:39,660 --> 00:32:43,660
+Donc, la solution qu'on utilise souvent maintenant, c'est d'utiliser le tempérament égal.
+
+644
+00:32:44,660 --> 00:32:49,660
+Dans le tempérament égal, nous disons que tous les semitones sont de la même taille.
+
+645
+00:32:50,660 --> 00:32:56,660
+Il y a 12 semitones dans une octave, et une octave correspond à un doublement de fréquence.
+
+646
+00:32:57,660 --> 00:33:01,660
+Donc, si nous mettons ça mathématiquement, où est-ce que nous sommes?
+
+647
+00:33:02,660 --> 00:33:09,660
+Nous disons l'intervalle, donné le nombre de semitones.
+
+648
+00:33:10,660 --> 00:33:21,660
+L'intervalle est un ratio de deux fréquences, et ce ratio de fréquences sera de la taille de deux,
+
+649
+00:33:23,660 --> 00:33:28,660
+qui correspond à le nombre de semitones divisé par 12.
+
+650
+00:33:29,660 --> 00:33:37,660
+Donc, si nous obtenons zéro semitone, c'est juste la même note, donc l'intervalle, la fréquence sera de la même taille.
+
+651
+00:33:38,660 --> 00:33:44,660
+Si nous obtenons 12 semitones, c'est une octave, donc nous multiplierons la fréquence par deux.
+
+652
+00:33:45,660 --> 00:33:48,660
+Si nous obtenons moins de 12 semitones, nous les divisons par deux,
+
+653
+00:33:49,660 --> 00:33:56,660
+et entre les deux, nous multiplierons ou les divisons par une certaine puissance de deux.
+
+654
+00:33:57,660 --> 00:34:07,660
+Ok, nous allons définir un bunch de notes que nous aimerions jouer.
+
+655
+00:34:08,660 --> 00:34:10,660
+Float notes.
+
+656
+00:34:11,660 --> 00:34:14,660
+Nous faisons ce const array.
+
+657
+00:34:16,660 --> 00:34:20,660
+Et disons que nous avons six notes.
+
+658
+00:34:21,660 --> 00:34:45,660
+On dirait que c'est un A, un E, un B, un E, un C, et un D.
+
+659
+00:34:46,660 --> 00:34:48,660
+Nous allons faire ça.
+
+660
+00:34:49,660 --> 00:34:53,660
+Maintenant, le jingle.
+
+661
+00:34:54,660 --> 00:34:59,660
+Nous allons juste combiner ces notes et les jouer un après l'autre.
+
+662
+00:35:00,660 --> 00:35:04,660
+Alors, comment le faisons-nous ? Nous définissons une fonction signal.
+
+663
+00:35:07,660 --> 00:35:09,660
+Une variable signal, en fait.
+
+664
+00:35:09,660 --> 00:35:24,660
+Et pour chaque note, donc pour i equals 0 à 6, nous allons ajouter une nouvelle note à notre signal.
+
+665
+00:35:25,660 --> 00:35:31,660
+Alors, quel est le nombre de notes de cette note ?
+
+666
+00:35:31,660 --> 00:35:34,660
+C'est juste une note à i.
+
+667
+00:35:35,660 --> 00:35:39,660
+Quelle est la fréquence de la note i ?
+
+668
+00:35:40,660 --> 00:35:51,660
+C'est 440 Hz, c'est-à-dire la note A, multipliée par la ratio qui correspond à cette intervalle.
+
+669
+00:35:52,660 --> 00:36:00,660
+Oui, les notes ici, j'ai choisi de les définir relative à la middle A.
+
+670
+00:36:01,660 --> 00:36:07,660
+Donc, l'intervalle correspond à la note.
+
+671
+00:36:07,660 --> 00:36:13,660
+Qu'est-ce que c'est le temps initial ? T0 i.
+
+672
+00:36:14,660 --> 00:36:17,660
+A quel temps la note i commence ?
+
+673
+00:36:18,660 --> 00:36:23,660
+Nous allons dire que nous changeons chaque note par 0,25 secondes.
+
+674
+00:36:24,660 --> 00:36:28,660
+C'est 0,25 fois la fréquence de la note i.
+
+675
+00:36:28,660 --> 00:36:31,660
+C'est 0,25 fois la fréquence de la note i.
+
+676
+00:36:32,660 --> 00:36:46,660
+Et nous allons dire que le temps actuel est modtime minus le temps initial de cette note.
+
+677
+00:36:47,660 --> 00:36:50,660
+Et nous allons répéter le pattern chaque 2 secondes.
+
+678
+00:36:51,660 --> 00:36:54,660
+C'est exactement la même idée que nous avons vu ici.
+
+679
+00:36:55,660 --> 00:37:11,660
+Et maintenant nous faisons sig plus equals fmplug de fi ti, et retournons sig.
+
+680
+00:37:11,660 --> 00:37:28,660
+Nous faisons sig plus equals jingle of t, et c'est tout.
+
+681
+00:37:28,660 --> 00:37:29,660
+C'est tout.
+
+682
+00:37:37,660 --> 00:37:38,660
+Maintenant, c'est bien.
+
+683
+00:37:39,660 --> 00:37:41,660
+Que se passe-t-il à la panning ?
+
+684
+00:37:42,660 --> 00:37:50,660
+Nous pouvons, par exemple, avoir une position pour chaque note.
+
+685
+00:37:51,660 --> 00:37:53,660
+Et cette position pourrait être...
+
+686
+00:37:54,660 --> 00:38:00,660
+Nous voulons que la première note soit dans le milieu, puis à droite, puis à gauche, puis au milieu, puis à droite.
+
+687
+00:38:01,660 --> 00:38:16,660
+Une possible formule pour cela serait imat3 plus 1, minus 1.
+
+688
+00:38:20,660 --> 00:38:24,660
+Maintenant, c'est imat3 plus 1.
+
+689
+00:38:27,660 --> 00:38:31,660
+Et nous pouvons faire une pause de temps.
+
+690
+00:38:36,660 --> 00:38:42,660
+Maintenant, si vous avez du stereo, vous allez entendre que le signal est entouré.
+
+691
+00:38:43,660 --> 00:38:44,660
+Fantastique.
+
+692
+00:38:45,660 --> 00:38:50,660
+La dernière chose que j'aimerais faire, c'est changer l'octave de cette note.
+
+693
+00:38:54,660 --> 00:38:56,660
+Pour avoir une bonne mélodie.
+
+694
+00:38:58,660 --> 00:39:00,660
+C'est tout pour aujourd'hui.
+
+695
+00:39:00,660 --> 00:39:07,660
+La prochaine fois, j'espère que je vais vous montrer comment faire de la percussion,
+
+696
+00:39:08,660 --> 00:39:13,660
+puis des effets, et commencer à parler de la structure de la chanson.
+
+697
+00:39:14,660 --> 00:39:15,660
+Au revoir.
+

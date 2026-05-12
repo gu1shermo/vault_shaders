@@ -1,0 +1,1015 @@
+Si nous le jouons directement, nous avons ceci.
+Bonjour, c'est Alex Citibo.
+Bienvenue au second épisode de Making Music in Shadotoy.
+Dans l'un des premiers épisodes, nous avons regardé des basiques
+de l'utiliser le sound buffer en Shadotoy
+et comment utiliser pour créer des notes
+avec différentes fréquences, timbres, panneaux.
+Nous avons joué avec des formes de la waveform,
+incluant la modulation de la fréquence,
+et nous avons utilisé pour créer un syntho simple
+et une mélodie simple.
+Aujourd'hui, j'aimerais couvrir un peu plus bas
+pour savoir pourquoi est FM
+un outil convenant
+pour faire le sound design en Shadotoy.
+Comment pouvons-nous comprendre ces paramètres
+et comment pouvons-nous utiliser pour créer
+des instruments intéressants ?
+Aujourd'hui, nous allons créer un pad et un syntho lead
+avec des mélodies pour ces instruments.
+Avant de commencer, je vous encourage
+à essayer de couvrir avec moi si c'est possible pour vous.
+La raison pour laquelle vous allez avoir
+beaucoup plus d'outils.
+Si vous n'avez pas besoin d'autre chose,
+vous pouvez aller à Shadotoy.com
+et ouvrir un nouveau shader
+avec le sound tab et vous allez bien.
+Si vous n'avez pas perdu à quel point
+vous pouvez toujours poser le vidéo
+ou vous pouvez juste suivre le lien
+dans la description
+pour le code que nous allons obtenir
+à la fin de l'épisode d'aujourd'hui.
+Allons-y !
+Aujourd'hui, nous allons
+travailler avec la modulation de la fréquence.
+Qu'est-ce que ce que c'est ?
+C'est quand vous avez une waveforme répétie
+mais cette waveforme est répétie
+avec une période différente
+selon le temps.
+Vous avez une fréquence instantanée
+FFT
+fréquence instantanée
+et puis vous avez un signal
+On va utiliser une fonction de signes
+ici, comme une waveforme
+vous pouvez utiliser d'autres formes de waveforms
+et ce sera le sign de la phase.
+Qu'est-ce que la fonction de phase
+devrait être utilisé ?
+C'est une phase de T ici.
+Qu'est-ce que la fonction de phase
+devrait être utilisé
+pour obtenir la fréquence qu'on veut ?
+La profondeur qu'on a besoin
+est que la durée de temps
+de la fonction de phase
+devrait être d'une pi
+fois FFT.
+Je vais définir
+ce micro ici
+comme la dernière fois
+on va utiliser le constant beaucoup.
+La phase devrait être
+l'intégral
+de cette phase prime.
+La phase de T
+devrait être l'intégral
+de pi x FFT
+de T.
+Il peut être l'intégral
+ou il peut être un constant
+de la phase prime.
+On va voir des espèces spéciales.
+D'abord, on va voir
+ce qui se passe si nous avons
+une fréquence constante.
+En ce cas, c'est assez
+obvious
+mais on va faire la calculation.
+La phase prime
+de T
+sera 2 pi
+fois FFT.
+Si nous intégrons
+cette phase
+de T
+qui est de pi x FFT
+de T plus un constant
+donc le signal
+à la fin
+sera
+le signe
+de pi x FFT
+plus un constant.
+Ici
+le constant c'est juste
+la phase offset
+donc vous pouvez juste le mettre
+si vous voulez.
+Nos yeux
+ne peuvent vraiment détecter
+si il y a une phase shift
+ou pas.
+On va voir
+ce qui se passe
+si nous avons
+une fréquence constante.
+Ça se passe
+si nous avons une variation synésoidale.
+On va introduire
+une
+fréquence carrière
+appelée FC.
+On va introduire
+une fréquence modulée
+appelée FM
+et
+on va
+introduire
+une fréquence
+de déviation
+et ça
+sera appelé DF.
+FFT
+sera
+une fC
+plus
+un DF
+de cosine
+de 2 pi
+x T.
+J'ai utilisé un cosine
+pour un changement.
+Ce que nous voulons
+c'est que la phase prime
+de T
+est 2 pi
+de pi
+ou tout ça.
+Qu'est-ce qu'on doit mettre
+en phase de T ?
+Nous avons
+la première termine
+qui est 2 pi x FC x T
+Et puis, let's integrate the second term.
+Let me make this a little bit clearer by distributing the two parts.
+So how do we integrate cosine of constant times t?
+Le constant est out.
+Donc nous devons diviser par 2pi times fm.
+Et puis l'intégral de cosine est sine.
+Nous allons obtenir 2pi times tf over 2pi times fm times sine f2pi times fm times t.
+C'est évidemment le 2pi que l'on annonce.
+Et c'est ce que l'on obtient.
+Donc à la fin, notre signal sera 2pi times fc times t plus df over fm times sine f2pi times fm times t.
+Donc c'est la modulation de fréquence quand la fonction modulée est sine.
+Ce que l'on peut introduire est l'index de modulation, iom.
+C'est ce que j'ai introduit la dernière fois.
+C'est juste df over fm.
+Alors que nous n'avons que de l'IOM ici.
+Nous allons défendre un macro pour tout ceci.
+Comment l'on fait de la modulation de fréquence avec fc, fm et iom?
+Nous allons rétablir un signal de fc times 2pi times fc times t plus iom times sine f2pi times fm times t.
+Je vais assumer que la t est définie dans le contexte.
+Et j'ai mis des parenthèses autour de fc et fm et iom.
+Juste en cas d'expressions. Parce que ce sera en ligne.
+Nous allons défendre ceci.
+Ce que j'aimerais faire maintenant, c'est de voir le spectre de ce son.
+Alors, nous allons introduire un signal, juste comme la dernière fois,
+qui nous retournons.
+Et pour le signal, nous allons ajouter ce fm.
+Nous allons essayer une wave de 1 kHz avec un modulateur de 100 Hz.
+Et pour la no-modulation, je vais mettre une petite amplitude,
+juste pour que ce soit pas trop obnoxieux.
+Alors, j'ai ouvert un spectre analyzer.
+Je ne sais pas ce que c'est, c'est un outil qui nous permet de voir
+quelle frequencies sont présentes dans notre signal.
+Ce que ça fait, c'est que ça écoute à l'outil de l'outil de l'étoile,
+ça choque le signal dans deux portes de temps.
+Et sur chaque port, ça décompose le signal comme un nombre de components sinusoidales.
+Et ça nous choque l'amplitude de chaque component de ça.
+Alors, si nous le mettons, maintenant, nous faisons un fm, mais nous n'avons pas de modulation,
+parce que l'index de modulation est 0.
+Donc, ce que nous devons faire, c'est une pure wave de signal.
+Et c'est ce que nous avons.
+Maintenant, si j'ai augmenté l'index de modulation,
+qu'est-ce que vous pensez que ça va arriver ?
+On va essayer.
+C'est intéressant.
+Ce que nous avons, c'est que la fréquence centrale reste à 1.000 Hz,
+mais ensuite, nous avons des peaks, des components sinusodales,
+à 900, 800, 700, et nous avons aussi des components à 1100, 1200, etc.
+Maintenant, je réalise qu'il y a un peu d'issue dans mon code,
+parce qu'on utilise un signe d'un grand nombre.
+On va mettre le mod à 1.
+On peut juste utiliser la fréquence,
+et faire la même chose qu'ici,
+pour que ça ne se débrouille après quelques secondes.
+Maintenant, ce que vous pensez que ça va arriver,
+si j'ai augmenté la fréquence de modulation.
+On voit que la fréquence centrale était basée à 100 Hz,
+si j'ai augmenté la fréquence de modulation à 120 Hz,
+bien sûr, la fréquence centrale était basée à 100 Hz.
+Qu'est-ce qui va arriver si j'ai augmenté la fréquence de modulation à 2 Hz?
+Bien sûr, ça va aller jusqu'à 2 Hz.
+Maintenant, ce que vous pensez que ça va arriver,
+si j'ai augmenté la fréquence de modulation?
+On va essayer ça.
+On a un peu plus de pique.
+La fréquence de modulation s'améliore,
+à l'aide de notre signe.
+Comme vous le voyez, ça s'améliore et s'améliore
+et s'occupe de plus en plus de la fréquence.
+On va mettre la fréquence de modulation à 2 Hz et à 100 Hz
+et voir précisément ce qui se passe ici.
+Si nous sommes au centre de la fréquence de modulation à 2 Hz,
+nous avons un modulateur de 100 Hz et un index de modulation de 10 Hz.
+On voit que la fréquence de modulation de modulation
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+...
+100 Hz, donc nous pouvons interpréter ça comme, bon, les audibles sidebends
+RFC plus ou moins, n times fn, for n is equal to about the index of modulation
+That's not exactly, depending on where you cut, you can consider that it's a slightly wider thing but
+that's a rule of thumb. Alright, before we move on, what do you think happens if the audible sideband
+gets a negative frequency? For instance, let's try 500 Hz and with a 300 Hz modulation and 2 as an
+index of modulation, so here, we've got 500 Hz, let's look at the lower sideband, so 500 minus 300
+is 200, 200 minus 300 again is negative 100, so will the universe blow up or will something else happen?
+Of course, what we will get is just a positive frequency at, well it should be minus 100 Hz, so we get plus 100 Hz
+So that's what you see here and if you look closely, you will see that there is also a negative 400 which gets
+reflected back to positive 400 and if we increase the index of modulation again, you get 700 and so on
+So, negative frequencies get reflected back, in other words, we just have an absolute value here
+Fantastic, I think that's really enlightening because this means that the spectrum of our signal, we have a very precise control over it
+So when we will be doing some sound design, we will be able to control precisely what components are in our generated signal
+So let's try the notes right now, now I want to move on to creating a pad, so let's create a pad, a very ethereal dreamy sound
+I'm going to have its stereo, let's call it pad synth
+And have it use a frequency and a time
+So let's define a signal and return that signal, so what should we be doing to our signal?
+Well, what we will be doing is just add a bunch of frequency components
+All right, so you get the idea, so what should we be adding first?
+One thing I like to have first is always a kind of solid body
+A warm sound, which is kind of the root of our pad
+Let's actually hear it right now, let's put on a 300 Hz
+So you see that's a basic sound, but I don't know what to do
+What we can do to make it a bit more interesting is add some modulation
+So let's detune slightly the modulator from the carrier
+And make it stereo
+So now we get this, a slightly stereo effect
+I'm not very fond of using 300 Hz here, so let me define a macro to get from a note number
+To a frequency, last time I had my note numbers relative to the A440
+But I like to have them related more to the middle C, which happens to be 90 Hz
+So let's use that instead, we will be using a note number minus 9
+Divided by 12
+That will be the, that will be the, that will be the
+12 tone equal temperament frequency for a note with a note number
+Which is relative to middle C, so if we put N of 0 here, we should get middle C
+Right, if you have perfect pitch, maybe you can notice that
+Ok, so right now this does not sound like a pad at all
+The problem with that is with the envelope, so let's define an envelope
+Let's have it increase smoothly from 0 to 1
+Over the course of, I don't know, let's say 5 tenths of a second
+Right, we get some nice smooth increase
+It's nice smooth increase in our signal
+Let's make this a bit more interesting by adding some detuned stuff
+Let's try, I don't know this
+Maybe make this slightly less
+Right, so we've got a very smooth, maybe a very warm body sound
+What it kind of lacks is some personality
+What I mean by personality is, when you get into a music mix
+If you have only frequencies around 300 to 1 kHz
+It will just get lost in the mix
+So what we need to do is give it some, a bit higher frequencies
+Very slight, but just so that it still can stick out
+Even if we have a lot of masking around this center frequencies
+So let's have another signal with a carrier
+Which I would like it to be around 2 kHz
+I don't want to do directly fc equals 2 kHz
+Because then it won't be a multiple of f
+So I want to round it to the closest multiple of f
+And to do that, I will be doing f times round of 2000 divided by f
+And now I can do fm of fcf
+And what index of modulation should I use
+Let's say I'd like to have about 1 kHz of frequency defiation
+So it should be 1000 divided by the modulation frequency
+So here we will be just using f
+Let's listen to that
+Right, so now we get some character, some personality
+Right now it's pretty ugly
+So we definitely need to add some more layering
+As well as some modulation
+I don't know, I'm really putting random numbers here
+Let's have this a little lower
+And let's have the index of modulation vary with time
+Let's have, yeah just sign of t here
+Maybe a bit faster
+Right, that's basically the root of our signal
+Maybe I can do some more modulation
+Have it be a bit slower here
+Like 2 times t
+Or 1.9, I don't know
+Minus
+All right, what we can do then
+Let's use it to create a chord
+So how do we create a chord?
+Well I'd like to have a 4 note chord
+So let's have 4 frequencies
+And add them to the signal
+So we will just be having 6 plus equal
+That's the nth of fs.xt
+And the same for yz and w
+And return sig
+That's it
+So now if we want to have a bad chord pattern
+With just time in it
+I will define a chord
+Let's say I would like an A minor
+With a B in it
+So this will be A B C and E
+I forgot a t here
+And let's directly return pad chord of
+N of chord
+The frequencies of those notes
+And t
+So what happens then?
+Right, this is getting somewhere
+Ok, so let's pan those frequencies around
+Let's just do it manually
+So here the lowest note
+Maybe I'd like to pan it a bit to the left
+So let's say 0.8, 0.3
+Then the middle note
+Let's pan it completely to the left
+Well, almost completely to the left
+The second middle note
+Almost completely to the right
+And the last note
+Slightly to the right
+So what we get is
+The extremes like the bass note
+And highest note almost tucked in
+To the center
+And the rest all wider
+Because no one really cares about the middle note
+So we can put them really farther around
+Let's hear that
+This is getting spacey
+One thing we can do
+Is add some reverb
+So we have a pad chord pattern
+So let's call it a pad chord pattern verb
+I'm saying reverb
+It's not actually reverb
+And fortunately a shader toy is not
+Able to do all the stuff that you would be using
+That you would be doing using usual digital signal processing
+But what you can do is add a signal
+With some delayed versions of it
+And that's a kind of fake reverb
+That is totally fine
+So let's actually
+So let's actually do that
+Here
+So we can have a pad chord pattern T
+And then we can have
+T minus 0.5
+I don't know
+Times 0.2
+And that's just a delayed version of it
+And let's shift
+Let's swap the indices
+And invert
+One of the channels
+So we get a more
+More surprising kind of sound
+Right now the chord pattern is very boring
+Because we've got only one chord
+So how do we go at defining
+An actual chord pattern
+Well, first thing I'd like to do
+Is define a speed
+A tempo for my song
+So let's say ppm 100 beats per minute
+And that would mean
+That the beat duration should be
+60 seconds divided by the number of beats per minute
+So right now it should be a bit over half a second
+And let's use that
+To change up our chords
+So our chord
+Let's use a ternary operator
+To say what chord we'd like to be using
+So we will say if T is less than
+4 times the beat duration
+Then we will use this A minor
+But then
+What happens if it's not
+Well it can be in the second bar
+It can be in the third bar
+And let's have it change 2 times
+In the last bar
+So we get 5 chords total
+And now we just get creative
+So one chord pattern that I liked
+Was having
+An F chord here
+Let's put a D
+Yeah let's put a D minor 7 here
+So that's A, C, D, F
+Then F major
+Which will be F, A, C
+And let's put a G on top
+And then let's use a C major
+With a D in it
+G, C, D, E
+And finally
+Just change
+Just change the C for a B
+So we get
+So we get a kind of G major with an E on top
+Now if we play that directly we get this
+A, C, D, E
+Which is fine
+But it's clicking
+So what we need to do
+Is make sure that
+The notes actually restart
+When we're changing chords
+So let's define T current
+B, T, F
+So now we get the attack
+But we don't have the decay
+So let's have an envelope
+For the decay
+Float and
+We need to make sure that the note goes down
+To zero at the end of the note
+So when should it be at zero
+Well at four times beat two
+And when should it be
+Still at one
+Well let's say at 3.5 times beat two
+And now we should get this
+Whoops
+I have a sticker here
+And I think we need to
+Oh, I was actually not using
+The chord pattern verb here
+So yeah, let's try this
+With a 1.5
+1.5 beat delay
+That's a bit longer, it's actually 2.75
+Yeah, now if we want
+Our chord pattern to repeat
+We should set T equals mod
+T 16 beat
+But we also don't want it
+Here we are using negative times
+So when we are using negative times
+We should set T equals mod
+So when we are using negative times
+We don't want there to be any sound
+So let's put T equals max T0
+Otherwise when we are doing this
+We will get the tail of the reverb
+As if there had already been sound
+Before
+I'm not really fond of that reverb
+Let's see if I can change it up a bit
+So that it's a bit more fun
+Let's have some fake early reflections
+Here before any actual
+Before any actual
+Actual reverb
+And then let's set the reverb 2.25
+Yeah
+In there
+Let's go
+All right, let's roll with this
+Now I want to move on to making
+A lead synth
+Here we will be using the same kind of technique
+So let's create a lead synth
+Let's say it should have a certain frequency
+And a certain time
+Now what I'd really like to do
+Is have it play with vibrato
+So let's first create a basic sound
+And then I'll show you the wrong way
+And the right way to the vibrato
+In shader toy
+So
+So now we've got this basic lead
+Synth sound
+Which is really just
+Just this
+And now let's say I want
+The frequency
+Let's say I want to add vibrato
+So what I could do
+Is say let's change up the frequency a bit
+Let's say we
+Multiply
+Or we add something to it
+And it should be
+Like
+0.2 of a semitone
+So a semitone is about
+0.06 times the frequency
+And
+Let's say we want to have
+A 5 Hz vibrato
+So this will be
+20 cents of a semitone
+And this will be
+The amount of frequency
+This is the wrong way to do it
+I'll explain you why
+Just a bit later
+But let's hear
+What it does
+And how it sounds
+Don't do that
+That's awful
+So yeah
+So what's happening here
+Well if you recall
+Earlier I said
+That
+That
+When we have some instantaneous frequency
+The phase
+The derivative of the phase
+Should be 2 times f
+So now
+What's happening is
+The actual phase we're using
+When we're putting this
+F into fm
+The actual phase we're using
+Is f of t times t
+And that's
+That's what the problem is
+Because when we
+Differentiate that with respect to time
+We get f of t
+Sure enough
+But with a product rule
+We also get
+f' of t times t
+And this guys
+Is really problematic
+Here f' of t
+Will be a kind of
+Cosine component
+And it will be increasing
+With respect to time
+Increasing in amplitude
+So that's why we get this
+Stronger and stronger
+Stronger and stronger
+Wobble
+Yeah, don't do it
+What is the right way to do it?
+Well
+What we want
+Is for f of t
+To be
+Well it should be f0 plus
+It's really basically the same formula as before
+Plus cosine of 2pi
+Times
+Modulating frequency
+Times time
+So when we integrate it
+We get that phase of t
+Is f0 times t
+Well 2pi sorry
+2pi times f0 times t
+Plus
+df over fm
+Times cosine
+Times sine
+2pi times fm
+Times t
+Except that now fm
+Will be like 5 hertz
+And f0
+Will be
+Well the frequency of our lead synth
+And df
+It should be
+Something small
+So yeah, this is the wrong way to do it
+Let's not use that
+Instead let's calculate
+The phase using that formula
+Let's do a function
+For that
+Call it vibrato phase
+Have f0
+df
+And
+Let's call it vibrato
+So it's clear
+We're talking about
+The speed of vibrato
+And
+Let's even put
+A semitone here
+So you can say df
+Will be 0.06 times f0
+That is about
+1 semitone
+So let's multiply that by semitones
+And
+Then phase
+Will be
+This formula here
+And where fm
+Is vibrato
+And return phase
+Yeah, we need t here
+And
+So this is vibrato phase
+Of
+f
+Let's have 0.2 semitones
+5 hertz of vibrato
+And t
+But now we're getting onto a problem
+Because our fm function
+Doesn't get phase
+It uses frequency
+So yeah, whatever, let's define
+A second macro
+Which will be using phase
+It's really simple
+Let's call it fm2
+Just replace fc times t
+With pc
+And fm times t
+With pm
+That's it
+Let's use it
+There's a problem here
+And it has to do with the fact
+That I used
+2pi
+This is actually modpc2pi
+And modpm2pi
+Right
+So here now we're getting
+A slight vibrato
+I can increase it
+To be more noticeable
+But this is getting
+Intasteful
+So let's stick with that
+We can also
+Put some kind of envelope on our vibrato
+And say
+It should go from
+It should start with no vibrato
+And then increase
+Up to its maximum
+In about half a second
+So now if you notice
+We're getting no vibrato at the start
+And some vibrato afterwards
+Right
+Let's make our lead sound more interesting
+First thing I'd like to do
+Is have
+Some
+Some layering
+Right
+Right
+This is still the body
+Of this sound
+Let's make it a bit harsher
+Right so we get a bit
+Wider spectrum
+And then
+Let's add some presence
+So presence is
+Like when you have a guitar amp
+And you turn up the presence
+It kind of turns up
+A very specific frequency
+To which our ear is very sensitive
+Which is about 5 kHz
+So let's
+Have
+A carrier frequency
+At about 5 kHz
+Let's do the same trick
+As
+Before
+Let's round 5 kHz
+To the nearest
+Multiple of
+The frequency
+And
+Have
+The index of modulation
+About 2 kHz
+By F
+And now
+We want to make sure
+To use FM2 again
+Because
+Because we are
+Dealing with some vibrato
+So we can't be using FC directly
+Let's use the ratio
+Which is just the integer ratio
+Of
+Carrier frequency
+So we can be using
+3x phase here
+And phase
+And index of modulation
+Let's have it times 0.01
+Right
+So this is getting
+This is getting much brighter
+This is giving us
+A nice sharp
+Nice sharp sound
+Maybe
+All right
+Let's have it
+Let's have some more stuff in here
+Okay
+And now what we need to do
+Is give it a bit of attack
+And for that
+We will be using
+A very wide
+A very wide signal
+Actually we don't care about
+We don't care about vibrato
+For the attack
+So let's just use
+Our simple FM
+Method
+What we can do
+Is
+Around FC
+To
+Actually for this one
+We don't even care about
+If the
+Components are actually multiples
+Of the frequency or not
+Because it will be decreasing so fast
+So let's have exponential
+Of minus 20
+Times time
+Here let's have an index of modulation
+Of
+10 kHz divided by F
+And here it goes
+Yeah
+Yeah, that's a bit 3D
+Actually let's run this
+To multiple a bit
+Yeah
+All right
+Now we can play a bit with the envelope
+Of it
+To make it
+A bit
+A bit more punchy
+More plucky
+So when you have an audio compressor
+It's a volume knob
+That goes
+It turns down the loud sounds with some delay
+And it's used creatively
+In many mixes
+Because due to that delay
+It kind of adds
+A wobbly
+Feeling to the sound
+And it can get artistic very easily
+So what it would do
+Here
+On our signal is it would detect
+The transient of our synth
+And with some delay
+It would turn the signal down
+So the transient would pass through
+And then we get some turning down
+And then once
+We're in the body of the sound
+It would turn back up a bit slowly
+Yeah, let's use the envelope
+So we're getting
+A different kind of
+Feeling
+Depending on
+So it changes the attack
+Basically from
+Hear it again
+Now it's very plucky
+Now it kind of spills over
+I like the plucky one
+And then
+Let's have it
+Go back up
+After
+Let's say
+Let's say half a second
+But not too much
+Right now it's feeling
+It's kind of pumping
+It's kind of pushing down the sound
+And letting it back up
+I don't know if you notice
+But that's one way
+To help our synth
+Come through in the mix
+Ok, let's define
+A lead synth pattern
+So for the code pattern
+We used
+These things here
+For the lead synth pattern
+What I will be doing is defining
+A macro
+Um
+Which
+Adds a note
+To the signal
+So it will be
+Using a note number
+And a certain beat duration
+What it will do
+Is
+If T is positive
+And T is
+Less than B
+Times beat duration
+Add
+Elite synth
+Of
+What will be the frequency
+The frequency will be Nfb
+And time T
+Moreover
+We should make sure that the envelope
+Goes back down to 0
+So let's do a smooth step
+No, sorry
+NfNN
+So we should define a smooth step
+That goes back down after B
+So it will be B times B
+Ture
+And it will be 1
+100th of a second before
+And it will be 0 afterwards
+Right
+And then what do we do
+We say T minus equals
+Big time speed tier
+In order to
+Skip to the next
+Note
+And return sig
+So
+So now
+What should happen
+If we can do
+Let's say
+We should play
+How do we play a basic scale
+A basic arpeggio
+Well
+Let's say AC
+D
+And A
+This should play
+And A minor arpeggio
+Perfect
+So it's super boring but
+We're getting there
+Let us
+Let us define
+An interesting pattern
+With that
+So now it's the moment when we get creative
+And try to find a funny melody
+I have one in my head right now
+So it happens to repeat
+Every 8 beats
+Let's do max T0
+Like the previous time to avoid
+Having anything
+With negative time
+1.75
+Beats
+Of silence
+At the start
+But when it repeats
+It might be playing some sound
+At the start of the bar
+Let's do that before doing the modular
+And then we will be playing
+Right
+So this is the pattern
+I've come up with
+I've actually not listened to it yet
+So I'm not sure if it actually works
+But let's try that
+And
+Yeah, that's exactly
+What I wanted
+Like for the previous sound
+Let's add
+Some delay to it
+One thing we can do
+Is
+This one
+Like this
+Have
+Another version
+With
+0.75 beats
+Of delay
+And have a third one
+With one and a half
+Beats of delay
+And
+Which decrease in amplitude
+Each time
+So what will that sound like
+Right, that's pretty nice
+I think
+We also need
+To have some fake
+Early reflections
+So let me put
+Something like
+5 milliseconds of delay
+And have this
+Be
+Like that maybe
+Oh
+Oh, it's not working
+Oh, it's not working
+Recursive function called
+Yeah
+Excellent
+I think that will be it
+For today guys
+I was really glad
+You could follow up until the end
+Don't hesitate to share it with me
+If you're doing anything creative
+Anything fun
+With all these ideas
+You can find the link in the description
+For this very script
+That we have been getting to here
+And in the next episode
+We will be having a look at some more
+Instruments
+That we can create
+Using frequency modulation
+And some tricks
+We will be doing bass
+Marimba
+And I think another lead sound
+So that then we will be
+Equipped
+To start
+Creating a whole song
+Until then
+Take care

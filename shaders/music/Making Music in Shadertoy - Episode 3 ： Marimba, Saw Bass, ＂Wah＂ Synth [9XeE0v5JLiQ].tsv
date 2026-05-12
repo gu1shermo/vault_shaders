@@ -1,0 +1,527 @@
+start	end	text
+0	7000	Bonjour, c'est Alex Citibault et bienvenue à l'épisode 3 de Making Music in Shaded Toy.
+7000	11000	La dernière fois que nous avons regardé la synthèse des modulations de fréquence
+11000	15000	et nous avons créé un couple d'instruments en utilisant ça.
+15000	21000	Nous avons vu comment c'est un outil convenu pour créer des instruments.
+21000	28000	Et aujourd'hui, j'aimerais remplir notre outil de instruments.
+28000	34000	Nous avons créé une chanson avec 100 BPM.
+34000	44000	J'aimerais ajouter un bass, un marimba et un autre synthèse.
+44000	52000	Nous allons donc faire la marimba en utilisant la synthèse de modulation de fréquence.
+52000	58000	Il s'agit d'une sorte de chanson classique dans la modulation de fréquence.
+58000	70000	Et pour le bass et l'autre synthèse, nous allons le faire en utilisant un outil de synthèse de modulation de fréquence.
+70000	76000	C'est un outil de chanson classique.
+76000	81000	C'est un outil de chanson classique.
+81000	85000	C'est un outil de chanson classique.
+85000	93000	La dernière fois que nous avons créé une modulation de fréquence, nous avons créé un outil de chanson
+124000	134000	Nous allons commencer avec la marimba.
+134000	142000	La marimba est une sorte de chanson classique.
+142000	150000	C'est un outil de chanson classique.
+150000	157000	Comment créer ça, c'est très simple.
+158000	165000	Vous voulez jouer une note de marimba à fréquence F avec un temps T.
+165000	175000	Le T ici, comme dans tout le synthèse que j'ai créé, c'est le temps depuis le début de la note.
+175000	180000	Nous faisons une modulation de fréquence avec des fréquences de carrière.
+181000	186000	La modulation de fréquence est ici.
+186000	189000	Nous avons une frequency de carrière et une frequency de modulateur.
+189000	191000	Nous faisons un index de modulation.
+191000	196000	Nous faisons un signage de 2pi fc T.
+196000	204000	Nous faisons un frac ici pour éviter des problèmes avec la précision dans la fonction des signes.
+204000	214000	2pi fc T est juste une frequency de carrière et une frequency de carrière.
+214000	220000	Nous faisons un index de modulation avec une frequency de carrière et une frequency de modulateur.
+220000	229000	Nous faisons un frac ici pour éviter des problèmes avec la fréquence de carrière et une frequency de carrière.
+229000	233000	Nous faisons une frequency de carrière et une frequency de modulateur.
+233000	248000	Si vous vous souvenez de la dernière fois, nous avons vu que le signal de modulation de fréquence contient une frequency de fc plus et moins multiples de fm.
+248000	253000	Donc ici il sera f plus et moins multiples de 7 fois f.
+254000	264000	Le premier signal de modulation sera f plus et plus de 7 fois f, donc 8 fois f, et f minus et plus de 7 fois f, donc moins de 6 fois f,
+264000	269000	ce qui sera un point positif.
+269000	272000	Donc plus de 6 fois f.
+272000	292000	Nous avons une fréquence très étrange, et ça ressemble à un instrument de marimba, comme un xylophone.
+292000	302000	Pour le index de modulation, vous voyez que j'ai mis quelque chose qui commence à 1,5, et puis qui se déclare très rapidement à 0.
+302000	314000	Donc seulement au début de la note, on obtient ces harmoniques, et très rapidement on obtient seulement le component sinusoidal.
+314000	320000	C'est aussi l'une de la façon dont le physique de l'instrument fonctionne.
+320000	330000	C'est un instrument qui joue une très bizarre façon de distraire les harmoniques quand c'est trac,
+330000	337000	mais très rapidement, ces harmoniques se déclarent et vous n'avez qu'une fréquence fondamentale.
+337000	343000	Donc c'est l'idée avec ça. Et puis on met un détail sur ça.
+343000	346000	Un détail simple et exponentiel.
+346000	352000	Donc si on écoute le marimba en itself, ça va sembler comme ça.
+352000	356000	6 plus de 7 fois marimba.
+357000	363000	C'est-à-dire à 440, et on va le jouer à chaque seconde.
+363000	365000	C'est là.
+368000	372000	Donc comme vous le voyez, ça a vraiment une qualité de voie.
+372000	381000	Si vous voulez changer le son, vous pouvez changer comment vite le détail se déclare.
+381000	385000	Nous pouvons mettre un détail plus lent sur le modulation index.
+387000	392000	Et maintenant on est en train d'avoir un son plus glissant.
+392000	398000	Il semble que le matériel est plus lourd ou plus rigide.
+402000	407000	Nous pouvons changer la fréquence modulée.
+408000	423000	Ici, on est en train d'avoir quelque chose qui est similaire à un patch de FN classique appelé EP1.
+423000	435000	Si vous avez la possibilité de jouer avec des emulations de la synthèse DX7 Yamaha,
+435000	441000	c'est un tool vraiment fantastique pour apprendre tout ce que la fréquence modulée est.
+441000	450000	Il y a le texte VST, qui est un free VST, qui émulate le Yamaha DX7.
+450000	456000	C'est vraiment un tool fantastique. Je vais mettre un lien dans la description pour ça.
+456000	458000	Mais j'aime le son comme il est.
+458000	462000	Nous allons juste le mettre comme ça.
+462000	466000	Comment on crée un pattern avec ça ?
+466000	470000	Ici, j'ai créé un pattern.
+470000	477000	Ce que j'aimerais faire, c'est de la pièce marimba, un type de pattern techno.
+478000	486000	L'une des choses que l'on peut faire, c'est de la pièce marimba de 16 beats,
+486000	492000	et puis, on choisit un couple de notes.
+492000	500000	Ces notes vont arriver à être dans la même corde que le patch.
+500000	508000	Si vous vous souvenez, le patch a joué des cordes ici.
+508000	510000	Je vais commenter.
+510000	513000	Nous nous souvenons de ce que ces cordes sont.
+513000	529000	C'était Am, puis Dm7, puis F major, puis C avec un 9 et puis G avec un 6.
+529000	539000	Ce que la marimba peut jouer ici, c'est des notes qui viennent de ce pattern.
+539000	547000	Juste là-bas, tous les notes sont référentes relativement au C.
+547000	552000	Donc 4 signifie 4 semitones sur le C, donc c'est un E.
+552000	558000	12 signifie 1 actif sur le C, donc c'est un C, 1 actif plus haut.
+559000	564000	Et aussi, c'est E et C, c'est F et A.
+564000	569000	Ici, c'est A et C, G et C, G et B.
+569000	573000	C'est le pattern qu'on a joué.
+573000	578000	Je vais offrir le start de ces cordes un peu,
+578000	585000	juste pour qu'elles ne passent pas avec le restart de la note.
+586000	592000	Donc, comment j'ai décidé à quel temps de restart de la note?
+592000	596000	Je fais des choses modèles ici.
+596000	598000	J'ai juste un peu de fun.
+598000	602000	Le plus important est celui-ci.
+602000	609000	L'idée est vraiment de jouer des dottie dates.
+609000	613000	8e note.
+613000	626000	C'est un pattern classique dans le techno et ce genre de musique.
+626000	629000	Ou quelque chose d'électro.
+629000	632000	C'est quand tu as le pulseur.
+632000	637000	Et tu as quelque chose qui va...
+638000	641000	Tu sais?
+641000	643000	Donc, le autre...
+643000	647000	Donc, tu as un peu d'épolléatrice.
+647000	653000	Les autres sont juste pour que ce pattern passe sur le grid.
+653000	657000	Et que nous n'avons rien de place.
+657000	662000	Je définis un signal et ajoute cette note marimba.
+662000	665000	J'ai un peu plus de la note basse.
+665000	670000	La note basse est plus à la gauche et la note basse est plus à la droite.
+670000	672000	Et j'ai juste rétellé ça.
+672000	683000	Donc, on va en faire un éclairage pour ce que ce pattern semble.
+683000	686000	Je vais en mettre ça pour le moment.
+696000	699000	C'est le pulseur.
+705000	710000	Donc, c'est vraiment un sound techno.
+710000	717000	Ce que nous pouvons faire, c'est ajouter le pad au-dessus de ça.
+717000	720000	Pour entendre comment ils se coudent ensemble.
+725000	739000	...
+739000	741000	Donc, oui, c'est ça.
+741000	747000	Donc, c'est ça pour la pattern marimba.
+747000	751000	Il n'y a vraiment rien d'autre que ça.
+751000	756000	...
+756000	759000	Donc, on va en mettre sur la base.
+759000	767000	Pour la base, j'ai voulu faire un sound analog.
+767000	772000	Donc, la dernière fois que nous avons vu que c'est...
+772000	777000	En fait, dans l'un des premiers épisodes, nous avons vu que c'est une bonne idée
+777000	780000	de créer un wave sort-of-wave directement.
+780000	782000	Parce que ça contient beaucoup de haute fréquence.
+782000	784000	C'est en faisant des aléasins.
+784000	787000	Et les aléasins ressemblent très bien.
+787000	790000	Comment nous dealons avec l'aléasin?
+790000	793000	Nous faisons de l'anti-aléasin.
+793000	795000	Donc, comment nous faisons de l'anti-aléasin?
+795000	798000	La idée est de filtrer.
+799000	809000	J'ai créé, dans GraphToy, la forme de wave que nous avons...
+809000	812000	La dernière fois que nous avons vu que c'est notre sort-of-wave.
+812000	815000	C'est là que c'est.
+815000	821000	Donc, nous disons que la valeur du sort-of-wave commence à 1.
+821000	825000	Et puis, quand x vient de 0 à 1,
+825000	827000	il s'agit d'un slope de minus 2 x.
+827000	831000	Donc, quand x vient de 1, il s'agit d'un slope de minus 1.
+831000	835000	Et puis, il se répète.
+835000	841000	Mais le problème avec ça, c'est que nous avons une grande discontinuité
+841000	845000	à x equals 0, x equals 1, etc.
+845000	847000	C'est une bonne idée.
+847000	850000	Donc, nous voulons smoother cette discontinuité.
+850000	852000	Comment pouvons-nous faire ça?
+852000	861000	Bien, ce que nous pouvons faire, c'est que nous avons une bonne fonction ici.
+861000	864000	Nous avons une autre partie, ici.
+864000	871000	Nous allons décider que, d'ici à d'ici, nous allons smoother la transition
+871000	873000	de l'un à l'autre.
+874000	883000	Donc, ceci est minus 1, minus 2 x,
+883000	888000	et ceci est 1, minus 2 x.
+888000	891000	Et comment pouvons-nous faire la transition de l'un à l'autre?
+891000	894000	Nous allons faire une fonction smooth,
+894000	900000	qui est de 0 à 1 x equals minus 0,2
+900000	906000	à 1 à 1 x equals 0,2.
+906000	913000	Et c'est la transition de l'un à l'autre.
+913000	916000	Comment pouvons-nous faire surement que ça répète?
+917000	919000	Maintenant, c'est parti.
+919000	921000	Nous n'avons pas besoin de ça.
+921000	924000	Comment pouvons-nous le répéter?
+924000	927000	Nous allons simplement cliquer...
+927000	932000	Non, pas cliquer, répéter.
+932000	937000	Donc, si nous faisons x, minus x,
+937000	942000	c'est à dire que nous couvons à negative 0,5
+943000	948000	et nous le répéter comme ça.
+948000	950000	C'est ça, vraiment.
+950000	954000	C'est notre fonction de la fonction de l'un à l'autre.
+954000	958000	Il y a beaucoup de meilleures manières à faire.
+958000	962000	Ceci est assez simple, vraiment facile à comprendre.
+962000	967000	Si nous voulons changer ce qui est la fréquence de l'un à l'autre,
+967000	970000	nous pouvons changer de la meer la fréquence.
+970000	973000	Nous pouvons changer de la plus grande fréquence.
+973000	976000	Nous pouvons avoir plus de fréquence,
+976000	980000	en faisant une plus chaude fréquence.
+984000	988000	Peut-être une meilleure façon d'en utiliser
+988000	993000	si nous serons dans des filtres analogues.
+993000	1002000	c'est d'avoir un look à des secondes ou des passés de passés de la basse et des choses comme ça
+1002000	1008000	il se trouve que c'est vraiment pas convainc d'impliquer dans l'échec de l'eau
+1008000	1017000	ce que vous devez vraiment faire est d'en prendre un papier et déranger la fonction de vous-même
+1018000	1021000	donc j'ai fait ça en fait
+1021000	1030000	à un moment j'ai eu un look à comment un second ordre de filter réacte
+1030000	1033000	à une fonction sortie
+1033000	1039000	et la solution est une fonction assez compliquée
+1039000	1042000	donc je vais mettre le lien dans la description
+1042000	1047000	si vous voulez avoir un look à ça, le bon chose avec ça c'est que vous pouvez avoir des résonances
+1047000	1052000	si vous êtes en train d'utiliser des sounds acidiques
+1052000	1056000	c'est une chose très bonne que vous puissiez utiliser
+1056000	1060000	nous avons ce genre de sound
+1072000	1076000	donc c'est plutôt riche
+1076000	1085000	mais je trouve que c'est plus simple et très convainc
+1085000	1090000	donc c'est ce que j'ai choisi à utiliser pour ce tutoriel
+1090000	1094000	pour trouver une fonction sortie
+1094000	1099000	nous aimerions jouer une fréquence F
+1099000	1103000	pour avoir une certaine fréquence de courant
+1103000	1108000	et pour jouer à un certain temps T
+1108000	1113000	donc ce qui correspond à la paramètre X dans notre graphique
+1113000	1117000	c'est juste une fréquence F x T
+1117000	1122000	on veut quelque chose d'une fréquence F
+1122000	1127000	donc on veut une fréquence X
+1127000	1131000	et ce sera la fin de notre fonction smooth
+1132000	1136000	ce que nous aimerions avoir
+1136000	1140000	c'est que si la fréquence T
+1140000	1145000	s'amuse par une fréquence F
+1145000	1149000	on veut de ce point à ce point
+1149000	1152000	être une fréquence F
+1152000	1156000	d'exception que nous avons décalé la fréquence X
+1156000	1161000	donc on veut une fréquence F x F
+1161000	1165000	puis on multiplie ça par une fréquence F
+1165000	1169000	parce que nous avons la partie négative et la partie positive
+1169000	1174000	on ne veut absolument pas la fréquence
+1174000	1177000	pour avoir une fréquence greater que une fréquence
+1177000	1181000	sinon on va avoir quelque chose qui ressemble très bien
+1181000	1184000	je vais vous montrer comment ça ressemble
+1184000	1187000	c'est un smooth step pour trop longtemps
+1187000	1190000	et quand nous nous sommes dans la fréquence
+1190000	1194000	on va réintroduire quelque chose de discontinu
+1194000	1198000	donc nous n'avons vraiment pas besoin d'une fréquence
+1198000	1201000	d'une fréquence plus ou moins
+1201000	1204000	et puis nous faisons comme nous l'avons dit
+1204000	1211000	X-x et nous mixons entre la première et la seconde
+1211000	1214000	en utilisant un smooth step
+1214000	1219000	nous pouvons utiliser cette fréquence pour créer un bas syntho
+1219000	1222000	ce que je voulais faire c'est d'avoir
+1222000	1226000	une fréquence 80-ish
+1226000	1230000	donc je voulais utiliser
+1230000	1233000	des fonctions d'un filtrant
+1233000	1237000	ici c'est juste le carrière
+1237000	1243000	je vais jouer le bas syntho
+1243000	1246000	par itself
+1253000	1255000	donc ce qui se passe ici
+1255000	1259000	nous avons choisi une certaine fréquence
+1259000	1263000	et puis comment nous choisirons
+1263000	1265000	la fréquence de coude
+1265000	1268000	la fréquence de coude
+1268000	1274000	c'est un enveloppe très rapide
+1274000	1278000	donc la valeur minimum est 100 Hz
+1278000	1280000	et puis
+1280000	1282000	sur ce que nous ajoutons
+1282000	1286000	un enveloppe qui s'adresse à 15 kHz
+1286000	1289000	qui s'occupe près de l'appareil
+1289000	1291000	de l'audition humaine
+1291000	1293000	l'appareil est de 20 kHz
+1293000	1296000	vous ne voulez vraiment rien dans votre signal
+1296000	1299000	d'être au-dessus de 20 kHz
+1299000	1303000	parce que vous ne pourriez vraiment pas entendre
+1303000	1305000	si c'est là
+1305000	1307000	et ça pourrait être le cas
+1307000	1309000	donc en général
+1309000	1314000	ne faites pas de fréquences à plus de 20 kHz
+1314000	1318000	donc ici nous avons cet enveloppe de decayation
+1318000	1320000	très rapide
+1320000	1323000	et ce que j'ai fait c'était de diviser la fréquence de coude
+1323000	1326000	pour avoir cette fréquence sub-base
+1326000	1329000	la fréquence actuelle que je fais
+1329000	1332000	va dans cette fonction ici
+1332000	1335000	donc ça va dans la gauche
+1335000	1337000	gauche
+1337000	1339000	je fais
+1339000	1341000	ce que je fais ici
+1341000	1343000	c'est des détenus
+1343000	1346000	j'utilise un T+, juste parce que
+1346000	1349000	sinon on ne peut pas entendre
+1349000	1351000	la détenue
+1351000	1354000	si la fréquence a commencé
+1354000	1357000	si la fréquence a commencé à phase equals 0
+1357000	1359000	donc si vous voulez entendre la détenue
+1359000	1362000	vous devez commencer à une phase normale
+1362000	1365000	donc c'est juste ce que la plus 1 est
+1365000	1367000	pour ici
+1367000	1370000	oui, on va le entendre en stereo
+1371000	1374000	oui, c'est...
+1374000	1376000	c'est ça
+1376000	1379000	j'ai ajouté la sub-base
+1382000	1386000	et maintenant on est vraiment, vraiment dans l'80s
+1386000	1389000	et j'ai ressenti que c'était
+1389000	1391000	un petit peu lourd
+1391000	1394000	d'un très bas sub-base
+1394000	1396000	donc j'ai ajouté
+1396000	1398000	juste la fréquence fondamentale
+1398000	1400000	de la fréquence
+1407000	1409000	donc c'est ça
+1409000	1411000	comment j'ai créé le pattern
+1411000	1413000	pour le pattern
+1413000	1415000	vous pouvez
+1415000	1417000	avoir
+1417000	1419000	un pattern
+1419000	1421000	que loupent tous les 4 barres
+1421000	1423000	juste le même
+1423000	1425000	et puis
+1425000	1428000	on choisit un numérique basé sur
+1428000	1430000	quand nous sommes dans ces 4 barres
+1430000	1432000	donc dans la première barre
+1432000	1435000	nous voulons jouer un A
+1435000	1437000	dans la seconde barre
+1437000	1439000	nous voulons jouer un D
+1439000	1441000	puis un F
+1441000	1443000	puis dans la dernière barre
+1443000	1445000	nous voulons changer deux fois
+1445000	1447000	nous voulons changer un F
+1447000	1449000	deux beat
+1449000	1451000	donc les premières 2 beats sont
+1451000	1453000	C et les dernières 2 beats sont
+1453000	1455000	G
+1455000	1457000	quand vous choisissez
+1457000	1459000	la fréquence fondamentale
+1459000	1461000	vous devez être careful
+1461000	1463000	de ce qui est le plus bas
+1463000	1465000	que vous vouliez jouer
+1465000	1467000	c'est
+1467000	1469000	je vais
+1469000	1471000	expliquer
+1471000	1473000	dans plus de détails
+1473000	1475000	vous voulez
+1475000	1477000	le plus bas
+1477000	1479000	pour être
+1479000	1481000	entre 40
+1481000	1483000	et 100
+1485000	1487000	vous ne voulez pas jouer
+1487000	1489000	trop bas
+1489000	1491000	ce n'est pas un bas
+1491000	1493000	fort
+1493000	1495000	et vous ne voulez pas le plus bas
+1495000	1497000	sinon ce sera
+1497000	1499000	moitié
+1499000	1501000	ici
+1501000	1503000	je vais jouer un nocturne basé
+1503000	1505000	juste pour que vous voient
+1505000	1507000	que c'est une mauvaise idée
+1507000	1509000	quand vous jouez trop bas
+1511000	1513000	ce n'est pas
+1519000	1521000	c'est à votre taste
+1521000	1523000	mais quand c'est trop bas
+1523000	1525000	vous ne verrez pas
+1525000	1527000	ce que c'est
+1527000	1529000	ce n'est pas
+1529000	1531000	le plus bas
+1531000	1533000	nous avons
+1533000	1535000	ce nocturne basé
+1535000	1537000	ici
+1537000	1539000	le nocturne basé
+1539000	1541000	ici c'est
+1541000	1543000	le nocturne basé
+1543000	1545000	donc c'est le nocturne basé
+1545000	1547000	220
+1547000	1549000	d'excepter que nous nous diviserons
+1549000	1551000	par 2
+1551000	1553000	donc nous nous disons que nous voulons jouer
+1553000	1555000	à 110 Hz
+1555000	1557000	d'excepter
+1557000	1559000	que dans notre signal
+1559000	1561000	nous avons le sub
+1561000	1563000	qui est maintenant joué à 55 Hz
+1563000	1565000	donc c'est exactement où nous voulons
+1565000	1567000	le plus bas
+1567000	1569000	donc
+1571000	1573000	maintenant
+1573000	1575000	avec ce bas
+1575000	1577000	j'aimerais
+1577000	1579000	avoir le nocturne basé
+1579000	1581000	donc une façon
+1581000	1583000	d'avoir
+1583000	1585000	le nocturne basé
+1585000	1587000	qui est très très souvent
+1587000	1589000	utilisé
+1589000	1591000	en techno
+1591000	1593000	et maintenant
+1593000	1595000	aussi très bien
+1595000	1597000	une sorte de musique
+1597000	1599000	c'est d'utiliser la compression de la main
+1599000	1601000	donc imaginez
+1601000	1603000	que vous avez des trompes
+1603000	1605000	en
+1605000	1607000	faisant des hits très lourds
+1607000	1609000	comment vous le faites
+1609000	1611000	que ces hits sont très lourds
+1611000	1613000	mais il y a un truc
+1613000	1615000	qui est très convaincu
+1615000	1617000	c'est que si vous décollez tout le reste
+1617000	1619000	de ces trucs
+1619000	1621000	nos oreilles
+1621000	1623000	nous percevons ces hits comme être super lourds
+1623000	1625000	et puis quand les sons
+1625000	1627000	sont revenus
+1627000	1629000	nous percevons aussi ces sounds
+1629000	1631000	comme être lourds
+1631000	1633000	pas comme être lourds
+1633000	1635000	donc
+1635000	1637000	même si nous n'avons pas
+1637000	1639000	encore des trompes
+1639000	1641000	c'est ce que je veux faire pour le bas
+1641000	1643000	donc imaginez qu'on a un trompe
+1643000	1645000	en faisant un boom
+1645000	1647000	à chaque beat
+1647000	1649000	alors ce que nous pouvons
+1649000	1651000	faire
+1651000	1653000	c'est ce type d'enveloppement
+1653000	1655000	donc qu'est-ce que c'est
+1655000	1657000	ce type d'enveloppement
+1657000	1659000	j'appelle le bump
+1659000	1661000	c'est vraiment une compression
+1661000	1663000	de la main
+1663000	1665000	donc
+1665000	1667000	qu'est-ce que ça fait
+1667000	1669000	quand ça va
+1669000	1671000	de 0 à 1
+1671000	1673000	à peu près de 0,2
+1673000	1675000	à chaque beat
+1675000	1677000	et puis ça va
+1677000	1679000	à la fin
+1679000	1681000	à chaque beat
+1681000	1683000	ok
+1685000	1687000	donc si nous appliquons
+1687000	1689000	directement
+1689000	1691000	à notre bas synth pattern
+1691000	1693000	vous devez entendre
+1693000	1695000	que ces notes
+1695000	1697000	donc les notes ailes
+1697000	1699000	que nous étions en train
+1699000	1701000	sont maintenant
+1701000	1703000	chaque
+1703000	1705000	première est
+1705000	1707000	en train
+1707000	1709000	d'être complètement inaudible
+1709000	1711000	c'est ce que ça semble
+1715000	1717000	donc c'est
+1717000	1719000	trop bien évidemment
+1719000	1721000	que ça montre
+1721000	1723000	l'idée et maintenant
+1723000	1725000	si nous
+1725000	1727000	mixons
+1727000	1729000	mixons le bump
+1729000	1731000	pour que
+1731000	1733000	l'enveloppe
+1733000	1735000	s'entraîne à 0,2
+1735000	1737000	à 1
+1737000	1739000	c'est ce que nous avons
+1743000	1745000	donc nous avons des dynamiques
+1745000	1747000	dans notre son
+1747000	1749000	et nous pouvons ajouter
+1749000	1751000	le pattern de la pâte
+1751000	1753000	aussi
+1753000	1755000	et aussi faire
+1755000	1757000	une compression de la main
+1757000	1759000	alors que nous allons faire
+1759000	1761000	un peu moins
+1761000	1763000	sur ça
+1763000	1765000	et la même chose
+1765000	1767000	pour la marimba et nous
+1767000	1769000	faisons seulement un petit bit
+1769000	1771000	de compression de la main
+1771000	1773000	pour la marimba
+1791000	1793000	donc maintenant on est vraiment
+1793000	1795000	quelque chose qui est
+1795000	1797000	assez musical
+1797000	1799000	je pense
+1799000	1801000	nous allons
+1801000	1803000	faire
+1803000	1805000	le dernier
+1805000	1807000	instrument
+1807000	1809000	que je voulais ajouter
+1809000	1811000	dans cet épisode
+1811000	1813000	je l'ai appelé Waleed
+1813000	1815000	c'est juste un syntho
+1815000	1817000	il y a
+1817000	1819000	des petites interventions
+1819000	1821000	maintenant et après
+1821000	1823000	ce genre d'idée
+1823000	1825000	donc je voulais être
+1825000	1827000	je veux
+1827000	1829000	avoir une longue duration
+1829000	1831000	donc
+1831000	1833000	j'ai utilisé 0,1
+1833000	1835000	ici mais
+1835000	1837000	c'est juste d'avoir quelque chose de facile
+1837000	1839000	à changer et j'ai créé
+1839000	1841000	un premier enveloppe
+1841000	1843000	que va de 0 à 1
+1843000	1845000	dans Dure Over 2
+1845000	1847000	et puis de 1 à 0
+1847000	1849000	dans Dure Over 2
+1849000	1851000	cet enveloppe
+1851000	1853000	j'ai utilisé
+1853000	1855000	dans le code de la fréquence
+1855000	1857000	faite
+1857000	1859000	filtrée de la function
+1861000	1863000	je dis que c'est faite
+1863000	1865000	c'est un vrai filtre
+1865000	1867000	c'est juste pas
+1867000	1869000	un filtre traditionnel
+1871000	1873000	dans le sens
+1873000	1875000	c'est
+1875000	1877000	un
+1877000	1879000	filtre finit
+1879000	1881000	de la fréquence
+1881000	1891400	Le deuxième enveloppe que j'ai décidé de moduler l'amplitude de notre synthèse.
+1891400	1900800	Donc j'ai voulu l'amplitude s'entraîner rapidement et then go back down a little more slowly.
+1901800	1908800	La fréquence de l'amplitude, j'ai voulu être pas trop bas à la start,
+1908800	1915800	donc 400 Hz c'est très, très medium, et puis aller par seulement 10 kHz,
+1915800	1923400	donc pas tout de la way, pas tout de la way up to the extremes of the hearing range.
+1923400	1931400	J'ai juste voulu l'amplitude s'entraîner un peu, mais pas trop s'entraîner.
+1931400	1938400	Et puis c'est juste la matière de créer cette fonction de sol filter.
+1938400	1948400	Et puis la pattern, cette pattern est juste bizarre.
+1948400	1952400	Donc c'est répétant tous les 4 barres.
+1952400	1960400	Nous avons choisi une note qui justifie, c'est juste vraiment la même chose que l'avant.
+1960400	1971400	Ici nous avons choisi de jouer une E, et puis une F, et puis une E, et puis une D,
+1971400	1982400	pour que ces notes soient dans les quarts que nous jouons, et qu'elles complètent avec les autres instruments.
+1982400	1988400	Donc elles ne classent pas trop.
+1989400	1996400	Et puis, cette chose ici, je ne peux vraiment pas expliquer.
+1996400	2006400	C'était tout pour jouer avec la durée de la note.
+2006400	2013400	C'est tout pour restarter la note, pour avoir une pattern intéressante
+2013400	2019400	pour que ce soit le début et le début.
+2019400	2022400	Je vais jouer pour vous.
+2022400	2028400	Ici, c'est tout.
+2028400	2038400	Nous mérстрons de ces cheveux de vache et déjà unerique.
+2038400	2049900	On va aller rentrer ici, et maintenant on va déjeuner la chaine dielle pour ahora.
+2049900	2059500	Fast repeating notes are due to this kind of thing here, and then the octave shift is due to this clause here.
+2062940	2064940	Yeah.
+2065500	2072780	The idea is just, yeah, just get creative with patterns, don't hesitate to play with mod, don't hesitate to play with
+2073740	2076100	that kind of weird stuff.
+2077060	2079060	Juste, see what comes out.
+2080100	2082100	Then I wanted to add a
+2083860	2085860	fake reverb on top of it as well.
+2088300	2090300	So here
+2090380	2097180	the left channel of the signal will be the pattern, the right channel will be the pattern with some delay and
+2097820	2103180	then we also have the pattern repeat with more delay.
+2106220	2109500	So if we hear it, it's going to sound like this.
+2119820	2122580	So yeah, it gets kind of crazy.
+2125540	2133660	Let me play it along with only the pad and I also added a
+2133660	2137940	fake sidechain on top of it, because why not?
+2157180	2160620	So yeah, we're getting almost a nostalgic kind of feeling here.
+2160620	2165660	Yeah, I think that's about it for today.
+2167340	2170940	Let me just play the whole thing for you.
+2177060	2179060	Sorry, restart it.
+2190620	2214900	So yeah, that's it for today guys. I hope that that gave you some ideas of stuff you can play with.
+2215900	2223740	Next time we will be playing with some percussion to add a basic drum loop to our song.
+2225100	2227100	That's it.
+2227660	2229660	I will see you next time. Bye.

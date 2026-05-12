@@ -1,0 +1,4060 @@
+1
+00:00:00,000 --> 00:00:04,000
+Si nous le jouons directement, nous avons ceci.
+
+2
+00:00:25,000 --> 00:00:28,000
+Bonjour, c'est Alex Citibo.
+
+3
+00:00:29,000 --> 00:00:33,000
+Bienvenue au second épisode de Making Music in Shadotoy.
+
+4
+00:00:33,000 --> 00:00:37,000
+Dans l'un des premiers épisodes, nous avons regardé des basiques
+
+5
+00:00:37,000 --> 00:00:41,000
+de l'utiliser le sound buffer en Shadotoy
+
+6
+00:00:41,000 --> 00:00:44,000
+et comment utiliser pour créer des notes
+
+7
+00:00:44,000 --> 00:00:48,000
+avec différentes fréquences, timbres, panneaux.
+
+8
+00:00:48,000 --> 00:00:52,000
+Nous avons joué avec des formes de la waveform,
+
+9
+00:00:52,000 --> 00:00:54,000
+incluant la modulation de la fréquence,
+
+10
+00:00:55,000 --> 00:01:00,000
+et nous avons utilisé pour créer un syntho simple
+
+11
+00:01:00,000 --> 00:01:02,000
+et une mélodie simple.
+
+12
+00:01:02,000 --> 00:01:05,000
+Aujourd'hui, j'aimerais couvrir un peu plus bas
+
+13
+00:01:05,000 --> 00:01:09,000
+pour savoir pourquoi est FM
+
+14
+00:01:09,000 --> 00:01:12,000
+un outil convenant
+
+15
+00:01:12,000 --> 00:01:15,000
+pour faire le sound design en Shadotoy.
+
+16
+00:01:15,000 --> 00:01:19,000
+Comment pouvons-nous comprendre ces paramètres
+
+17
+00:01:19,000 --> 00:01:22,000
+et comment pouvons-nous utiliser pour créer
+
+18
+00:01:22,000 --> 00:01:25,000
+des instruments intéressants ?
+
+19
+00:01:25,000 --> 00:01:32,000
+Aujourd'hui, nous allons créer un pad et un syntho lead
+
+20
+00:01:32,000 --> 00:01:36,000
+avec des mélodies pour ces instruments.
+
+21
+00:01:36,000 --> 00:01:40,000
+Avant de commencer, je vous encourage
+
+22
+00:01:40,000 --> 00:01:44,000
+à essayer de couvrir avec moi si c'est possible pour vous.
+
+23
+00:01:44,000 --> 00:01:48,000
+La raison pour laquelle vous allez avoir
+
+24
+00:01:48,000 --> 00:01:52,000
+beaucoup plus d'outils.
+
+25
+00:01:52,000 --> 00:01:55,000
+Si vous n'avez pas besoin d'autre chose,
+
+26
+00:01:55,000 --> 00:01:57,000
+vous pouvez aller à Shadotoy.com
+
+27
+00:01:57,000 --> 00:01:59,000
+et ouvrir un nouveau shader
+
+28
+00:01:59,000 --> 00:02:02,000
+avec le sound tab et vous allez bien.
+
+29
+00:02:02,000 --> 00:02:04,000
+Si vous n'avez pas perdu à quel point
+
+30
+00:02:04,000 --> 00:02:06,000
+vous pouvez toujours poser le vidéo
+
+31
+00:02:06,000 --> 00:02:09,000
+ou vous pouvez juste suivre le lien
+
+32
+00:02:09,000 --> 00:02:11,000
+dans la description
+
+33
+00:02:11,000 --> 00:02:13,000
+pour le code que nous allons obtenir
+
+34
+00:02:13,000 --> 00:02:17,000
+à la fin de l'épisode d'aujourd'hui.
+
+35
+00:02:17,000 --> 00:02:21,000
+Allons-y !
+
+36
+00:02:21,000 --> 00:02:23,840
+Aujourd'hui, nous allons
+
+37
+00:02:23,840 --> 00:02:30,000
+travailler avec la modulation de la fréquence.
+
+38
+00:02:30,000 --> 00:02:33,000
+Qu'est-ce que ce que c'est ?
+
+39
+00:02:33,000 --> 00:02:37,000
+C'est quand vous avez une waveforme répétie
+
+40
+00:02:37,000 --> 00:02:40,000
+mais cette waveforme est répétie
+
+41
+00:02:40,000 --> 00:02:42,000
+avec une période différente
+
+42
+00:02:42,000 --> 00:02:45,000
+selon le temps.
+
+43
+00:02:45,000 --> 00:02:48,000
+Vous avez une fréquence instantanée
+
+44
+00:02:48,000 --> 00:02:51,000
+FFT
+
+45
+00:02:51,000 --> 00:02:55,000
+fréquence instantanée
+
+46
+00:02:55,000 --> 00:02:59,000
+et puis vous avez un signal
+
+47
+00:02:59,000 --> 00:03:02,000
+On va utiliser une fonction de signes
+
+48
+00:03:02,000 --> 00:03:04,000
+ici, comme une waveforme
+
+49
+00:03:04,000 --> 00:03:08,000
+vous pouvez utiliser d'autres formes de waveforms
+
+50
+00:03:08,000 --> 00:03:12,000
+et ce sera le sign de la phase.
+
+51
+00:03:13,000 --> 00:03:15,000
+Qu'est-ce que la fonction de phase
+
+52
+00:03:15,000 --> 00:03:16,000
+devrait être utilisé ?
+
+53
+00:03:16,000 --> 00:03:18,000
+C'est une phase de T ici.
+
+54
+00:03:18,000 --> 00:03:20,000
+Qu'est-ce que la fonction de phase
+
+55
+00:03:20,000 --> 00:03:22,000
+devrait être utilisé
+
+56
+00:03:22,000 --> 00:03:24,000
+pour obtenir la fréquence qu'on veut ?
+
+57
+00:03:24,000 --> 00:03:28,000
+La profondeur qu'on a besoin
+
+58
+00:03:28,000 --> 00:03:30,000
+est que la durée de temps
+
+59
+00:03:30,000 --> 00:03:32,000
+de la fonction de phase
+
+60
+00:03:32,000 --> 00:03:34,000
+devrait être d'une pi
+
+61
+00:03:35,000 --> 00:03:37,000
+fois FFT.
+
+62
+00:03:37,000 --> 00:03:39,000
+Je vais définir
+
+63
+00:03:41,000 --> 00:03:43,000
+ce micro ici
+
+64
+00:03:43,000 --> 00:03:45,000
+comme la dernière fois
+
+65
+00:03:47,000 --> 00:03:50,000
+on va utiliser le constant beaucoup.
+
+66
+00:03:51,000 --> 00:03:53,000
+La phase devrait être
+
+67
+00:03:53,000 --> 00:03:55,000
+l'intégral
+
+68
+00:03:55,000 --> 00:03:57,000
+de cette phase prime.
+
+69
+00:03:59,000 --> 00:04:01,000
+La phase de T
+
+70
+00:04:01,000 --> 00:04:03,000
+devrait être l'intégral
+
+71
+00:04:04,000 --> 00:04:07,000
+de pi x FFT
+
+72
+00:04:07,000 --> 00:04:09,000
+de T.
+
+73
+00:04:09,000 --> 00:04:11,000
+Il peut être l'intégral
+
+74
+00:04:11,000 --> 00:04:13,000
+ou il peut être un constant
+
+75
+00:04:13,000 --> 00:04:15,000
+de la phase prime.
+
+76
+00:04:15,000 --> 00:04:17,000
+On va voir des espèces spéciales.
+
+77
+00:04:19,000 --> 00:04:21,000
+D'abord, on va voir
+
+78
+00:04:21,000 --> 00:04:23,000
+ce qui se passe si nous avons
+
+79
+00:04:23,000 --> 00:04:25,000
+une fréquence constante.
+
+80
+00:04:25,000 --> 00:04:27,000
+En ce cas, c'est assez
+
+81
+00:04:27,000 --> 00:04:29,000
+obvious
+
+82
+00:04:29,000 --> 00:04:31,000
+mais on va faire la calculation.
+
+83
+00:04:31,000 --> 00:04:33,000
+La phase prime
+
+84
+00:04:33,000 --> 00:04:35,000
+de T
+
+85
+00:04:35,000 --> 00:04:37,000
+sera 2 pi
+
+86
+00:04:37,000 --> 00:04:39,000
+fois FFT.
+
+87
+00:04:39,000 --> 00:04:41,000
+Si nous intégrons
+
+88
+00:04:41,000 --> 00:04:43,000
+cette phase
+
+89
+00:04:43,000 --> 00:04:45,000
+de T
+
+90
+00:04:45,000 --> 00:04:47,000
+qui est de pi x FFT
+
+91
+00:04:47,000 --> 00:04:49,000
+de T plus un constant
+
+92
+00:04:51,000 --> 00:04:53,000
+donc le signal
+
+93
+00:04:53,000 --> 00:04:55,000
+à la fin
+
+94
+00:04:55,000 --> 00:04:57,000
+sera
+
+95
+00:04:57,000 --> 00:04:59,000
+le signe
+
+96
+00:04:59,000 --> 00:05:01,000
+de pi x FFT
+
+97
+00:05:01,000 --> 00:05:03,000
+plus un constant.
+
+98
+00:05:03,000 --> 00:05:05,000
+Ici
+
+99
+00:05:05,000 --> 00:05:07,000
+le constant c'est juste
+
+100
+00:05:07,000 --> 00:05:09,000
+la phase offset
+
+101
+00:05:09,000 --> 00:05:11,000
+donc vous pouvez juste le mettre
+
+102
+00:05:11,000 --> 00:05:13,000
+si vous voulez.
+
+103
+00:05:13,000 --> 00:05:15,000
+Nos yeux
+
+104
+00:05:15,000 --> 00:05:17,000
+ne peuvent vraiment détecter
+
+105
+00:05:17,000 --> 00:05:19,000
+si il y a une phase shift
+
+106
+00:05:19,000 --> 00:05:21,000
+ou pas.
+
+107
+00:05:21,000 --> 00:05:23,000
+On va voir
+
+108
+00:05:23,000 --> 00:05:25,000
+ce qui se passe
+
+109
+00:05:25,000 --> 00:05:27,000
+si nous avons
+
+110
+00:05:27,000 --> 00:05:29,000
+une fréquence constante.
+
+111
+00:05:33,000 --> 00:05:35,000
+Ça se passe
+
+112
+00:05:35,000 --> 00:05:37,000
+si nous avons une variation synésoidale.
+
+113
+00:05:39,000 --> 00:05:41,000
+On va introduire
+
+114
+00:05:41,000 --> 00:05:43,000
+une
+
+115
+00:05:43,000 --> 00:05:45,000
+fréquence carrière
+
+116
+00:05:47,000 --> 00:05:49,000
+appelée FC.
+
+117
+00:05:49,000 --> 00:05:51,000
+On va introduire
+
+118
+00:05:51,000 --> 00:05:53,000
+une fréquence modulée
+
+119
+00:05:53,000 --> 00:05:55,000
+appelée FM
+
+120
+00:05:55,000 --> 00:05:57,000
+et
+
+121
+00:05:57,000 --> 00:05:59,000
+on va
+
+122
+00:05:59,000 --> 00:06:01,000
+introduire
+
+123
+00:06:01,000 --> 00:06:03,000
+une fréquence
+
+124
+00:06:03,000 --> 00:06:05,000
+de déviation
+
+125
+00:06:05,000 --> 00:06:07,000
+et ça
+
+126
+00:06:07,000 --> 00:06:09,000
+sera appelé DF.
+
+127
+00:06:09,000 --> 00:06:11,000
+FFT
+
+128
+00:06:11,000 --> 00:06:13,000
+sera
+
+129
+00:06:13,000 --> 00:06:15,000
+une fC
+
+130
+00:06:15,000 --> 00:06:17,000
+plus
+
+131
+00:06:17,000 --> 00:06:19,000
+un DF
+
+132
+00:06:19,000 --> 00:06:21,000
+de cosine
+
+133
+00:06:21,000 --> 00:06:23,000
+de 2 pi
+
+134
+00:06:23,000 --> 00:06:25,000
+x T.
+
+135
+00:06:25,000 --> 00:06:27,000
+J'ai utilisé un cosine
+
+136
+00:06:27,000 --> 00:06:29,000
+pour un changement.
+
+137
+00:06:29,000 --> 00:06:31,000
+Ce que nous voulons
+
+138
+00:06:31,000 --> 00:06:33,000
+c'est que la phase prime
+
+139
+00:06:33,000 --> 00:06:34,000
+de T
+
+140
+00:06:34,000 --> 00:06:35,000
+est 2 pi
+
+141
+00:06:35,000 --> 00:06:36,000
+de pi
+
+142
+00:06:36,000 --> 00:06:38,000
+ou tout ça.
+
+143
+00:06:41,000 --> 00:06:43,000
+Qu'est-ce qu'on doit mettre
+
+144
+00:06:43,000 --> 00:06:45,000
+en phase de T ?
+
+145
+00:06:45,000 --> 00:06:47,000
+Nous avons
+
+146
+00:06:47,000 --> 00:06:49,000
+la première termine
+
+147
+00:06:49,000 --> 00:06:51,000
+qui est 2 pi x FC x T
+
+148
+00:06:53,000 --> 00:07:01,000
+Et puis, let's integrate the second term.
+
+149
+00:07:01,000 --> 00:07:09,000
+Let me make this a little bit clearer by distributing the two parts.
+
+150
+00:07:09,000 --> 00:07:16,000
+So how do we integrate cosine of constant times t?
+
+151
+00:07:16,000 --> 00:07:20,000
+Le constant est out.
+
+152
+00:07:20,000 --> 00:07:26,000
+Donc nous devons diviser par 2pi times fm.
+
+153
+00:07:26,000 --> 00:07:30,000
+Et puis l'intégral de cosine est sine.
+
+154
+00:07:30,000 --> 00:07:48,000
+Nous allons obtenir 2pi times tf over 2pi times fm times sine f2pi times fm times t.
+
+155
+00:07:48,000 --> 00:07:56,000
+C'est évidemment le 2pi que l'on annonce.
+
+156
+00:07:56,000 --> 00:08:00,000
+Et c'est ce que l'on obtient.
+
+157
+00:08:00,000 --> 00:08:27,000
+Donc à la fin, notre signal sera 2pi times fc times t plus df over fm times sine f2pi times fm times t.
+
+158
+00:08:27,000 --> 00:08:41,000
+Donc c'est la modulation de fréquence quand la fonction modulée est sine.
+
+159
+00:08:41,000 --> 00:08:48,000
+Ce que l'on peut introduire est l'index de modulation, iom.
+
+160
+00:08:48,000 --> 00:08:53,000
+C'est ce que j'ai introduit la dernière fois.
+
+161
+00:08:53,000 --> 00:09:00,000
+C'est juste df over fm.
+
+162
+00:09:00,000 --> 00:09:03,000
+Alors que nous n'avons que de l'IOM ici.
+
+163
+00:09:03,000 --> 00:09:09,000
+Nous allons défendre un macro pour tout ceci.
+
+164
+00:09:09,000 --> 00:09:18,000
+Comment l'on fait de la modulation de fréquence avec fc, fm et iom?
+
+165
+00:09:18,000 --> 00:09:37,000
+Nous allons rétablir un signal de fc times 2pi times fc times t plus iom times sine f2pi times fm times t.
+
+166
+00:09:37,000 --> 00:09:43,000
+Je vais assumer que la t est définie dans le contexte.
+
+167
+00:09:43,000 --> 00:09:50,000
+Et j'ai mis des parenthèses autour de fc et fm et iom.
+
+168
+00:09:50,000 --> 00:09:58,000
+Juste en cas d'expressions. Parce que ce sera en ligne.
+
+169
+00:09:58,000 --> 00:10:03,000
+Nous allons défendre ceci.
+
+170
+00:10:03,000 --> 00:10:14,000
+Ce que j'aimerais faire maintenant, c'est de voir le spectre de ce son.
+
+171
+00:10:14,000 --> 00:10:24,000
+Alors, nous allons introduire un signal, juste comme la dernière fois,
+
+172
+00:10:24,000 --> 00:10:26,000
+qui nous retournons.
+
+173
+00:10:26,000 --> 00:10:32,000
+Et pour le signal, nous allons ajouter ce fm.
+
+174
+00:10:32,000 --> 00:10:44,000
+Nous allons essayer une wave de 1 kHz avec un modulateur de 100 Hz.
+
+175
+00:10:44,000 --> 00:10:51,000
+Et pour la no-modulation, je vais mettre une petite amplitude,
+
+176
+00:10:51,000 --> 00:10:56,000
+juste pour que ce soit pas trop obnoxieux.
+
+177
+00:10:56,000 --> 00:11:00,000
+Alors, j'ai ouvert un spectre analyzer.
+
+178
+00:11:00,000 --> 00:11:06,000
+Je ne sais pas ce que c'est, c'est un outil qui nous permet de voir
+
+179
+00:11:06,000 --> 00:11:09,000
+quelle frequencies sont présentes dans notre signal.
+
+180
+00:11:09,000 --> 00:11:13,000
+Ce que ça fait, c'est que ça écoute à l'outil de l'outil de l'étoile,
+
+181
+00:11:13,000 --> 00:11:16,000
+ça choque le signal dans deux portes de temps.
+
+182
+00:11:16,000 --> 00:11:26,000
+Et sur chaque port, ça décompose le signal comme un nombre de components sinusoidales.
+
+183
+00:11:26,000 --> 00:11:31,000
+Et ça nous choque l'amplitude de chaque component de ça.
+
+184
+00:11:31,000 --> 00:11:38,000
+Alors, si nous le mettons, maintenant, nous faisons un fm, mais nous n'avons pas de modulation,
+
+185
+00:11:38,000 --> 00:11:42,000
+parce que l'index de modulation est 0.
+
+186
+00:11:42,000 --> 00:11:49,000
+Donc, ce que nous devons faire, c'est une pure wave de signal.
+
+187
+00:11:49,000 --> 00:11:55,000
+Et c'est ce que nous avons.
+
+188
+00:11:55,000 --> 00:11:59,000
+Maintenant, si j'ai augmenté l'index de modulation,
+
+189
+00:11:59,000 --> 00:12:02,000
+qu'est-ce que vous pensez que ça va arriver ?
+
+190
+00:12:02,000 --> 00:12:06,000
+On va essayer.
+
+191
+00:12:06,000 --> 00:12:08,000
+C'est intéressant.
+
+192
+00:12:08,000 --> 00:12:17,000
+Ce que nous avons, c'est que la fréquence centrale reste à 1.000 Hz,
+
+193
+00:12:18,000 --> 00:12:24,000
+mais ensuite, nous avons des peaks, des components sinusodales,
+
+194
+00:12:24,000 --> 00:12:36,000
+à 900, 800, 700, et nous avons aussi des components à 1100, 1200, etc.
+
+195
+00:12:36,000 --> 00:12:46,000
+Maintenant, je réalise qu'il y a un peu d'issue dans mon code,
+
+196
+00:12:46,000 --> 00:12:52,000
+parce qu'on utilise un signe d'un grand nombre.
+
+197
+00:12:52,000 --> 00:12:57,000
+On va mettre le mod à 1.
+
+198
+00:12:57,000 --> 00:13:02,000
+On peut juste utiliser la fréquence,
+
+199
+00:13:02,000 --> 00:13:09,000
+et faire la même chose qu'ici,
+
+200
+00:13:09,000 --> 00:13:17,000
+pour que ça ne se débrouille après quelques secondes.
+
+201
+00:13:18,000 --> 00:13:23,000
+Maintenant, ce que vous pensez que ça va arriver,
+
+202
+00:13:23,000 --> 00:13:29,000
+si j'ai augmenté la fréquence de modulation.
+
+203
+00:13:29,000 --> 00:13:35,000
+On voit que la fréquence centrale était basée à 100 Hz,
+
+204
+00:13:35,000 --> 00:13:41,000
+si j'ai augmenté la fréquence de modulation à 120 Hz,
+
+205
+00:13:41,000 --> 00:13:57,000
+bien sûr, la fréquence centrale était basée à 100 Hz.
+
+206
+00:13:57,000 --> 00:14:06,000
+Qu'est-ce qui va arriver si j'ai augmenté la fréquence de modulation à 2 Hz?
+
+207
+00:14:06,000 --> 00:14:14,000
+Bien sûr, ça va aller jusqu'à 2 Hz.
+
+208
+00:14:14,000 --> 00:14:19,000
+Maintenant, ce que vous pensez que ça va arriver,
+
+209
+00:14:19,000 --> 00:14:24,000
+si j'ai augmenté la fréquence de modulation?
+
+210
+00:14:24,000 --> 00:14:27,000
+On va essayer ça.
+
+211
+00:14:28,000 --> 00:14:32,000
+On a un peu plus de pique.
+
+212
+00:14:32,000 --> 00:14:36,000
+La fréquence de modulation s'améliore,
+
+213
+00:14:36,000 --> 00:14:43,000
+à l'aide de notre signe.
+
+214
+00:14:43,000 --> 00:14:46,000
+Comme vous le voyez, ça s'améliore et s'améliore
+
+215
+00:14:46,000 --> 00:14:52,000
+et s'occupe de plus en plus de la fréquence.
+
+216
+00:14:53,000 --> 00:14:58,000
+On va mettre la fréquence de modulation à 2 Hz et à 100 Hz
+
+217
+00:14:58,000 --> 00:15:03,000
+et voir précisément ce qui se passe ici.
+
+218
+00:15:03,000 --> 00:15:07,000
+Si nous sommes au centre de la fréquence de modulation à 2 Hz,
+
+219
+00:15:07,000 --> 00:15:13,000
+nous avons un modulateur de 100 Hz et un index de modulation de 10 Hz.
+
+220
+00:15:14,000 --> 00:15:24,000
+On voit que la fréquence de modulation de modulation
+
+221
+00:15:24,000 --> 00:15:25,000
+...
+
+222
+00:15:25,000 --> 00:15:26,000
+...
+
+223
+00:15:26,000 --> 00:15:27,000
+...
+
+224
+00:15:27,000 --> 00:15:28,000
+...
+
+225
+00:15:28,000 --> 00:15:29,000
+...
+
+226
+00:15:29,000 --> 00:15:30,000
+...
+
+227
+00:15:30,000 --> 00:15:31,000
+...
+
+228
+00:15:31,000 --> 00:15:32,000
+...
+
+229
+00:15:32,000 --> 00:15:33,000
+...
+
+230
+00:15:33,000 --> 00:15:34,000
+...
+
+231
+00:15:34,000 --> 00:15:35,000
+...
+
+232
+00:15:35,000 --> 00:15:36,000
+...
+
+233
+00:15:36,000 --> 00:15:39,000
+...
+
+234
+00:15:39,000 --> 00:15:40,000
+...
+
+235
+00:15:40,000 --> 00:15:42,000
+...
+
+236
+00:15:42,000 --> 00:15:43,000
+...
+
+237
+00:15:43,000 --> 00:15:44,000
+...
+
+238
+00:15:44,000 --> 00:15:45,000
+...
+
+239
+00:15:45,000 --> 00:15:46,000
+...
+
+240
+00:15:46,000 --> 00:15:47,000
+...
+
+241
+00:15:47,000 --> 00:15:48,000
+...
+
+242
+00:15:48,000 --> 00:15:49,000
+...
+
+243
+00:15:49,000 --> 00:15:50,000
+...
+
+244
+00:15:50,000 --> 00:15:51,000
+...
+
+245
+00:15:51,000 --> 00:15:52,000
+...
+
+246
+00:15:52,000 --> 00:15:53,000
+...
+
+247
+00:15:53,000 --> 00:15:54,000
+...
+
+248
+00:15:55,000 --> 00:15:57,000
+...
+
+249
+00:15:57,000 --> 00:15:58,000
+...
+
+250
+00:15:58,000 --> 00:15:59,000
+...
+
+251
+00:15:59,000 --> 00:16:00,000
+...
+
+252
+00:16:00,000 --> 00:16:01,000
+...
+
+253
+00:16:01,000 --> 00:16:02,000
+...
+
+254
+00:16:02,000 --> 00:16:03,000
+...
+
+255
+00:16:03,000 --> 00:16:04,000
+...
+
+256
+00:16:04,000 --> 00:16:16,660
+100 Hz, donc nous pouvons interpréter ça comme, bon, les audibles sidebends
+
+257
+00:16:16,660 --> 00:16:31,140
+RFC plus ou moins, n times fn, for n is equal to about the index of modulation
+
+258
+00:16:31,140 --> 00:16:43,020
+That's not exactly, depending on where you cut, you can consider that it's a slightly wider thing but
+
+259
+00:16:43,020 --> 00:16:53,740
+that's a rule of thumb. Alright, before we move on, what do you think happens if the audible sideband
+
+260
+00:16:53,740 --> 00:17:11,180
+gets a negative frequency? For instance, let's try 500 Hz and with a 300 Hz modulation and 2 as an
+
+261
+00:17:11,180 --> 00:17:22,580
+index of modulation, so here, we've got 500 Hz, let's look at the lower sideband, so 500 minus 300
+
+262
+00:17:22,580 --> 00:17:33,940
+is 200, 200 minus 300 again is negative 100, so will the universe blow up or will something else happen?
+
+263
+00:17:34,940 --> 00:17:48,340
+Of course, what we will get is just a positive frequency at, well it should be minus 100 Hz, so we get plus 100 Hz
+
+264
+00:17:48,340 --> 00:18:04,540
+So that's what you see here and if you look closely, you will see that there is also a negative 400 which gets
+
+265
+00:18:04,540 --> 00:18:13,900
+reflected back to positive 400 and if we increase the index of modulation again, you get 700 and so on
+
+266
+00:18:19,100 --> 00:18:33,900
+So, negative frequencies get reflected back, in other words, we just have an absolute value here
+
+267
+00:18:33,900 --> 00:18:53,460
+Fantastic, I think that's really enlightening because this means that the spectrum of our signal, we have a very precise control over it
+
+268
+00:18:54,020 --> 00:19:08,420
+So when we will be doing some sound design, we will be able to control precisely what components are in our generated signal
+
+269
+00:19:09,380 --> 00:19:25,380
+So let's try the notes right now, now I want to move on to creating a pad, so let's create a pad, a very ethereal dreamy sound
+
+270
+00:19:29,380 --> 00:19:36,380
+I'm going to have its stereo, let's call it pad synth
+
+271
+00:19:39,380 --> 00:19:43,380
+And have it use a frequency and a time
+
+272
+00:19:45,380 --> 00:19:53,380
+So let's define a signal and return that signal, so what should we be doing to our signal?
+
+273
+00:19:53,380 --> 00:20:04,380
+Well, what we will be doing is just add a bunch of frequency components
+
+274
+00:20:09,380 --> 00:20:16,380
+All right, so you get the idea, so what should we be adding first?
+
+275
+00:20:16,380 --> 00:20:24,380
+One thing I like to have first is always a kind of solid body
+
+276
+00:20:25,340 --> 00:20:36,340
+A warm sound, which is kind of the root of our pad
+
+277
+00:20:37,300 --> 00:20:44,300
+Let's actually hear it right now, let's put on a 300 Hz
+
+278
+00:20:48,300 --> 00:20:56,300
+So you see that's a basic sound, but I don't know what to do
+
+279
+00:20:57,260 --> 00:21:06,260
+What we can do to make it a bit more interesting is add some modulation
+
+280
+00:21:06,260 --> 00:21:13,260
+So let's detune slightly the modulator from the carrier
+
+281
+00:21:13,260 --> 00:21:16,260
+And make it stereo
+
+282
+00:21:17,220 --> 00:21:25,220
+So now we get this, a slightly stereo effect
+
+283
+00:21:25,220 --> 00:21:36,220
+I'm not very fond of using 300 Hz here, so let me define a macro to get from a note number
+
+284
+00:21:36,220 --> 00:21:46,220
+To a frequency, last time I had my note numbers relative to the A440
+
+285
+00:21:46,220 --> 00:21:56,220
+But I like to have them related more to the middle C, which happens to be 90 Hz
+
+286
+00:21:57,220 --> 00:22:04,220
+So let's use that instead, we will be using a note number minus 9
+
+287
+00:22:04,220 --> 00:22:06,220
+Divided by 12
+
+288
+00:22:06,220 --> 00:22:14,220
+That will be the, that will be the, that will be the
+
+289
+00:22:14,220 --> 00:22:24,220
+12 tone equal temperament frequency for a note with a note number
+
+290
+00:22:24,220 --> 00:22:34,220
+Which is relative to middle C, so if we put N of 0 here, we should get middle C
+
+291
+00:22:34,220 --> 00:22:44,220
+Right, if you have perfect pitch, maybe you can notice that
+
+292
+00:22:44,220 --> 00:22:54,220
+Ok, so right now this does not sound like a pad at all
+
+293
+00:22:54,220 --> 00:23:04,220
+The problem with that is with the envelope, so let's define an envelope
+
+294
+00:23:04,220 --> 00:23:14,220
+Let's have it increase smoothly from 0 to 1
+
+295
+00:23:14,220 --> 00:23:24,220
+Over the course of, I don't know, let's say 5 tenths of a second
+
+296
+00:23:24,220 --> 00:23:34,220
+Right, we get some nice smooth increase
+
+297
+00:23:34,220 --> 00:23:42,220
+It's nice smooth increase in our signal
+
+298
+00:23:42,220 --> 00:23:52,220
+Let's make this a bit more interesting by adding some detuned stuff
+
+299
+00:23:56,220 --> 00:24:02,220
+Let's try, I don't know this
+
+300
+00:24:02,220 --> 00:24:10,220
+Maybe make this slightly less
+
+301
+00:24:10,220 --> 00:24:22,220
+Right, so we've got a very smooth, maybe a very warm body sound
+
+302
+00:24:22,220 --> 00:24:30,220
+What it kind of lacks is some personality
+
+303
+00:24:30,220 --> 00:24:38,220
+What I mean by personality is, when you get into a music mix
+
+304
+00:24:38,220 --> 00:24:44,220
+If you have only frequencies around 300 to 1 kHz
+
+305
+00:24:44,220 --> 00:24:48,220
+It will just get lost in the mix
+
+306
+00:24:48,220 --> 00:24:54,220
+So what we need to do is give it some, a bit higher frequencies
+
+307
+00:24:54,220 --> 00:25:00,220
+Very slight, but just so that it still can stick out
+
+308
+00:25:00,220 --> 00:25:06,220
+Even if we have a lot of masking around this center frequencies
+
+309
+00:25:06,220 --> 00:25:12,220
+So let's have another signal with a carrier
+
+310
+00:25:12,220 --> 00:25:16,220
+Which I would like it to be around 2 kHz
+
+311
+00:25:16,220 --> 00:25:20,220
+I don't want to do directly fc equals 2 kHz
+
+312
+00:25:20,220 --> 00:25:24,220
+Because then it won't be a multiple of f
+
+313
+00:25:24,220 --> 00:25:30,220
+So I want to round it to the closest multiple of f
+
+314
+00:25:30,220 --> 00:25:40,220
+And to do that, I will be doing f times round of 2000 divided by f
+
+315
+00:25:40,220 --> 00:25:49,220
+And now I can do fm of fcf
+
+316
+00:25:49,220 --> 00:25:55,220
+And what index of modulation should I use
+
+317
+00:25:55,220 --> 00:26:03,220
+Let's say I'd like to have about 1 kHz of frequency defiation
+
+318
+00:26:03,220 --> 00:26:08,220
+So it should be 1000 divided by the modulation frequency
+
+319
+00:26:08,220 --> 00:26:12,220
+So here we will be just using f
+
+320
+00:26:12,220 --> 00:26:16,220
+Let's listen to that
+
+321
+00:26:16,220 --> 00:26:21,220
+Right, so now we get some character, some personality
+
+322
+00:26:21,220 --> 00:26:24,220
+Right now it's pretty ugly
+
+323
+00:26:24,220 --> 00:26:31,220
+So we definitely need to add some more layering
+
+324
+00:26:31,220 --> 00:26:35,220
+As well as some modulation
+
+325
+00:26:45,220 --> 00:26:50,220
+I don't know, I'm really putting random numbers here
+
+326
+00:26:54,220 --> 00:27:00,220
+Let's have this a little lower
+
+327
+00:27:00,220 --> 00:27:11,220
+And let's have the index of modulation vary with time
+
+328
+00:27:11,220 --> 00:27:21,220
+Let's have, yeah just sign of t here
+
+329
+00:27:22,220 --> 00:27:25,220
+Maybe a bit faster
+
+330
+00:27:37,220 --> 00:27:47,220
+Right, that's basically the root of our signal
+
+331
+00:27:47,220 --> 00:27:55,220
+Maybe I can do some more modulation
+
+332
+00:27:55,220 --> 00:28:00,220
+Have it be a bit slower here
+
+333
+00:28:00,220 --> 00:28:04,220
+Like 2 times t
+
+334
+00:28:04,220 --> 00:28:09,220
+Or 1.9, I don't know
+
+335
+00:28:10,220 --> 00:28:12,220
+Minus
+
+336
+00:28:19,220 --> 00:28:25,220
+All right, what we can do then
+
+337
+00:28:25,220 --> 00:28:33,220
+Let's use it to create a chord
+
+338
+00:28:33,220 --> 00:28:36,220
+So how do we create a chord?
+
+339
+00:28:36,220 --> 00:28:40,220
+Well I'd like to have a 4 note chord
+
+340
+00:28:40,220 --> 00:28:43,220
+So let's have 4 frequencies
+
+341
+00:28:43,220 --> 00:28:48,220
+And add them to the signal
+
+342
+00:28:48,220 --> 00:28:53,220
+So we will just be having 6 plus equal
+
+343
+00:28:53,220 --> 00:29:01,220
+That's the nth of fs.xt
+
+344
+00:29:01,220 --> 00:29:06,220
+And the same for yz and w
+
+345
+00:29:06,220 --> 00:29:08,220
+And return sig
+
+346
+00:29:08,220 --> 00:29:11,220
+That's it
+
+347
+00:29:11,220 --> 00:29:19,220
+So now if we want to have a bad chord pattern
+
+348
+00:29:19,220 --> 00:29:25,220
+With just time in it
+
+349
+00:29:25,220 --> 00:29:29,220
+I will define a chord
+
+350
+00:29:29,220 --> 00:29:35,220
+Let's say I would like an A minor
+
+351
+00:29:35,220 --> 00:29:38,220
+With a B in it
+
+352
+00:29:38,220 --> 00:29:42,220
+So this will be A B C and E
+
+353
+00:29:42,220 --> 00:29:48,220
+I forgot a t here
+
+354
+00:29:48,220 --> 00:29:54,220
+And let's directly return pad chord of
+
+355
+00:29:54,220 --> 00:29:56,220
+N of chord
+
+356
+00:29:56,220 --> 00:30:01,220
+The frequencies of those notes
+
+357
+00:30:01,220 --> 00:30:04,220
+And t
+
+358
+00:30:07,220 --> 00:30:12,220
+So what happens then?
+
+359
+00:30:21,220 --> 00:30:25,220
+Right, this is getting somewhere
+
+360
+00:30:26,220 --> 00:30:32,220
+Ok, so let's pan those frequencies around
+
+361
+00:30:32,220 --> 00:30:35,220
+Let's just do it manually
+
+362
+00:30:35,220 --> 00:30:39,220
+So here the lowest note
+
+363
+00:30:39,220 --> 00:30:43,220
+Maybe I'd like to pan it a bit to the left
+
+364
+00:30:43,220 --> 00:30:48,220
+So let's say 0.8, 0.3
+
+365
+00:30:48,220 --> 00:30:51,220
+Then the middle note
+
+366
+00:30:51,220 --> 00:30:54,220
+Let's pan it completely to the left
+
+367
+00:30:54,220 --> 00:30:57,220
+Well, almost completely to the left
+
+368
+00:30:57,220 --> 00:30:59,220
+The second middle note
+
+369
+00:30:59,220 --> 00:31:02,220
+Almost completely to the right
+
+370
+00:31:02,220 --> 00:31:05,220
+And the last note
+
+371
+00:31:05,220 --> 00:31:08,220
+Slightly to the right
+
+372
+00:31:08,220 --> 00:31:11,220
+So what we get is
+
+373
+00:31:11,220 --> 00:31:14,220
+The extremes like the bass note
+
+374
+00:31:14,220 --> 00:31:17,220
+And highest note almost tucked in
+
+375
+00:31:17,220 --> 00:31:20,220
+To the center
+
+376
+00:31:20,220 --> 00:31:23,220
+And the rest all wider
+
+377
+00:31:23,220 --> 00:31:26,220
+Because no one really cares about the middle note
+
+378
+00:31:26,220 --> 00:31:31,220
+So we can put them really farther around
+
+379
+00:31:31,220 --> 00:31:35,220
+Let's hear that
+
+380
+00:31:39,220 --> 00:31:42,220
+This is getting spacey
+
+381
+00:31:46,220 --> 00:31:49,220
+One thing we can do
+
+382
+00:31:49,220 --> 00:31:52,220
+Is add some reverb
+
+383
+00:31:52,220 --> 00:31:56,220
+So we have a pad chord pattern
+
+384
+00:31:56,220 --> 00:32:02,220
+So let's call it a pad chord pattern verb
+
+385
+00:32:02,220 --> 00:32:05,220
+I'm saying reverb
+
+386
+00:32:05,220 --> 00:32:07,220
+It's not actually reverb
+
+387
+00:32:07,220 --> 00:32:11,220
+And fortunately a shader toy is not
+
+388
+00:32:11,220 --> 00:32:16,220
+Able to do all the stuff that you would be using
+
+389
+00:32:16,220 --> 00:32:21,220
+That you would be doing using usual digital signal processing
+
+390
+00:32:21,220 --> 00:32:26,220
+But what you can do is add a signal
+
+391
+00:32:26,220 --> 00:32:29,220
+With some delayed versions of it
+
+392
+00:32:29,220 --> 00:32:34,220
+And that's a kind of fake reverb
+
+393
+00:32:34,220 --> 00:32:38,220
+That is totally fine
+
+394
+00:32:38,220 --> 00:32:41,220
+So let's actually
+
+395
+00:32:41,220 --> 00:32:44,220
+So let's actually do that
+
+396
+00:32:44,220 --> 00:32:46,220
+Here
+
+397
+00:32:46,220 --> 00:32:50,220
+So we can have a pad chord pattern T
+
+398
+00:32:50,220 --> 00:32:54,220
+And then we can have
+
+399
+00:32:54,220 --> 00:32:58,220
+T minus 0.5
+
+400
+00:32:58,220 --> 00:33:01,220
+I don't know
+
+401
+00:33:01,220 --> 00:33:05,220
+Times 0.2
+
+402
+00:33:05,220 --> 00:33:08,220
+And that's just a delayed version of it
+
+403
+00:33:11,220 --> 00:33:15,220
+And let's shift
+
+404
+00:33:15,220 --> 00:33:18,220
+Let's swap the indices
+
+405
+00:33:19,220 --> 00:33:22,220
+And invert
+
+406
+00:33:22,220 --> 00:33:25,220
+One of the channels
+
+407
+00:33:28,220 --> 00:33:32,220
+So we get a more
+
+408
+00:33:32,220 --> 00:33:35,220
+More surprising kind of sound
+
+409
+00:33:37,220 --> 00:33:40,220
+Right now the chord pattern is very boring
+
+410
+00:33:40,220 --> 00:33:43,220
+Because we've got only one chord
+
+411
+00:33:43,220 --> 00:33:47,220
+So how do we go at defining
+
+412
+00:33:48,220 --> 00:33:51,220
+An actual chord pattern
+
+413
+00:33:51,220 --> 00:33:54,220
+Well, first thing I'd like to do
+
+414
+00:33:54,220 --> 00:33:58,220
+Is define a speed
+
+415
+00:33:58,220 --> 00:34:01,220
+A tempo for my song
+
+416
+00:34:01,220 --> 00:34:05,220
+So let's say ppm 100 beats per minute
+
+417
+00:34:05,220 --> 00:34:08,220
+And that would mean
+
+418
+00:34:08,220 --> 00:34:12,220
+That the beat duration should be
+
+419
+00:34:12,220 --> 00:34:16,220
+60 seconds divided by the number of beats per minute
+
+420
+00:34:16,220 --> 00:34:20,220
+So right now it should be a bit over half a second
+
+421
+00:34:22,220 --> 00:34:25,220
+And let's use that
+
+422
+00:34:25,220 --> 00:34:28,220
+To change up our chords
+
+423
+00:34:28,220 --> 00:34:32,220
+So our chord
+
+424
+00:34:32,220 --> 00:34:35,220
+Let's use a ternary operator
+
+425
+00:34:35,220 --> 00:34:39,220
+To say what chord we'd like to be using
+
+426
+00:34:40,220 --> 00:34:44,220
+So we will say if T is less than
+
+427
+00:34:44,220 --> 00:34:47,220
+4 times the beat duration
+
+428
+00:34:47,220 --> 00:34:50,220
+Then we will use this A minor
+
+429
+00:34:53,220 --> 00:34:56,220
+But then
+
+430
+00:34:56,220 --> 00:34:59,220
+What happens if it's not
+
+431
+00:34:59,220 --> 00:35:02,220
+Well it can be in the second bar
+
+432
+00:35:02,220 --> 00:35:04,220
+It can be in the third bar
+
+433
+00:35:04,220 --> 00:35:07,220
+And let's have it change 2 times
+
+434
+00:35:07,220 --> 00:35:09,220
+In the last bar
+
+435
+00:35:09,220 --> 00:35:12,220
+So we get 5 chords total
+
+436
+00:35:12,220 --> 00:35:15,220
+And now we just get creative
+
+437
+00:35:15,220 --> 00:35:19,220
+So one chord pattern that I liked
+
+438
+00:35:19,220 --> 00:35:22,220
+Was having
+
+439
+00:35:25,220 --> 00:35:28,220
+An F chord here
+
+440
+00:35:31,220 --> 00:35:36,220
+Let's put a D
+
+441
+00:35:36,220 --> 00:35:40,220
+Yeah let's put a D minor 7 here
+
+442
+00:35:40,220 --> 00:35:44,220
+So that's A, C, D, F
+
+443
+00:35:44,220 --> 00:35:47,220
+Then F major
+
+444
+00:35:47,220 --> 00:35:51,220
+Which will be F, A, C
+
+445
+00:35:51,220 --> 00:35:55,220
+And let's put a G on top
+
+446
+00:35:58,220 --> 00:36:02,220
+And then let's use a C major
+
+447
+00:36:04,220 --> 00:36:07,220
+With a D in it
+
+448
+00:36:07,220 --> 00:36:11,220
+G, C, D, E
+
+449
+00:36:11,220 --> 00:36:14,220
+And finally
+
+450
+00:36:14,220 --> 00:36:17,220
+Just change
+
+451
+00:36:17,220 --> 00:36:20,220
+Just change the C for a B
+
+452
+00:36:20,220 --> 00:36:23,220
+So we get
+
+453
+00:36:23,220 --> 00:36:27,220
+So we get a kind of G major with an E on top
+
+454
+00:36:30,220 --> 00:36:34,220
+Now if we play that directly we get this
+
+455
+00:36:37,220 --> 00:36:41,220
+A, C, D, E
+
+456
+00:36:45,220 --> 00:36:48,220
+Which is fine
+
+457
+00:36:48,220 --> 00:36:50,220
+But it's clicking
+
+458
+00:36:50,220 --> 00:36:52,220
+So what we need to do
+
+459
+00:36:52,220 --> 00:36:55,220
+Is make sure that
+
+460
+00:36:55,220 --> 00:36:58,220
+The notes actually restart
+
+461
+00:36:58,220 --> 00:37:01,220
+When we're changing chords
+
+462
+00:37:01,220 --> 00:37:04,220
+So let's define T current
+
+463
+00:37:04,220 --> 00:37:08,220
+B, T, F
+
+464
+00:37:18,220 --> 00:37:20,220
+So now we get the attack
+
+465
+00:37:20,220 --> 00:37:23,220
+But we don't have the decay
+
+466
+00:37:23,220 --> 00:37:27,220
+So let's have an envelope
+
+467
+00:37:27,220 --> 00:37:30,220
+For the decay
+
+468
+00:37:30,220 --> 00:37:33,220
+Float and
+
+469
+00:37:33,220 --> 00:37:36,220
+We need to make sure that the note goes down
+
+470
+00:37:36,220 --> 00:37:39,220
+To zero at the end of the note
+
+471
+00:37:39,220 --> 00:37:42,220
+So when should it be at zero
+
+472
+00:37:42,220 --> 00:37:45,220
+Well at four times beat two
+
+473
+00:37:45,220 --> 00:37:48,220
+And when should it be
+
+474
+00:37:48,220 --> 00:37:50,220
+Still at one
+
+475
+00:37:50,220 --> 00:37:54,220
+Well let's say at 3.5 times beat two
+
+476
+00:37:54,220 --> 00:37:57,220
+And now we should get this
+
+477
+00:37:58,220 --> 00:38:01,220
+Whoops
+
+478
+00:38:01,220 --> 00:38:04,220
+I have a sticker here
+
+479
+00:38:14,220 --> 00:38:17,220
+And I think we need to
+
+480
+00:38:17,220 --> 00:38:20,220
+Oh, I was actually not using
+
+481
+00:38:20,220 --> 00:38:23,220
+The chord pattern verb here
+
+482
+00:38:24,220 --> 00:38:27,220
+So yeah, let's try this
+
+483
+00:38:27,220 --> 00:38:30,220
+With a 1.5
+
+484
+00:38:33,220 --> 00:38:36,220
+1.5 beat delay
+
+485
+00:38:41,220 --> 00:38:44,220
+That's a bit longer, it's actually 2.75
+
+486
+00:38:53,220 --> 00:38:56,220
+Yeah, now if we want
+
+487
+00:38:56,220 --> 00:38:59,220
+Our chord pattern to repeat
+
+488
+00:38:59,220 --> 00:39:02,220
+We should set T equals mod
+
+489
+00:39:02,220 --> 00:39:06,220
+T 16 beat
+
+490
+00:39:09,220 --> 00:39:12,220
+But we also don't want it
+
+491
+00:39:12,220 --> 00:39:15,220
+Here we are using negative times
+
+492
+00:39:15,220 --> 00:39:18,220
+So when we are using negative times
+
+493
+00:39:18,220 --> 00:39:21,220
+We should set T equals mod
+
+494
+00:39:21,220 --> 00:39:24,220
+So when we are using negative times
+
+495
+00:39:24,220 --> 00:39:27,220
+We don't want there to be any sound
+
+496
+00:39:27,220 --> 00:39:30,220
+So let's put T equals max T0
+
+497
+00:39:30,220 --> 00:39:33,220
+Otherwise when we are doing this
+
+498
+00:39:33,220 --> 00:39:36,220
+We will get the tail of the reverb
+
+499
+00:39:36,220 --> 00:39:39,220
+As if there had already been sound
+
+500
+00:39:39,220 --> 00:39:42,220
+Before
+
+501
+00:39:52,220 --> 00:39:55,220
+I'm not really fond of that reverb
+
+502
+00:39:55,220 --> 00:39:58,220
+Let's see if I can change it up a bit
+
+503
+00:40:01,220 --> 00:40:04,220
+So that it's a bit more fun
+
+504
+00:40:08,220 --> 00:40:11,220
+Let's have some fake early reflections
+
+505
+00:40:11,220 --> 00:40:15,220
+Here before any actual
+
+506
+00:40:15,220 --> 00:40:18,220
+Before any actual
+
+507
+00:40:26,220 --> 00:40:28,220
+Actual reverb
+
+508
+00:40:28,220 --> 00:40:31,220
+And then let's set the reverb 2.25
+
+509
+00:40:31,220 --> 00:40:33,220
+Yeah
+
+510
+00:40:34,220 --> 00:40:36,220
+In there
+
+511
+00:40:45,220 --> 00:40:47,220
+Let's go
+
+512
+00:40:55,220 --> 00:40:58,220
+All right, let's roll with this
+
+513
+00:40:58,220 --> 00:41:01,220
+Now I want to move on to making
+
+514
+00:41:01,220 --> 00:41:04,220
+A lead synth
+
+515
+00:41:06,220 --> 00:41:10,220
+Here we will be using the same kind of technique
+
+516
+00:41:11,220 --> 00:41:14,220
+So let's create a lead synth
+
+517
+00:41:16,220 --> 00:41:19,220
+Let's say it should have a certain frequency
+
+518
+00:41:19,220 --> 00:41:22,220
+And a certain time
+
+519
+00:41:24,220 --> 00:41:27,220
+Now what I'd really like to do
+
+520
+00:41:27,220 --> 00:41:30,220
+Is have it play with vibrato
+
+521
+00:41:33,220 --> 00:41:36,220
+So let's first create a basic sound
+
+522
+00:41:36,220 --> 00:41:39,220
+And then I'll show you the wrong way
+
+523
+00:41:39,220 --> 00:41:42,220
+And the right way to the vibrato
+
+524
+00:41:42,220 --> 00:41:44,220
+In shader toy
+
+525
+00:41:45,220 --> 00:41:47,220
+So
+
+526
+00:41:50,220 --> 00:41:53,220
+So now we've got this basic lead
+
+527
+00:41:53,220 --> 00:41:55,220
+Synth sound
+
+528
+00:41:55,220 --> 00:41:58,220
+Which is really just
+
+529
+00:41:58,220 --> 00:42:01,220
+Just this
+
+530
+00:42:01,220 --> 00:42:04,220
+And now let's say I want
+
+531
+00:42:04,220 --> 00:42:07,220
+The frequency
+
+532
+00:42:07,220 --> 00:42:10,220
+Let's say I want to add vibrato
+
+533
+00:42:11,220 --> 00:42:14,220
+So what I could do
+
+534
+00:42:14,220 --> 00:42:18,220
+Is say let's change up the frequency a bit
+
+535
+00:42:19,220 --> 00:42:21,220
+Let's say we
+
+536
+00:42:21,220 --> 00:42:23,220
+Multiply
+
+537
+00:42:23,220 --> 00:42:26,220
+Or we add something to it
+
+538
+00:42:26,220 --> 00:42:29,220
+And it should be
+
+539
+00:42:29,220 --> 00:42:31,220
+Like
+
+540
+00:42:31,220 --> 00:42:34,220
+0.2 of a semitone
+
+541
+00:42:34,220 --> 00:42:37,220
+So a semitone is about
+
+542
+00:42:38,220 --> 00:42:41,220
+0.06 times the frequency
+
+543
+00:42:41,220 --> 00:42:43,220
+And
+
+544
+00:42:43,220 --> 00:42:46,220
+Let's say we want to have
+
+545
+00:42:46,220 --> 00:42:49,220
+A 5 Hz vibrato
+
+546
+00:42:52,220 --> 00:42:54,220
+So this will be
+
+547
+00:42:54,220 --> 00:42:57,220
+20 cents of a semitone
+
+548
+00:42:57,220 --> 00:42:59,220
+And this will be
+
+549
+00:42:59,220 --> 00:43:02,220
+The amount of frequency
+
+550
+00:43:02,220 --> 00:43:05,220
+This is the wrong way to do it
+
+551
+00:43:05,220 --> 00:43:07,220
+I'll explain you why
+
+552
+00:43:07,220 --> 00:43:09,220
+Just a bit later
+
+553
+00:43:09,220 --> 00:43:11,220
+But let's hear
+
+554
+00:43:11,220 --> 00:43:13,220
+What it does
+
+555
+00:43:13,220 --> 00:43:15,220
+And how it sounds
+
+556
+00:43:19,220 --> 00:43:21,220
+Don't do that
+
+557
+00:43:21,220 --> 00:43:23,220
+That's awful
+
+558
+00:43:23,220 --> 00:43:25,220
+So yeah
+
+559
+00:43:25,220 --> 00:43:28,220
+So what's happening here
+
+560
+00:43:28,220 --> 00:43:31,220
+Well if you recall
+
+561
+00:43:31,220 --> 00:43:34,220
+Earlier I said
+
+562
+00:43:34,220 --> 00:43:36,220
+That
+
+563
+00:43:36,220 --> 00:43:38,220
+That
+
+564
+00:43:38,220 --> 00:43:41,220
+When we have some instantaneous frequency
+
+565
+00:43:41,220 --> 00:43:43,220
+The phase
+
+566
+00:43:43,220 --> 00:43:45,220
+The derivative of the phase
+
+567
+00:43:45,220 --> 00:43:47,220
+Should be 2 times f
+
+568
+00:43:49,220 --> 00:43:51,220
+So now
+
+569
+00:43:51,220 --> 00:43:54,220
+What's happening is
+
+570
+00:43:54,220 --> 00:43:57,220
+The actual phase we're using
+
+571
+00:44:00,220 --> 00:44:02,220
+When we're putting this
+
+572
+00:44:02,220 --> 00:44:04,220
+F into fm
+
+573
+00:44:04,220 --> 00:44:07,220
+The actual phase we're using
+
+574
+00:44:07,220 --> 00:44:10,220
+Is f of t times t
+
+575
+00:44:10,220 --> 00:44:12,220
+And that's
+
+576
+00:44:12,220 --> 00:44:14,220
+That's what the problem is
+
+577
+00:44:14,220 --> 00:44:16,220
+Because when we
+
+578
+00:44:16,220 --> 00:44:20,220
+Differentiate that with respect to time
+
+579
+00:44:20,220 --> 00:44:22,220
+We get f of t
+
+580
+00:44:22,220 --> 00:44:24,220
+Sure enough
+
+581
+00:44:24,220 --> 00:44:26,220
+But with a product rule
+
+582
+00:44:26,220 --> 00:44:28,220
+We also get
+
+583
+00:44:28,220 --> 00:44:31,220
+f' of t times t
+
+584
+00:44:31,220 --> 00:44:34,220
+And this guys
+
+585
+00:44:34,220 --> 00:44:37,220
+Is really problematic
+
+586
+00:44:37,220 --> 00:44:40,220
+Here f' of t
+
+587
+00:44:40,220 --> 00:44:43,220
+Will be a kind of
+
+588
+00:44:43,220 --> 00:44:46,220
+Cosine component
+
+589
+00:44:46,220 --> 00:44:48,220
+And it will be increasing
+
+590
+00:44:48,220 --> 00:44:50,220
+With respect to time
+
+591
+00:44:50,220 --> 00:44:52,220
+Increasing in amplitude
+
+592
+00:44:52,220 --> 00:44:54,220
+So that's why we get this
+
+593
+00:44:54,220 --> 00:44:56,220
+Stronger and stronger
+
+594
+00:44:56,220 --> 00:44:58,220
+Stronger and stronger
+
+595
+00:44:58,220 --> 00:45:00,220
+Wobble
+
+596
+00:45:03,220 --> 00:45:05,220
+Yeah, don't do it
+
+597
+00:45:06,220 --> 00:45:09,220
+What is the right way to do it?
+
+598
+00:45:09,220 --> 00:45:11,220
+Well
+
+599
+00:45:12,220 --> 00:45:14,220
+What we want
+
+600
+00:45:15,220 --> 00:45:17,220
+Is for f of t
+
+601
+00:45:17,220 --> 00:45:19,220
+To be
+
+602
+00:45:21,220 --> 00:45:24,220
+Well it should be f0 plus
+
+603
+00:45:25,220 --> 00:45:29,220
+It's really basically the same formula as before
+
+604
+00:45:29,220 --> 00:45:32,220
+Plus cosine of 2pi
+
+605
+00:45:33,220 --> 00:45:36,220
+Times
+
+606
+00:45:36,220 --> 00:45:38,220
+Modulating frequency
+
+607
+00:45:38,220 --> 00:45:40,220
+Times time
+
+608
+00:45:40,220 --> 00:45:43,220
+So when we integrate it
+
+609
+00:45:43,220 --> 00:45:45,220
+We get that phase of t
+
+610
+00:45:45,220 --> 00:45:47,220
+Is f0 times t
+
+611
+00:45:47,220 --> 00:45:49,220
+Well 2pi sorry
+
+612
+00:45:49,220 --> 00:45:51,220
+2pi times f0 times t
+
+613
+00:45:51,220 --> 00:45:53,220
+Plus
+
+614
+00:45:53,220 --> 00:45:55,220
+df over fm
+
+615
+00:45:55,220 --> 00:45:57,220
+Times cosine
+
+616
+00:45:57,220 --> 00:45:59,220
+Times sine
+
+617
+00:45:59,220 --> 00:46:01,220
+2pi times fm
+
+618
+00:46:01,220 --> 00:46:03,220
+Times t
+
+619
+00:46:03,220 --> 00:46:05,220
+Except that now fm
+
+620
+00:46:05,220 --> 00:46:07,220
+Will be like 5 hertz
+
+621
+00:46:07,220 --> 00:46:09,220
+And f0
+
+622
+00:46:09,220 --> 00:46:11,220
+Will be
+
+623
+00:46:11,220 --> 00:46:13,220
+Well the frequency of our lead synth
+
+624
+00:46:14,220 --> 00:46:16,220
+And df
+
+625
+00:46:16,220 --> 00:46:18,220
+It should be
+
+626
+00:46:18,220 --> 00:46:20,220
+Something small
+
+627
+00:46:24,220 --> 00:46:27,220
+So yeah, this is the wrong way to do it
+
+628
+00:46:27,220 --> 00:46:29,220
+Let's not use that
+
+629
+00:46:29,220 --> 00:46:32,220
+Instead let's calculate
+
+630
+00:46:32,220 --> 00:46:36,220
+The phase using that formula
+
+631
+00:46:36,220 --> 00:46:39,220
+Let's do a function
+
+632
+00:46:39,220 --> 00:46:41,220
+For that
+
+633
+00:46:41,220 --> 00:46:43,220
+Call it vibrato phase
+
+634
+00:46:45,220 --> 00:46:47,220
+Have f0
+
+635
+00:46:47,220 --> 00:46:49,220
+df
+
+636
+00:46:49,220 --> 00:46:51,220
+And
+
+637
+00:46:51,220 --> 00:46:53,220
+Let's call it vibrato
+
+638
+00:46:53,220 --> 00:46:55,220
+So it's clear
+
+639
+00:46:55,220 --> 00:46:57,220
+We're talking about
+
+640
+00:46:57,220 --> 00:46:59,220
+The speed of vibrato
+
+641
+00:47:03,220 --> 00:47:05,220
+And
+
+642
+00:47:05,220 --> 00:47:07,220
+Let's even put
+
+643
+00:47:07,220 --> 00:47:09,220
+A semitone here
+
+644
+00:47:13,220 --> 00:47:15,220
+So you can say df
+
+645
+00:47:15,220 --> 00:47:17,220
+Will be 0.06 times f0
+
+646
+00:47:17,220 --> 00:47:19,220
+That is about
+
+647
+00:47:19,220 --> 00:47:21,220
+1 semitone
+
+648
+00:47:21,220 --> 00:47:23,220
+So let's multiply that by semitones
+
+649
+00:47:23,220 --> 00:47:25,220
+And
+
+650
+00:47:25,220 --> 00:47:27,220
+Then phase
+
+651
+00:47:27,220 --> 00:47:29,220
+Will be
+
+652
+00:47:29,220 --> 00:47:31,220
+This formula here
+
+653
+00:47:35,220 --> 00:47:37,220
+And where fm
+
+654
+00:47:37,220 --> 00:47:39,220
+Is vibrato
+
+655
+00:47:43,220 --> 00:47:45,220
+And return phase
+
+656
+00:47:46,220 --> 00:47:48,220
+Yeah, we need t here
+
+657
+00:47:53,220 --> 00:47:55,220
+And
+
+658
+00:47:55,220 --> 00:47:57,220
+So this is vibrato phase
+
+659
+00:47:57,220 --> 00:47:59,220
+Of
+
+660
+00:47:59,220 --> 00:48:01,220
+f
+
+661
+00:48:01,220 --> 00:48:03,220
+Let's have 0.2 semitones
+
+662
+00:48:03,220 --> 00:48:05,220
+5 hertz of vibrato
+
+663
+00:48:07,220 --> 00:48:09,220
+And t
+
+664
+00:48:11,220 --> 00:48:13,220
+But now we're getting onto a problem
+
+665
+00:48:13,220 --> 00:48:15,220
+Because our fm function
+
+666
+00:48:15,220 --> 00:48:17,220
+Doesn't get phase
+
+667
+00:48:17,220 --> 00:48:19,220
+It uses frequency
+
+668
+00:48:21,220 --> 00:48:23,220
+So yeah, whatever, let's define
+
+669
+00:48:23,220 --> 00:48:25,220
+A second macro
+
+670
+00:48:25,220 --> 00:48:27,220
+Which will be using phase
+
+671
+00:48:27,220 --> 00:48:29,220
+It's really simple
+
+672
+00:48:31,220 --> 00:48:33,220
+Let's call it fm2
+
+673
+00:48:35,220 --> 00:48:37,220
+Just replace fc times t
+
+674
+00:48:37,220 --> 00:48:39,220
+With pc
+
+675
+00:48:39,220 --> 00:48:41,220
+And fm times t
+
+676
+00:48:41,220 --> 00:48:43,220
+With pm
+
+677
+00:48:43,220 --> 00:48:45,220
+That's it
+
+678
+00:48:49,220 --> 00:48:51,220
+Let's use it
+
+679
+00:48:59,220 --> 00:49:01,220
+There's a problem here
+
+680
+00:49:01,220 --> 00:49:03,220
+And it has to do with the fact
+
+681
+00:49:03,220 --> 00:49:05,220
+That I used
+
+682
+00:49:05,220 --> 00:49:07,220
+2pi
+
+683
+00:49:09,220 --> 00:49:11,220
+This is actually modpc2pi
+
+684
+00:49:17,220 --> 00:49:19,220
+And modpm2pi
+
+685
+00:49:21,220 --> 00:49:23,220
+Right
+
+686
+00:49:25,220 --> 00:49:27,220
+So here now we're getting
+
+687
+00:49:27,220 --> 00:49:29,220
+A slight vibrato
+
+688
+00:49:29,220 --> 00:49:31,220
+I can increase it
+
+689
+00:49:31,220 --> 00:49:33,220
+To be more noticeable
+
+690
+00:49:35,220 --> 00:49:37,220
+But this is getting
+
+691
+00:49:37,220 --> 00:49:39,220
+Intasteful
+
+692
+00:49:39,220 --> 00:49:41,220
+So let's stick with that
+
+693
+00:49:43,220 --> 00:49:45,220
+We can also
+
+694
+00:49:45,220 --> 00:49:47,220
+Put some kind of envelope on our vibrato
+
+695
+00:49:51,220 --> 00:49:53,220
+And say
+
+696
+00:49:53,220 --> 00:49:55,220
+It should go from
+
+697
+00:49:55,220 --> 00:49:57,220
+It should start with no vibrato
+
+698
+00:49:57,220 --> 00:49:59,220
+And then increase
+
+699
+00:50:01,220 --> 00:50:03,220
+Up to its maximum
+
+700
+00:50:03,220 --> 00:50:05,220
+In about half a second
+
+701
+00:50:07,220 --> 00:50:09,220
+So now if you notice
+
+702
+00:50:09,220 --> 00:50:11,220
+We're getting no vibrato at the start
+
+703
+00:50:11,220 --> 00:50:13,220
+And some vibrato afterwards
+
+704
+00:50:15,220 --> 00:50:17,220
+Right
+
+705
+00:50:17,220 --> 00:50:19,220
+Let's make our lead sound more interesting
+
+706
+00:50:21,220 --> 00:50:23,220
+First thing I'd like to do
+
+707
+00:50:23,220 --> 00:50:25,220
+Is have
+
+708
+00:50:25,220 --> 00:50:27,220
+Some
+
+709
+00:50:29,220 --> 00:50:31,220
+Some layering
+
+710
+00:50:37,220 --> 00:50:39,220
+Right
+
+711
+00:50:41,220 --> 00:50:43,220
+Right
+
+712
+00:50:43,220 --> 00:50:45,220
+This is still the body
+
+713
+00:50:45,220 --> 00:50:47,220
+Of this sound
+
+714
+00:50:47,220 --> 00:50:49,220
+Let's make it a bit harsher
+
+715
+00:50:55,220 --> 00:50:57,220
+Right so we get a bit
+
+716
+00:50:57,220 --> 00:50:59,220
+Wider spectrum
+
+717
+00:50:59,220 --> 00:51:01,220
+And then
+
+718
+00:51:03,220 --> 00:51:05,220
+Let's add some presence
+
+719
+00:51:05,220 --> 00:51:07,220
+So presence is
+
+720
+00:51:09,220 --> 00:51:11,220
+Like when you have a guitar amp
+
+721
+00:51:11,220 --> 00:51:13,220
+And you turn up the presence
+
+722
+00:51:13,220 --> 00:51:15,220
+It kind of turns up
+
+723
+00:51:15,220 --> 00:51:17,220
+A very specific frequency
+
+724
+00:51:17,220 --> 00:51:19,220
+To which our ear is very sensitive
+
+725
+00:51:19,220 --> 00:51:21,220
+Which is about 5 kHz
+
+726
+00:51:23,220 --> 00:51:25,220
+So let's
+
+727
+00:51:25,220 --> 00:51:27,220
+Have
+
+728
+00:51:27,220 --> 00:51:29,220
+A carrier frequency
+
+729
+00:51:29,220 --> 00:51:31,220
+At about 5 kHz
+
+730
+00:51:31,220 --> 00:51:33,220
+Let's do the same trick
+
+731
+00:51:33,220 --> 00:51:35,220
+As
+
+732
+00:51:35,220 --> 00:51:37,220
+Before
+
+733
+00:51:37,220 --> 00:51:39,220
+Let's round 5 kHz
+
+734
+00:51:39,220 --> 00:51:41,220
+To the nearest
+
+735
+00:51:41,220 --> 00:51:43,220
+Multiple of
+
+736
+00:51:43,220 --> 00:51:45,220
+The frequency
+
+737
+00:51:45,220 --> 00:51:47,220
+And
+
+738
+00:51:47,220 --> 00:51:49,220
+Have
+
+739
+00:51:49,220 --> 00:51:51,220
+The index of modulation
+
+740
+00:51:51,220 --> 00:51:53,220
+About 2 kHz
+
+741
+00:51:53,220 --> 00:51:55,220
+By F
+
+742
+00:51:55,220 --> 00:51:57,220
+And now
+
+743
+00:51:57,220 --> 00:51:59,220
+We want to make sure
+
+744
+00:51:59,220 --> 00:52:01,220
+To use FM2 again
+
+745
+00:52:01,220 --> 00:52:03,220
+Because
+
+746
+00:52:05,220 --> 00:52:07,220
+Because we are
+
+747
+00:52:07,220 --> 00:52:09,220
+Dealing with some vibrato
+
+748
+00:52:11,220 --> 00:52:13,220
+So we can't be using FC directly
+
+749
+00:52:13,220 --> 00:52:15,220
+Let's use the ratio
+
+750
+00:52:15,220 --> 00:52:17,220
+Which is just the integer ratio
+
+751
+00:52:19,220 --> 00:52:21,220
+Of
+
+752
+00:52:21,220 --> 00:52:23,220
+Carrier frequency
+
+753
+00:52:25,220 --> 00:52:27,220
+So we can be using
+
+754
+00:52:27,220 --> 00:52:29,220
+3x phase here
+
+755
+00:52:31,220 --> 00:52:33,220
+And phase
+
+756
+00:52:33,220 --> 00:52:35,220
+And index of modulation
+
+757
+00:52:35,220 --> 00:52:37,220
+Let's have it times 0.01
+
+758
+00:52:41,220 --> 00:52:43,220
+Right
+
+759
+00:52:43,220 --> 00:52:45,220
+So this is getting
+
+760
+00:52:45,220 --> 00:52:47,220
+This is getting much brighter
+
+761
+00:52:47,220 --> 00:52:49,220
+This is giving us
+
+762
+00:52:49,220 --> 00:52:51,220
+A nice sharp
+
+763
+00:52:53,220 --> 00:52:55,220
+Nice sharp sound
+
+764
+00:52:55,220 --> 00:52:57,220
+Maybe
+
+765
+00:53:03,220 --> 00:53:05,220
+All right
+
+766
+00:53:05,220 --> 00:53:07,220
+Let's have it
+
+767
+00:53:11,220 --> 00:53:13,220
+Let's have some more stuff in here
+
+768
+00:53:25,220 --> 00:53:27,220
+Okay
+
+769
+00:53:27,220 --> 00:53:29,220
+And now what we need to do
+
+770
+00:53:29,220 --> 00:53:31,220
+Is give it a bit of attack
+
+771
+00:53:31,220 --> 00:53:33,220
+And for that
+
+772
+00:53:33,220 --> 00:53:35,220
+We will be using
+
+773
+00:53:35,220 --> 00:53:37,220
+A very wide
+
+774
+00:53:37,220 --> 00:53:39,220
+A very wide signal
+
+775
+00:53:39,220 --> 00:53:41,220
+Actually we don't care about
+
+776
+00:53:41,220 --> 00:53:43,220
+We don't care about vibrato
+
+777
+00:53:43,220 --> 00:53:45,220
+For the attack
+
+778
+00:53:45,220 --> 00:53:47,220
+So let's just use
+
+779
+00:53:49,220 --> 00:53:51,220
+Our simple FM
+
+780
+00:53:51,220 --> 00:53:53,220
+Method
+
+781
+00:53:53,220 --> 00:53:55,220
+What we can do
+
+782
+00:53:55,220 --> 00:53:57,220
+Is
+
+783
+00:53:59,220 --> 00:54:01,220
+Around FC
+
+784
+00:54:01,220 --> 00:54:03,220
+To
+
+785
+00:54:03,220 --> 00:54:05,220
+Actually for this one
+
+786
+00:54:05,220 --> 00:54:07,220
+We don't even care about
+
+787
+00:54:09,220 --> 00:54:11,220
+If the
+
+788
+00:54:11,220 --> 00:54:13,220
+Components are actually multiples
+
+789
+00:54:13,220 --> 00:54:15,220
+Of the frequency or not
+
+790
+00:54:15,220 --> 00:54:17,220
+Because it will be decreasing so fast
+
+791
+00:54:21,220 --> 00:54:23,220
+So let's have exponential
+
+792
+00:54:23,220 --> 00:54:25,220
+Of minus 20
+
+793
+00:54:25,220 --> 00:54:27,220
+Times time
+
+794
+00:54:27,220 --> 00:54:29,220
+Here let's have an index of modulation
+
+795
+00:54:29,220 --> 00:54:31,220
+Of
+
+796
+00:54:31,220 --> 00:54:33,220
+10 kHz divided by F
+
+797
+00:54:33,220 --> 00:54:35,220
+And here it goes
+
+798
+00:54:35,220 --> 00:54:37,220
+Yeah
+
+799
+00:54:49,220 --> 00:54:51,220
+Yeah, that's a bit 3D
+
+800
+00:54:51,220 --> 00:54:53,220
+Actually let's run this
+
+801
+00:54:53,220 --> 00:54:55,220
+To multiple a bit
+
+802
+00:55:05,220 --> 00:55:07,220
+Yeah
+
+803
+00:55:09,220 --> 00:55:11,220
+All right
+
+804
+00:55:13,220 --> 00:55:15,220
+Now we can play a bit with the envelope
+
+805
+00:55:15,220 --> 00:55:17,220
+Of it
+
+806
+00:55:17,220 --> 00:55:19,220
+To make it
+
+807
+00:55:19,220 --> 00:55:21,220
+A bit
+
+808
+00:55:21,220 --> 00:55:23,220
+A bit more punchy
+
+809
+00:55:23,220 --> 00:55:25,220
+More plucky
+
+810
+00:55:27,220 --> 00:55:29,220
+So when you have an audio compressor
+
+811
+00:55:29,220 --> 00:55:31,220
+It's a volume knob
+
+812
+00:55:31,220 --> 00:55:33,220
+That goes
+
+813
+00:55:33,220 --> 00:55:35,220
+It turns down the loud sounds with some delay
+
+814
+00:55:35,220 --> 00:55:37,220
+And it's used creatively
+
+815
+00:55:37,220 --> 00:55:39,220
+In many mixes
+
+816
+00:55:39,220 --> 00:55:41,220
+Because due to that delay
+
+817
+00:55:41,220 --> 00:55:43,220
+It kind of adds
+
+818
+00:55:43,220 --> 00:55:45,220
+A wobbly
+
+819
+00:55:45,220 --> 00:55:47,220
+Feeling to the sound
+
+820
+00:55:47,220 --> 00:55:49,220
+And it can get artistic very easily
+
+821
+00:55:49,220 --> 00:55:51,220
+So what it would do
+
+822
+00:55:51,220 --> 00:55:53,220
+Here
+
+823
+00:55:53,220 --> 00:55:55,220
+On our signal is it would detect
+
+824
+00:55:55,220 --> 00:55:57,220
+The transient of our synth
+
+825
+00:55:57,220 --> 00:55:59,220
+And with some delay
+
+826
+00:55:59,220 --> 00:56:01,220
+It would turn the signal down
+
+827
+00:56:01,220 --> 00:56:03,220
+So the transient would pass through
+
+828
+00:56:03,220 --> 00:56:05,220
+And then we get some turning down
+
+829
+00:56:05,220 --> 00:56:07,220
+And then once
+
+830
+00:56:07,220 --> 00:56:09,220
+We're in the body of the sound
+
+831
+00:56:09,220 --> 00:56:11,220
+It would turn back up a bit slowly
+
+832
+00:56:17,220 --> 00:56:19,220
+Yeah, let's use the envelope
+
+833
+00:56:27,220 --> 00:56:29,220
+So we're getting
+
+834
+00:56:29,220 --> 00:56:31,220
+A different kind of
+
+835
+00:56:31,220 --> 00:56:33,220
+Feeling
+
+836
+00:56:33,220 --> 00:56:35,220
+Depending on
+
+837
+00:56:35,220 --> 00:56:37,220
+So it changes the attack
+
+838
+00:56:37,220 --> 00:56:39,220
+Basically from
+
+839
+00:56:41,220 --> 00:56:43,220
+Hear it again
+
+840
+00:56:43,220 --> 00:56:45,220
+Now it's very plucky
+
+841
+00:56:47,220 --> 00:56:49,220
+Now it kind of spills over
+
+842
+00:56:51,220 --> 00:56:53,220
+I like the plucky one
+
+843
+00:56:53,220 --> 00:56:55,220
+And then
+
+844
+00:56:55,220 --> 00:56:57,220
+Let's have it
+
+845
+00:56:57,220 --> 00:56:59,220
+Go back up
+
+846
+00:57:01,220 --> 00:57:03,220
+After
+
+847
+00:57:03,220 --> 00:57:05,220
+Let's say
+
+848
+00:57:05,220 --> 00:57:07,220
+Let's say half a second
+
+849
+00:57:07,220 --> 00:57:09,220
+But not too much
+
+850
+00:57:15,220 --> 00:57:17,220
+Right now it's feeling
+
+851
+00:57:17,220 --> 00:57:19,220
+It's kind of pumping
+
+852
+00:57:19,220 --> 00:57:21,220
+It's kind of pushing down the sound
+
+853
+00:57:21,220 --> 00:57:23,220
+And letting it back up
+
+854
+00:57:23,220 --> 00:57:25,220
+I don't know if you notice
+
+855
+00:57:25,220 --> 00:57:27,220
+But that's one way
+
+856
+00:57:27,220 --> 00:57:29,220
+To help our synth
+
+857
+00:57:29,220 --> 00:57:31,220
+Come through in the mix
+
+858
+00:57:33,220 --> 00:57:35,220
+Ok, let's define
+
+859
+00:57:37,220 --> 00:57:39,220
+A lead synth pattern
+
+860
+00:57:39,220 --> 00:57:41,220
+So for the code pattern
+
+861
+00:57:41,220 --> 00:57:43,220
+We used
+
+862
+00:57:43,220 --> 00:57:45,220
+These things here
+
+863
+00:57:45,220 --> 00:57:47,220
+For the lead synth pattern
+
+864
+00:57:47,220 --> 00:57:49,220
+What I will be doing is defining
+
+865
+00:57:49,220 --> 00:57:51,220
+A macro
+
+866
+00:57:51,220 --> 00:57:53,220
+Um
+
+867
+00:57:53,220 --> 00:57:55,220
+Which
+
+868
+00:57:55,220 --> 00:57:57,220
+Adds a note
+
+869
+00:57:57,220 --> 00:57:59,220
+To the signal
+
+870
+00:57:59,220 --> 00:58:01,220
+So it will be
+
+871
+00:58:01,220 --> 00:58:03,220
+Using a note number
+
+872
+00:58:03,220 --> 00:58:05,220
+And a certain beat duration
+
+873
+00:58:07,220 --> 00:58:09,220
+What it will do
+
+874
+00:58:09,220 --> 00:58:11,220
+Is
+
+875
+00:58:11,220 --> 00:58:13,220
+If T is positive
+
+876
+00:58:15,220 --> 00:58:17,220
+And T is
+
+877
+00:58:17,220 --> 00:58:19,220
+Less than B
+
+878
+00:58:19,220 --> 00:58:21,220
+Times beat duration
+
+879
+00:58:21,220 --> 00:58:23,220
+Add
+
+880
+00:58:29,220 --> 00:58:31,220
+Elite synth
+
+881
+00:58:31,220 --> 00:58:33,220
+Of
+
+882
+00:58:33,220 --> 00:58:35,220
+What will be the frequency
+
+883
+00:58:35,220 --> 00:58:37,220
+The frequency will be Nfb
+
+884
+00:58:37,220 --> 00:58:39,220
+And time T
+
+885
+00:58:41,220 --> 00:58:43,220
+Moreover
+
+886
+00:58:45,220 --> 00:58:47,220
+We should make sure that the envelope
+
+887
+00:58:47,220 --> 00:58:49,220
+Goes back down to 0
+
+888
+00:58:49,220 --> 00:58:51,220
+So let's do a smooth step
+
+889
+00:58:53,220 --> 00:58:55,220
+No, sorry
+
+890
+00:58:55,220 --> 00:58:57,220
+NfNN
+
+891
+00:59:01,220 --> 00:59:03,220
+So we should define a smooth step
+
+892
+00:59:03,220 --> 00:59:05,220
+That goes back down after B
+
+893
+00:59:09,220 --> 00:59:11,220
+So it will be B times B
+
+894
+00:59:11,220 --> 00:59:13,220
+Ture
+
+895
+00:59:13,220 --> 00:59:15,220
+And it will be 1
+
+896
+00:59:15,220 --> 00:59:17,220
+100th of a second before
+
+897
+00:59:17,220 --> 00:59:19,220
+And it will be 0 afterwards
+
+898
+00:59:19,220 --> 00:59:21,220
+Right
+
+899
+00:59:21,220 --> 00:59:23,220
+And then what do we do
+
+900
+00:59:23,220 --> 00:59:25,220
+We say T minus equals
+
+901
+00:59:25,220 --> 00:59:27,220
+Big time speed tier
+
+902
+00:59:29,220 --> 00:59:31,220
+In order to
+
+903
+00:59:31,220 --> 00:59:33,220
+Skip to the next
+
+904
+00:59:33,220 --> 00:59:35,220
+Note
+
+905
+00:59:37,220 --> 00:59:39,220
+And return sig
+
+906
+00:59:39,220 --> 00:59:41,220
+So
+
+907
+00:59:43,220 --> 00:59:45,220
+So now
+
+908
+00:59:45,220 --> 00:59:47,220
+What should happen
+
+909
+00:59:47,220 --> 00:59:49,220
+If we can do
+
+910
+00:59:51,220 --> 00:59:53,220
+Let's say
+
+911
+00:59:53,220 --> 00:59:55,220
+We should play
+
+912
+00:59:55,220 --> 00:59:57,220
+How do we play a basic scale
+
+913
+00:59:57,220 --> 00:59:59,220
+A basic arpeggio
+
+914
+00:59:59,220 --> 01:00:01,220
+Well
+
+915
+01:00:01,220 --> 01:00:03,220
+Let's say AC
+
+916
+01:00:05,220 --> 01:00:07,220
+D
+
+917
+01:00:07,220 --> 01:00:09,220
+And A
+
+918
+01:00:13,220 --> 01:00:15,220
+This should play
+
+919
+01:00:19,220 --> 01:00:21,220
+And A minor arpeggio
+
+920
+01:00:25,220 --> 01:00:27,220
+Perfect
+
+921
+01:00:29,220 --> 01:00:31,220
+So it's super boring but
+
+922
+01:00:31,220 --> 01:00:33,220
+We're getting there
+
+923
+01:00:33,220 --> 01:00:35,220
+Let us
+
+924
+01:00:37,220 --> 01:00:39,220
+Let us define
+
+925
+01:00:39,220 --> 01:00:41,220
+An interesting pattern
+
+926
+01:00:41,220 --> 01:00:43,220
+With that
+
+927
+01:00:43,220 --> 01:00:45,220
+So now it's the moment when we get creative
+
+928
+01:00:45,220 --> 01:00:47,220
+And try to find a funny melody
+
+929
+01:00:47,220 --> 01:00:49,220
+I have one in my head right now
+
+930
+01:00:51,220 --> 01:00:53,220
+So it happens to repeat
+
+931
+01:00:55,220 --> 01:00:57,220
+Every 8 beats
+
+932
+01:00:59,220 --> 01:01:01,220
+Let's do max T0
+
+933
+01:01:01,220 --> 01:01:03,220
+Like the previous time to avoid
+
+934
+01:01:03,220 --> 01:01:05,220
+Having anything
+
+935
+01:01:05,220 --> 01:01:07,220
+With negative time
+
+936
+01:01:09,220 --> 01:01:11,220
+1.75
+
+937
+01:01:11,220 --> 01:01:13,220
+Beats
+
+938
+01:01:13,220 --> 01:01:15,220
+Of silence
+
+939
+01:01:15,220 --> 01:01:17,220
+At the start
+
+940
+01:01:17,220 --> 01:01:19,220
+But when it repeats
+
+941
+01:01:19,220 --> 01:01:21,220
+It might be playing some sound
+
+942
+01:01:21,220 --> 01:01:23,220
+At the start of the bar
+
+943
+01:01:25,220 --> 01:01:27,220
+Let's do that before doing the modular
+
+944
+01:01:27,220 --> 01:01:29,220
+And then we will be playing
+
+945
+01:01:41,220 --> 01:01:43,220
+Right
+
+946
+01:01:43,220 --> 01:01:45,220
+So this is the pattern
+
+947
+01:01:45,220 --> 01:01:47,220
+I've come up with
+
+948
+01:01:49,220 --> 01:01:51,220
+I've actually not listened to it yet
+
+949
+01:01:51,220 --> 01:01:53,220
+So I'm not sure if it actually works
+
+950
+01:01:53,220 --> 01:01:55,220
+But let's try that
+
+951
+01:01:57,220 --> 01:01:59,220
+And
+
+952
+01:02:05,220 --> 01:02:07,220
+Yeah, that's exactly
+
+953
+01:02:07,220 --> 01:02:09,220
+What I wanted
+
+954
+01:02:11,220 --> 01:02:13,220
+Like for the previous sound
+
+955
+01:02:13,220 --> 01:02:15,220
+Let's add
+
+956
+01:02:15,220 --> 01:02:17,220
+Some delay to it
+
+957
+01:02:21,220 --> 01:02:23,220
+One thing we can do
+
+958
+01:02:23,220 --> 01:02:25,220
+Is
+
+959
+01:02:25,220 --> 01:02:27,220
+This one
+
+960
+01:02:27,220 --> 01:02:29,220
+Like this
+
+961
+01:02:29,220 --> 01:02:31,220
+Have
+
+962
+01:02:31,220 --> 01:02:33,220
+Another version
+
+963
+01:02:33,220 --> 01:02:35,220
+With
+
+964
+01:02:35,220 --> 01:02:37,220
+0.75 beats
+
+965
+01:02:39,220 --> 01:02:41,220
+Of delay
+
+966
+01:02:45,220 --> 01:02:47,220
+And have a third one
+
+967
+01:02:47,220 --> 01:02:49,220
+With one and a half
+
+968
+01:02:51,220 --> 01:02:53,220
+Beats of delay
+
+969
+01:02:55,220 --> 01:02:57,220
+And
+
+970
+01:03:01,220 --> 01:03:03,220
+Which decrease in amplitude
+
+971
+01:03:03,220 --> 01:03:05,220
+Each time
+
+972
+01:03:07,220 --> 01:03:09,220
+So what will that sound like
+
+973
+01:03:21,220 --> 01:03:23,220
+Right, that's pretty nice
+
+974
+01:03:25,220 --> 01:03:27,220
+I think
+
+975
+01:03:27,220 --> 01:03:29,220
+We also need
+
+976
+01:03:29,220 --> 01:03:31,220
+To have some fake
+
+977
+01:03:31,220 --> 01:03:33,220
+Early reflections
+
+978
+01:03:33,220 --> 01:03:35,220
+So let me put
+
+979
+01:03:35,220 --> 01:03:37,220
+Something like
+
+980
+01:03:37,220 --> 01:03:39,220
+5 milliseconds of delay
+
+981
+01:03:39,220 --> 01:03:41,220
+And have this
+
+982
+01:03:43,220 --> 01:03:45,220
+Be
+
+983
+01:03:49,220 --> 01:03:51,220
+Like that maybe
+
+984
+01:03:55,220 --> 01:03:57,220
+Oh
+
+985
+01:04:07,220 --> 01:04:09,220
+Oh, it's not working
+
+986
+01:04:09,220 --> 01:04:11,220
+Oh, it's not working
+
+987
+01:04:13,220 --> 01:04:15,220
+Recursive function called
+
+988
+01:04:15,220 --> 01:04:17,220
+Yeah
+
+989
+01:04:25,220 --> 01:04:27,220
+Excellent
+
+990
+01:04:31,220 --> 01:04:33,220
+I think that will be it
+
+991
+01:04:33,220 --> 01:04:35,220
+For today guys
+
+992
+01:04:35,220 --> 01:04:37,220
+I was really glad
+
+993
+01:04:37,220 --> 01:04:39,220
+You could follow up until the end
+
+994
+01:04:39,220 --> 01:04:41,220
+Don't hesitate to share it with me
+
+995
+01:04:41,220 --> 01:04:43,220
+If you're doing anything creative
+
+996
+01:04:43,220 --> 01:04:45,220
+Anything fun
+
+997
+01:04:45,220 --> 01:04:47,220
+With all these ideas
+
+998
+01:04:47,220 --> 01:04:49,220
+You can find the link in the description
+
+999
+01:04:49,220 --> 01:04:51,220
+For this very script
+
+1000
+01:04:51,220 --> 01:04:53,220
+That we have been getting to here
+
+1001
+01:04:55,220 --> 01:04:57,220
+And in the next episode
+
+1002
+01:04:57,220 --> 01:04:59,220
+We will be having a look at some more
+
+1003
+01:04:59,220 --> 01:05:01,220
+Instruments
+
+1004
+01:05:01,220 --> 01:05:03,220
+That we can create
+
+1005
+01:05:03,220 --> 01:05:05,220
+Using frequency modulation
+
+1006
+01:05:05,220 --> 01:05:07,220
+And some tricks
+
+1007
+01:05:07,220 --> 01:05:09,220
+We will be doing bass
+
+1008
+01:05:09,220 --> 01:05:11,220
+Marimba
+
+1009
+01:05:11,220 --> 01:05:13,220
+And I think another lead sound
+
+1010
+01:05:13,220 --> 01:05:15,220
+So that then we will be
+
+1011
+01:05:15,220 --> 01:05:17,220
+Equipped
+
+1012
+01:05:17,220 --> 01:05:19,220
+To start
+
+1013
+01:05:19,220 --> 01:05:21,220
+Creating a whole song
+
+1014
+01:05:21,220 --> 01:05:23,220
+Until then
+
+1015
+01:05:23,220 --> 01:05:25,220
+Take care
+

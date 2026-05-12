@@ -1,0 +1,697 @@
+Bonjour et bienvenue à Making Music in ShaderToy.
+Je m'appelle Alexis Thibault et aujourd'hui, je vais parler de comment on peut utiliser ShaderToy
+pour créer des waveforms, des enveloppes et commencer à faire de la musique en utilisant
+l'application du son.
+Si vous ne connaissez pas ShaderToy déjà, c'est un site pour créer des shaders pixels
+qui compilent en parallèle sur le GPU le couleur de chaque pixel sur l'écran en utilisant
+la même pièce de code pour chaque pixel.
+Si vous êtes intéressé par les graphiques de computers, les effets visuels, les scènes
+de démon, le rendement ou autre chose comme ça, je vous recommande de les voir.
+Mais ce que nous sommes intéressés aujourd'hui est en particulier les capacités de son son.
+Donc, allons-y et créons un nouveau shader.
+Donc, ici, nous avons la partie visuelle dans laquelle la fonction principale est appelée
+mainImage et prend des coordonnées et exécutent un bunch de codes pour chaque de ces coordonnées.
+Le tab de son, que vous pouvez ajouter en cliquant sur ce petit « plus » ici,
+crée un nouveau morceau de codes dans lequel la fonction est appelée mainSound et, à l'inverse,
+prend du temps.
+Et donc, pour chaque morceau, il exécutera un morceau de codes pour calculer le valeur du son
+à ce morceau, à ce morceau particulier.
+Alors, qu'est-ce qu'on a ici ? C'est supposé être un vecteur 2.
+Donc, vecteur 2 signifie un vecteur avec deux coordonnées.
+La coordonnée X correspond à l'écran de gauche et la coordonnée Y à l'écran de droite.
+En ce cas, nous avons quelque chose qui n'est qu'un valeur flottante.
+Ce que vous obtenez, c'est le même valeur pour X et Y, et donc vous obtenez un signe mono.
+Maintenant, allons-y faire un regard plus proche de cet exemple.
+Il dit « une vague de 440 Hz qui s'atténue rapidement à travers le temps. »
+Allons-y écouter.
+Alors, ce qu'on entend, c'est une vague avec une fréquence définie claire et une enveloppe
+décalée.
+Alors, qu'est-ce qu'on peut lire dans le code ? Nous avons une vague de signe, avec ce numéro,
+qui apparaît être 2 pi, et nous l'utiliserons beaucoup, donc allons-y directement créer
+un macro pour ça, « Define 2 pi ».
+Et ensuite, nous obtenons une fréquence de 440 Hz, et ensuite le temps.
+J'aime le nom de temps T parce que c'est plus court.
+Donc ici, si nous changeons la valeur de la fréquence, nous aurons différentes notes.
+Allons-y essayer ça.
+Allons-y essayer une valeur plus élevée.
+Donc, nous entendons que la note est plus élevée en pitch quand nous utilisons des valeurs plus élevées
+pour la fréquence.
+Conversement, si nous mettons des valeurs plus élevées, nous pouvons obtenir des notes plus élevées,
+qui peut être ou ne peut pas être possible d'entendre, dépendant du système d'audio que vous utilisez.
+Ok, allons-y revenir à la fréquence de 440 Hz.
+Et maintenant, qu'est-ce que c'est ?
+C'est l'enveloppe.
+Et pour visualiser l'enveloppe, ce que j'aime utiliser, c'est le GraphToy.
+graphtoy.com est un autre site par le même créateur que shader-toy.com, qui est à Inigoculars.
+GraphToy permet de placer des fonctions différentes, comme vous le souhaitez.
+Et c'est très pratique quand vous codez ce genre de choses.
+Alors, allons-y placer notre enveloppe.
+Je vais zoomer pour avoir un 0 et un 1 ici.
+Et allons-y placer l'exponential minus 3 x x.
+Donc, ce qu'on obtient, c'est une enveloppe de décalage,
+qui commence, comme x equal à 0, à 1,
+puis décale et s'envole jusqu'à 0 assez rapidement.
+Elle ne s'envole pas assez, mais elle devient inaudible après quelques secondes.
+Ce genre de décalage apparaît très naturel,
+parce que c'est comme ça qu'il se passe dans le monde réel,
+quand vous avez presque n'importe quoi.
+Si vous avez un cordon de guitare ou un instrument de percussion,
+la plupart du temps, le décalage va tendre à être exponentiel dans le temps.
+Alors, qu'est-ce que la coefficient 3 fait ici ?
+Elle nous dit la vitesse de la décalage.
+Si nous mettons un numéro plus haut,
+nous aurons quelque chose qui décale très rapidement.
+Et si nous mettons un numéro plus bas,
+nous aurons quelque chose qui décale plus lentement.
+Donc, nous pouvons faire ça et essayer d'entendre ce qu'elle fait.
+On fait un décalage rapide
+et un décalage lent.
+OK. Vous avez peut-être remarqué que ce son est assez lourd.
+La raison est qu'il atteint en fait le minus 1 et le plus 1,
+les valeurs minimales et maximales possibles,
+autorisées pour les outputs de son son.
+Si nous mettons un numéro plus bas,
+nous aurons quelque chose qui décale très rapidement.
+Si nous essayons de mettre des valeurs plus grosses que 1
+ou plus petites que le minus 1,
+nous aurons quelque chose qui décale plus lentement.
+Et en général, c'est une mauvaise idée.
+Il détorte le son et il a tendance à sonner très mal.
+C'est inconvénient si nous aimerions
+que plusieurs sons soient joués en même temps,
+parce que cela pourrait décaler.
+Donc, on décale l'amplitude de ce signal.
+On le multiplie par 0,1.
+Et c'est le terme de l'amplitude,
+qui peut être considéré comme une partie de l'enveloppe, si vous le voulez.
+Maintenant, il joue tranquillement.
+D'accord.
+J'aime cet exemple.
+Faisons-le une fonction.
+C'est une float.
+Je vais l'appeler float et je vais l'appeler signplug,
+parce que ça ressemble à plugger un string.
+D'accord.
+Disons que nous ferons que ce soit dépendant d'une fréquence, F.
+Donc, on va le remplacer par F.
+Et un temps en T.
+Et on va laisser l'amplitude être un décalé médium.
+D'accord, maintenant, ce que j'aime faire
+pour pouvoir ajouter plusieurs sons ensemble,
+c'est de définir l'effet 2,
+que j'appelle sig,
+et que j'initialise en 0.
+Et ensuite, nous pouvons ajouter des choses à sig,
+et retourner au sig.
+Alors, qu'est-ce que je mets dans mon signal ?
+Je peux mettre un signplug
+à la fréquence de 440 Hz en temps en T.
+Et ça nous donnera le son que nous avons déjà entendu avant.
+Et je peux aussi mettre un autre son.
+Disons que j'ai 660 Hz.
+D'accord, maintenant, nous entendons un intervalle.
+Nous entendons deux notes en même temps.
+Cela se passe par la note A,
+et c'est la note E, qui est au-dessus.
+Nous pouvons jouer des notes différentes.
+Nous allons jouer aussi la note E au-dessous.
+D'accord.
+Mais c'est assez drôle.
+Nous jouons seulement une note.
+Alors, essayons de jouer avec le timing.
+Ce que nous pouvons faire,
+vous voyez que ce signplug
+commence à jouer,
+l'enveloppe commence à jouer
+quand T est à 0.
+Donc, ce que nous pouvons faire,
+c'est que T commence à 0,
+puis s'éteint progressivement,
+puis retourne à 0 à chaque minute
+pour dire que nous commençons une nouvelle note.
+Une façon de faire cela
+serait d'utiliser la fonction mode.
+Si nous faisons mode X1,
+nous voyons X,
+et il monte, monte, monte,
+jusqu'à ce qu'il arrive à 1,
+à ce moment-là, il retourne à 0,
+et il commence à nouveau.
+Si nous voulons,
+au lieu d'aller jusqu'à 1,
+aller jusqu'à 2,
+et donc répéter à chaque 2 secondes,
+nous pouvons aussi le faire
+en éteignant ce nombre.
+Donc, faisons-le dans notre exemple.
+Ici, au lieu de T,
+nous allons mettre le mode T1.
+Je vais faire attention
+d'utiliser 1 dot.
+Je ne l'ai pas mentionné avant,
+mais c'est toujours les nombres
+du point flottant
+que nous parlons ici,
+et GLSL n'aime pas
+d'implicites conversion,
+mais si vous ne connaissez pas
+Shaded or EU,
+vous êtes habitués à ça.
+Maintenant, nous entendons
+le son répéter à chaque seconde.
+Ok, fantastique.
+Nous pouvons avoir
+notre A et E
+en jouant à chaque seconde.
+Mais c'est un peu drôle.
+Ok, mais c'est un peu drôle.
+Essayons d'offrir
+les nombres relative à l'autre.
+Si nous faisons
+une petite modification ici,
+nous pouvons offrir
+cela en temps.
+Disons que nous voulons
+que la note commence
+une demi seconde plus tard.
+Nous voulons que cela soit 0
+quand x est equal à 0,5.
+Ce que nous pouvons faire,
+c'est que
+quand x est equal à 0,5,
+c'est 0,
+et quand il arrive à 1,
+il rentre à 0.
+Si nous voulons
+qu'on l'offre
+par une demi seconde,
+on met juste 0,25 ici,
+et il est tard
+par seulement une demi seconde.
+Essayons d'offrir
+0,5.
+Et si nous voulons
+que la note seconde
+vienne un peu plus tôt,
+nous pouvons faire cela.
+Maintenant,
+la note première arrive juste après.
+Nous allons jouer
+avec le panning.
+Si vous avez un système
+qui est stéréo,
+vous pourrez
+noter que tout
+est dans le milieu.
+Mais nous pouvons
+utiliser les capacités
+stéréo
+de ce système.
+Nous avons un VEC2,
+donc nous pourrions
+avoir différents
+canaux à gauche et à droite.
+Nous allons faire cela.
+Nous pouvons
+multiplier
+cela
+et
+ajouter
+les différents signaux
+avec une autre amplitude
+pour les canaux à gauche et à droite.
+Nous allons multiplier
+cela par un VEC2,
+qui pourrait être 1
+à gauche et 0 à droite,
+et ici,
+0 à gauche et 1 à droite.
+Donc, la note basse,
+la note A,
+ne sera que entendue sur le canal à gauche
+et la note E
+ne sera que entendue sur le canal à droite.
+Nous l'entendons.
+Excellent.
+Vous pouvez
+faire quelque chose de moins extrême
+par avoir
+des numéros positifs,
+ici et ici.
+Ce sera
+plus à gauche,
+mais pas complètement
+uniquement dans le canal à gauche.
+Ce sera plus à droite.
+Nous l'entendons.
+C'est l'une des façons de le faire.
+Ce que j'aime
+faire, c'est une fonction panning.
+Je définirai une fonction
+qui constructe
+ces choses pour moi.
+Alors, allons-y.
+Définir
+une fonction panning,
+qui donne une valeur positionnelle
+qui range
+de minus 1 à 1,
+qui nous donne un VEC2
+qui devrait être normalisé
+et
+qui, bien,
+quand la position est de 0,
+elle devrait être à gauche du milieu,
+quand la position est de minus 1,
+elle devrait être à gauche du milieu,
+et quand la position est de plus 1,
+elle devrait être à gauche du milieu.
+Comment faire?
+On l'appelle E.
+Si nous faisons
+1 minus pass et 1 plus pass,
+ce que nous obtenons
+est exactement ce que j'ai dit.
+Quand la position est de 0,
+nous obtenons 1 1,
+quand la position est de minus 1,
+nous obtenons 2 0,
+quand la position est de plus 1,
+nous obtenons 2 0,
+donc complètement à droite.
+Maintenant, allons-y normaliser
+pour éviter d'avoir des différences
+en volume, dépendant du panning.
+Donc, si on utilise cette fonction pan,
+dans cet exemple,
+on pourrait faire quelque chose comme pan,
+peut-être 50 % à gauche,
+50 % à gauche,
+et ici,
+pan 50 % à droite,
+et nous obtenons
+presque la même chose.
+Maintenant, commençons
+à jouer avec différentes waveforms.
+Les fonctions de signe
+que nous avons écoutées jusqu'à maintenant
+sont très bonnes, mais
+si nous aimerions avoir
+différents instruments,
+différentes waveforms,
+lesquels nous pouvons utiliser
+pour simuler
+une basse,
+une guitare,
+une flûte, ou quoi que ce soit.
+Ce que j'ai tendance à voir
+beaucoup
+sur Shader Toy,
+c'est que les gens utilisent
+des fonctions de signe square
+ou des fonctions de sawtooth.
+Alors, allons-y regarder
+elles, et je vais expliquer
+pourquoi je pense
+que je ne les aime pas trop
+et que j'ai préféré utiliser
+d'autres types de fonctions.
+Alors, allons-y définir
+une flûte square.
+Alors, comment
+on transforme une flûte sine
+en une flûte square ?
+C'est très simple.
+Sine x, ici.
+Et si vous connaissez
+une fonction signe,
+vous pourriez avoir su que
+c'est une façon possible
+de transformer une flûte sine
+en une flûte square.
+En fait, la fonction sine
+retient la flûte positive
+quand
+tout ce qui est fait est positif,
+et la flûte négative
+est négative.
+Et donc, quand la flûte sine est positive,
+on reçoit plus 1,
+et quand la flûte sine est négative,
+on reçoit minus 1.
+Et donc, on a une flûte square.
+Alors, allons-y
+coder.
+Maintenant, allons-y utiliser la flûte square
+au lieu
+et la entendre.
+Alors, vous pourriez noter
+que
+on reçoit une signal
+qui est beaucoup
+plus riche
+en termes de timbre
+que ce qu'on avait auparavant.
+C'est un peu
+fort
+et piquant.
+Mais
+vous pourriez aussi noter
+que
+cela
+est
+un peu froid
+aussi.
+La raison
+est
+de l'AES,
+qui est
+un sujet
+assez compliqué
+concernant
+l'approximation des fonctions
+et le sampler.
+Donc, l'idée est
+que, puisqu'on a
+un contenu de haute fréquence
+dans cette fonction
+square block,
+certains de ces contenus
+de haute fréquence
+ne peuvent pas
+être représentés exactement
+juste en le samplant
+à chaque
+sample
+qui est pris.
+Ici,
+la fonction évalue
+44.1
+mille
+fois par seconde.
+Et donc,
+quelles que
+la fréquence
+soit plus de la moitié,
+elle sera
+représentée
+comme si elle
+était reflétée.
+C'est un peu la même chose
+que si vous avez un vidéo
+d'une roue
+qui tourne trop vite
+et qu'elle
+commence à ressembler
+comme si la roue
+tournait en arrière.
+C'est la même idée ici.
+C'est pourquoi
+je n'utilise pas trop
+les fonctions square.
+Mais
+continuons
+notre voyage
+sur les différentes
+waveformes que vous pouvez utiliser.
+Regardons la fonction
+d'un samplant.
+On va définir
+un samplac
+floatF, floatT.
+Comment
+créons-nous une fonction de samplac ?
+Nous aimerions que
+la fonction commence
+à negative 1, puis à positive 1,
+et qu'elle commence à nouveau.
+Ça
+ressemble à
+mod X1.
+Mais nous voulions
+commencer à negative 1.
+Nous faisons
+minus 1, et
+nous voulions qu'elle fasse plus 1,
+donc que nous multiplions par 2.
+Ici,
+nous avons une sorte de fonction
+avec période 1.
+Si nous voulions
+qu'elle ait une autre fréquence,
+nous pouvons
+la multiplier par une autre valeur.
+2, 3...
+Typiquement, nous ferons 440 Hz
+ou quelque chose comme ça.
+OK, c'est parti.
+Mod Tf
+1
+x 2-1
+et
+nous multiplions par l'enveloppe.
+Laissez-nous
+l'envelopper
+dans notre
+signal generation
+et la entendre.
+C'est un timbre
+complètement différent,
+qui peut être
+ou peut-être pas.
+C'est un
+très bon timbre.
+Encore une fois, c'est assez
+basé à cause de l'aliasing.
+La famille
+de signals
+que j'utilise beaucoup
+sur ShaderToys
+est appelée Frequency Modulation.
+J'aime
+vous en parler
+parce que je trouve
+que c'est vraiment facile
+à coder, c'est très versatile
+et
+très facile à utiliser.
+Ça ne l'aliase pas
+jusqu'à ce que vous l'appuiez trop dur.
+Vous pouvez faire beaucoup de choses
+avec ça.
+Alors, voyons
+la Frequency Modulation.
+On définit un
+signal FM-Pluck.
+La Frequency Modulation,
+l'idée est
+que vous avez une carrière
+de Frequency.
+Pour le moment, on va juste la mettre
+à F.
+Et une Frequency Modulation,
+qu'on va mettre à F aussi.
+Et vous avez un troisième paramètre,
+qui est l'Index of Modulation,
+qu'on va mettre
+à 1 pour le moment.
+C'est la Carrière Frequency.
+C'est la
+Modulation Frequency.
+Et c'est
+l'Index
+of Modulation.
+Techniquement, ce qu'on va faire ici
+est appelé Phase Modulation.
+Mais c'est
+très, très proche.
+Alors, qu'est-ce qu'on va faire ensuite ?
+Le signal
+qu'on va utiliser
+sera
+une fonction de signe,
+2 pi x
+Carrière Frequency x t.
+C'est
+si on
+n'a pas de Frequency Modulation,
+mais si on a
+Frequency Modulation,
+le signe
+a un terme additionnel
+dans son argument,
+c'est l'Index of Modulation
+x une autre fonction de signe,
+2 pi x
+Modulating Frequency
+x t.
+Et on va multiplier
+cela par l'enveloppe.
+On va dire
+que l'enveloppe
+est cette chose de nouveau.
+Ok.
+Alors, voyons-le.
+Ce son est
+très typique
+de Frequency Modulation.
+C'est
+assez lisse
+et encore plus riche
+que la fonction de signe.
+Alors, qu'est-ce qui change
+quand on change la Frequency Carrière,
+la Frequency Modulation
+et l'Index of Modulation ?
+Bien, si on change
+l'Index of Modulation,
+qui est vraiment
+le paramètre le plus important
+dans cette chose,
+on va changer
+combien riche le timbre est.
+Donc, si on
+utilise 2 au lieu de 1,
+on obtient quelque chose
+qui s'extend un peu
+au-delà de sa fréquence initiale.
+On peut utiliser
+des numéros non integer,
+on peut utiliser, par exemple, 2,7.
+Si on commence à essayer
+des valeurs plus hautes,
+ça devient vraiment
+un peu sharp.
+On va essayer 20.
+Maintenant, ça commence à
+vraiment
+à ressembler
+à un matériau très, très dur,
+comme du verre, ou quelque chose comme ça.
+On retourne
+à une modulation plus raisonnable
+dans l'Index of Modulation,
+en jouant avec la fréquence modulatrice.
+Si on multiplie par 2,
+on obtient quelque chose
+qui ressemble à un courant.
+Et c'est à cause de la
+structure harmonique
+qu'on obtient en utilisant
+cette fréquence modulatrice.
+Je ne vais pas trop loin
+dans les détails,
+mais c'est un sujet vraiment intéressant.
+On va essayer 3.
+Vous pouvez faire toutes sortes
+de structures harmoniques avec ça.
+Je ne vais pas trop loin
+dans les détails,
+vous pouvez y jouer.
+Si vous utilisez
+un numéro non integer,
+ça va commencer à ressembler
+assez bizarre.
+On va essayer 4.
+C'est quelque chose
+qui ressemble à un caudel
+qui est aussi
+quelque chose dont
+la fréquence modulatrice est fameuse.
+Ok, on va juste utiliser
+ces choses.
+Ce que vous pouvez faire aussi
+c'est de commencer
+à utiliser la fréquence modulatrice
+En fait, je définirai une fonction de modulation fréquente pour pouvoir l'utiliser d'une manière plus convaincante.
+IOM et FlowT, et on va juste retourner ce truc.
+Donc maintenant, c'est juste Fm, Fc, Fm, IOM et T.
+Ok.
+Et maintenant, on va pouvoir l'utiliser d'une manière plus convaincante.
+Et on va juste retourner ce truc.
+Donc maintenant, c'est juste Fm, Fc, Fm, IOM et T.
+Ok.
+On va faire la fonction Sig.
+En fait, on va faire ce Stereo.
+Donc, on fait cette fonction Vec2. Vec2Sig == Vec2Zero.
+Et ce que l'on peut faire, c'est que le signal soit différent dans le canal gauche et droit.
+Donc on peut dire que Sig.X == Fm de...
+On va dire F1.
+F1.
+Quelle devrait être l'index de modulation?
+Bon, je vais commencer avec juste F1 et T.
+Encore une fois l'enveloppe principale.
+Et pour le canal gauche, c'est le minus 1.
+Et qu'est-ce que ça ressemble à?
+Vous avez ce beau effet de phasing de Stereo.
+Si vous voulez que l'attaque soit un peu plus forte,
+ce que vous pouvez faire, c'est ajouter quelque chose avec un index de modulation plus élevé.
+On va dire, je ne sais pas, 15. T.
+Et ensuite, vous le multipliez par une enveloppe qui décale plus vite.
+On va dire que c'est le minus 10 x T.
+Et que ce soit pas trop lourd, juste pour qu'il fasse l'attaque.
+Vous pouvez le faire décaler plus vite.
+Et balancez-le un peu.
+C'est vraiment assez solide.
+Et maintenant, on commence à obtenir quelque chose qui est assez musical, je pense.
+Donc, pour terminer, ce que je suggère, c'est que nous composons un simple jingle.
+Donc, ce qu'il faut faire pour commencer à faire de la musique, c'est de définir les fréquences de nos notes.
+La fréquence est un sujet assez compliqué dans la musique, parce que ce n'est absolument pas évident pour n'importe qui.
+La fréquence doit être pour une certaine note.
+Il y a beaucoup de débats dans la musique sur cette chose qui s'appelle le tempérament,
+qui est donné comme un nom de note, la fréquence et l'assignement.
+Donc, la solution qu'on utilise souvent maintenant, c'est d'utiliser le tempérament égal.
+Dans le tempérament égal, nous disons que tous les semitones sont de la même taille.
+Il y a 12 semitones dans une octave, et une octave correspond à un doublement de fréquence.
+Donc, si nous mettons ça mathématiquement, où est-ce que nous sommes?
+Nous disons l'intervalle, donné le nombre de semitones.
+L'intervalle est un ratio de deux fréquences, et ce ratio de fréquences sera de la taille de deux,
+qui correspond à le nombre de semitones divisé par 12.
+Donc, si nous obtenons zéro semitone, c'est juste la même note, donc l'intervalle, la fréquence sera de la même taille.
+Si nous obtenons 12 semitones, c'est une octave, donc nous multiplierons la fréquence par deux.
+Si nous obtenons moins de 12 semitones, nous les divisons par deux,
+et entre les deux, nous multiplierons ou les divisons par une certaine puissance de deux.
+Ok, nous allons définir un bunch de notes que nous aimerions jouer.
+Float notes.
+Nous faisons ce const array.
+Et disons que nous avons six notes.
+On dirait que c'est un A, un E, un B, un E, un C, et un D.
+Nous allons faire ça.
+Maintenant, le jingle.
+Nous allons juste combiner ces notes et les jouer un après l'autre.
+Alors, comment le faisons-nous ? Nous définissons une fonction signal.
+Une variable signal, en fait.
+Et pour chaque note, donc pour i equals 0 à 6, nous allons ajouter une nouvelle note à notre signal.
+Alors, quel est le nombre de notes de cette note ?
+C'est juste une note à i.
+Quelle est la fréquence de la note i ?
+C'est 440 Hz, c'est-à-dire la note A, multipliée par la ratio qui correspond à cette intervalle.
+Oui, les notes ici, j'ai choisi de les définir relative à la middle A.
+Donc, l'intervalle correspond à la note.
+Qu'est-ce que c'est le temps initial ? T0 i.
+A quel temps la note i commence ?
+Nous allons dire que nous changeons chaque note par 0,25 secondes.
+C'est 0,25 fois la fréquence de la note i.
+C'est 0,25 fois la fréquence de la note i.
+Et nous allons dire que le temps actuel est modtime minus le temps initial de cette note.
+Et nous allons répéter le pattern chaque 2 secondes.
+C'est exactement la même idée que nous avons vu ici.
+Et maintenant nous faisons sig plus equals fmplug de fi ti, et retournons sig.
+Nous faisons sig plus equals jingle of t, et c'est tout.
+C'est tout.
+Maintenant, c'est bien.
+Que se passe-t-il à la panning ?
+Nous pouvons, par exemple, avoir une position pour chaque note.
+Et cette position pourrait être...
+Nous voulons que la première note soit dans le milieu, puis à droite, puis à gauche, puis au milieu, puis à droite.
+Une possible formule pour cela serait imat3 plus 1, minus 1.
+Maintenant, c'est imat3 plus 1.
+Et nous pouvons faire une pause de temps.
+Maintenant, si vous avez du stereo, vous allez entendre que le signal est entouré.
+Fantastique.
+La dernière chose que j'aimerais faire, c'est changer l'octave de cette note.
+Pour avoir une bonne mélodie.
+C'est tout pour aujourd'hui.
+La prochaine fois, j'espère que je vais vous montrer comment faire de la percussion,
+puis des effets, et commencer à parler de la structure de la chanson.
+Au revoir.
