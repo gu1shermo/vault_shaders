@@ -57,6 +57,20 @@ La fonction `mainSound` de Shadertoy reprend **exactement le même paradigme** q
 - **Wah synth** : synthèse additive bandlimited, double enveloppe
 - Assemblage final d'une chanson 4 instruments
 
+### Compagnon — [[Pure Data - paralleles]]
+
+Note transverse qui **rejoue chaque concept des 3 cours en Pure Data**.
+Permet de discuter le paradigme dataflow + stateful en contraste avec le shader stateless/parallèle.
+Inclut TP suggérés (mêmes instruments en Pd, instrument live, physical modeling).
+Bibliographie tirée de *bang | Pure Data* (Zimmer, 2006).
+
+### Parcours d'auto-formation — [[Kreidler - parcours guide]]
+
+Programme **8 semaines** de lecture guidée du tutoriel libre de **Johannes Kreidler**
+*Programming Electronic Music in Pd* (<http://www.pd-tutorial.com/english>).
+Chaque semaine : un chapitre Kreidler, des exercices, et un mini-comparatif shader ↔ Pd.
+Conçu pour donner aux étudiants une vision **par contraste** des deux paradigmes.
+
 ---
 
 ## Évaluation suggérée

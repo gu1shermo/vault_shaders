@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "music/Cours 1 - Bases, waveforms et melodie.md",
-                "mode": "preview",
+                "file": "music/Kreidler - parcours guide.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Cours 1 - Bases, waveforms et melodie"
+              "title": "Kreidler - parcours guide"
             }
           }
         ],
@@ -109,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "music/Cours 1 - Bases, waveforms et melodie.md",
+                "file": "music/Kreidler - parcours guide.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -119,7 +119,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Cours 1 - Bases, waveforms et melodie"
+              "title": "Backlinks for Kreidler - parcours guide"
             }
           },
           {
@@ -171,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "music/Cours 1 - Bases, waveforms et melodie.md",
+                "file": "music/Kreidler - parcours guide.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Cours 1 - Bases, waveforms et melodie"
+              "title": "Outline of Kreidler - parcours guide"
             }
           }
         ],
@@ -200,9 +200,14 @@
   },
   "active": "b89a60efb2c0054e",
   "lastOpenFiles": [
+    "music/Zimmer - 2006 - bang Pure Data.pdf",
+    "music/Pure Data - paralleles.md",
+    "music/Kreidler - parcours guide.md",
+    "music/index.html",
+    "music/Cours 1 - Bases, waveforms et melodie.md",
+    "music/Pure Data - paralleles.md.tmp.17568.c4f31636316c",
     "music/Cours 3 - Marimba, Saw Bass, Wah Synth.md",
     "music/Cours 2 - FM Synthesis, Pad, Lead Synth.md",
-    "music/Cours 1 - Bases, waveforms et melodie.md",
     "music/Themes audio - panorama.md",
     "ref shaders.md",
     "music/_Index - Shaders Audio.md",
@@ -213,9 +218,6 @@
     "music/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].txt",
     "music/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].json",
     "music/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].tsv",
-    "music/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].srt",
-    "music/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].vtt",
-    "music/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].txt",
     "tunnel/tunnel1 - étapes.md",
     "tunnel/tunnel1.md",
     "tunnel/refract2 - étapes.md",
