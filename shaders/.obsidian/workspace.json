@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "music/Kreidler - parcours guide.md",
+                "file": "music/code/code3/Étape 06 - Séquenceur de basse.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Kreidler - parcours guide"
+              "title": "Étape 06 - Séquenceur de basse"
             }
           }
         ],
@@ -171,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "music/Kreidler - parcours guide.md",
+                "file": "music/code/code3/Étape 06 - Séquenceur de basse.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Kreidler - parcours guide"
+              "title": "Outline of Étape 06 - Séquenceur de basse"
             }
           }
         ],
@@ -200,39 +200,42 @@
   },
   "active": "b89a60efb2c0054e",
   "lastOpenFiles": [
-    "music/Zimmer - 2006 - bang Pure Data.pdf",
-    "music/Pure Data - paralleles.md",
-    "music/Kreidler - parcours guide.md",
-    "music/index.html",
-    "music/Cours 1 - Bases, waveforms et melodie.md",
-    "music/Pure Data - paralleles.md.tmp.17568.c4f31636316c",
-    "music/Cours 3 - Marimba, Saw Bass, Wah Synth.md",
-    "music/Cours 2 - FM Synthesis, Pad, Lead Synth.md",
-    "music/Themes audio - panorama.md",
+    "music/code/code3/Étape 05 - bassSynth saw stab.md",
+    "music/code/code3/Étape 04 - Saw filtrée anti-aliasée.md",
+    "music/code/code3/Étape 03 - Séquenceur de marimba.md",
+    "music/code/code3/Étape 02 - Marimba FM inharmonique.md",
+    "music/code/code3/Étape 01 - Boîte à outils FM.md",
+    "music/code/code3/Étape 10 - Sidechain et mix final.md",
+    "music/code/code3/Étape 10 - Sidechain et mix final.md.tmp.17016.869984cdaee8",
+    "music/code/shadertoy3 code.md",
+    "music/code/code3/Étape 09 - Pad et lead réutilisés.md",
+    "music/code/code3/Étape 09 - Pad et lead réutilisés.md.tmp.17016.98d4766a85b2",
+    "music/code/code3/Étape 08 - Séquenceur wah et delay.md",
+    "music/code/code3/Étape 08 - Séquenceur wah et delay.md.tmp.17016.2e6b671dda01",
+    "music/code/code3/Étape 07 - wahLead balayage de filtre.md",
+    "music/code/code3/Étape 07 - wahLead balayage de filtre.md.tmp.17016.5fdce27da743",
+    "music/code/code3/Étape 06 - Séquenceur de basse.md",
+    "music/code/code3/Étape 05 - bassSynth saw stab.md.tmp.17016.408a7664e710",
+    "music/code/code3/Étape 04 - Saw filtrée anti-aliasée.md.tmp.17016.815787c4f3c9",
+    "music/code/code3/Étape 03 - Séquenceur de marimba.md.tmp.17016.df34e0388c8d",
+    "music/code/code3/Étape 02 - Marimba FM inharmonique.md.tmp.17016.e6ab7564c3ab",
+    "music/code/code3/Étape 01 - Boîte à outils FM.md.tmp.17016.a2e9f5134f6e",
+    "music/code/code3/_Index - Décomposition shadertoy3.md",
+    "music/code/code3/_Index - Décomposition shadertoy3.md.tmp.17016.4df4608d9afa",
+    "music/code/code3/Étape 09 - Rebond et phase pseudo-aléatoire.md",
+    "music/code/code3/Étape 08 - Grille de notes répétées.md",
+    "music/code/code3/Étape 07 - Défilement et double repère.md",
+    "music/code/code3/Étape 06 - Haut du crochet et fonction eighthNote.md",
+    "music/code/code3/Étape 05 - Le crochet par intersection.md",
+    "music/code/code3/Étape 04 - La hampe et l'union.md",
+    "music/code/code3/Étape 03 - Ellipse et rotation.md",
+    "music/code/code3/Étape 02 - SDF et anti-aliasing.md",
+    "music/code/code3/Étape 01 - Repère normalisé.md",
     "ref shaders.md",
-    "music/_Index - Shaders Audio.md",
-    "music/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].json",
-    "music/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].tsv",
-    "music/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].srt",
-    "music/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].vtt",
-    "music/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].txt",
-    "music/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].json",
-    "music/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].tsv",
-    "tunnel/tunnel1 - étapes.md",
-    "tunnel/tunnel1.md",
-    "tunnel/refract2 - étapes.md",
-    "tunnel/refract2.md",
-    "tunnel/refract1 - étapes.md",
-    "tunnel/refract1.md",
-    "tunnel/travel - étapes.md",
-    "evaluation CC.md",
-    "tunnel/travel - report.md",
-    "Pasted image 20260501143205.png",
-    "tunnel/travel.md",
-    "tunnel/tunnel2 - étapes.md",
-    "tunnel/tunnel2.md",
-    "evaluation.md",
-    "prog vendredi.md",
-    "Welcome.md"
+    "music/Cours 2 - FM Synthesis, Pad, Lead Synth.md",
+    "music/code/code1/Étape 01 - Sinus pur.md",
+    "music/code/code2/Étape 07 - Réverbération par échos.md",
+    "music/code/code2/Étape 05 - Empiler un accord.md",
+    "Pasted image 20260501143205.png"
   ]
 }

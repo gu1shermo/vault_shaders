@@ -3,7 +3,8 @@
     "allow": [
       "Bash(git -C \"C:/Users/GuiSh/Documents/GUILLAUME/03_TRAVAIL/ESGI/vault_shaders\" rev-parse --show-toplevel)",
       "Bash(git -C \"C:/Users/GuiSh/Documents/GUILLAUME/03_TRAVAIL/ESGI/vault_shaders\" ls-files --error-unmatch \"shaders/music/Making Music in Shadertoy - Episode 1 ： Basics, Waveforms, and a Simple Tune [3mteFftC7fE].mp3\")",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(python -c \"import json; d=json.load\\(open\\('../Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].json',encoding='utf-8'\\)\\); print\\(type\\(d\\)\\); print\\(list\\(d.keys\\(\\)\\)[:20] if isinstance\\(d,dict\\) else d[:3]\\)\")"
     ]
   }
 }
