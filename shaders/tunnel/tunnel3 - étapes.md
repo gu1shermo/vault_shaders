@@ -1,5 +1,5 @@
 
-# Tunnel 3 — décomposition en 18 étapes
+# Tunnel 3 — décomposition en 21 étapes
 
 Chaque étape contient un shader **complet** copiable tel quel dans Shadertoy. On part de zéro et on arrive au shader original en ajoutant **une notion par étape**.
 
@@ -1148,26 +1148,86 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ---
 
-## Étape 16 — Audio reactive : FFT (`iChannel1`)
+## Étape 16 — Visualiser le spectre audio (`iChannel1`)
 
-**Notion :** Shadertoy expose le spectre audio comme une **texture 1D** dans `iChannel1`. La macro :
+**Notion :** Shadertoy expose la musique sous forme d'une **texture** dans `iChannel1`. Cette texture est mise à jour à chaque frame et encode le **spectre fréquentiel** du son qui joue :
+
+- **axe X** de la texture = **fréquence**, mappée de **0 (graves)** à **1 (aigus)**
+- **valeur du pixel** = **amplitude** de cette fréquence à cet instant (0 = silence, 1 = max)
+- on ne lit que la **première ligne** (y=0) : c'est de la donnée 1D, pas une vraie image
+
+C'est exactement ce qu'on appelle une **FFT** (Fast Fourier Transform) en audio : on découpe le signal sonore continu en « bandes » de fréquences, et on lit l'énergie de chaque bande. Shadertoy fournit en général ~512 bandes, qu'on échantillonne par interpolation.
+
+D'où la macro :
 
 ```glsl
 #define FFT(a) texture(iChannel1, vec2(a, 0.)).x
 ```
 
-renvoie l'amplitude de la bande de fréquence `a` (entre 0 et 1). On l'utilise à trois endroits :
+`FFT(0.)` = niveau des **graves** (kicks, basse).
+`FFT(.5)` = niveau des **médiums** (voix, instruments principaux).
+`FFT(.9)` = niveau des **aigus** (cymbales, sifflements).
 
-1. **rayon du tube** : `rad = FFT(abs(p.z*.001))*.25` → la paroi se déforme avec la musique
-2. **taille des bandes** : `vec2(5.4 * pow(FFT(abs(id.y*.01)), 5.), .05)` → chaque ligne a sa fréquence, et `pow(..,5)` exagère les pics
-3. **flash global lumineux** : `pow(FFT(.0), 2.) * 2.` autour des graves
+**Avant d'utiliser** cette donnée pour piloter le tunnel, on lui consacre une **étape didactique plein écran** : on coupe tout le reste et on n'affiche **que** l'égaliseur. La hauteur de chaque colonne = `FFT(ouv.x)` directement — pas de mise à l'échelle, pas de zone réservée. On voit le spectre dans toute sa résolution.
 
-> **Bind :** dans Shadertoy, clique sur `iChannel1` et choisis *Sound* → un morceau (ex. *Experiment*) — sinon `FFT()` renvoie 0 partout.
+> **Bind :** clique sur `iChannel1` dans Shadertoy → onglet **Music** ou **SoundCloud** → un morceau. Sans ça, `FFT()` renvoie 0 partout et l'égaliseur reste plat.
+
+```glsl
+// FFT : amplitude de la bande de fréquence "a" (∈ [0,1]) lue dans iChannel1.
+// 0 = graves, 1 = aigus, valeur retournée ∈ [0,1].
+#define FFT(a) texture(iChannel1, vec2(a, 0.)).x
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 ouv = fragCoord.xy / iResolution.xy;      // ouv.x ∈ [0,1] = fréquence interrogée
+                                                    // ouv.y ∈ [0,1] = hauteur écran
+
+    // Lecture du spectre : amplitude à la fréquence ouv.x
+    float spectrum = FFT(ouv.x);
+
+    vec3 col = vec3(0.);
+
+    // ── Barre verticale : on est "dedans" si ouv.y est sous le sommet de la barre ──
+    if (ouv.y < spectrum) {
+        // Dégradé vert (bas) → rouge (haut) : plus c'est fort, plus c'est rouge.
+        col = mix(vec3(.2, 1., .3), vec3(1., .2, .2), ouv.y);
+    }
+
+    // ── Grille de référence en arrière-plan ──
+    // Lignes verticales tous les 10% de fréquence (graves|.1|.2|...|.9|aigus)
+    if (fract(ouv.x * 10.) < .005) col += vec3(.08);
+    // Lignes horizontales tous les 25% d'amplitude
+    if (fract(ouv.y * 4.) < .005)  col += vec3(.05);
+
+    // ── Repères colorés sur l'axe X pour situer graves / médiums / aigus ──
+    // Bande très fine en haut de l'écran qui passe du bleu (graves) au rouge (aigus).
+    if (ouv.y > .98) col = mix(vec3(.2, .3, 1.), vec3(1., .3, .2), ouv.x);
+
+    fragColor = vec4(col, 1.);
+}
+```
+
+> **Ce qu'on doit voir :** un égaliseur en barres qui **occupe toute la fenêtre**, pulsant en direct sur la musique. La **moitié gauche** (graves : kicks, basse) bouge sur le rythme. La **moitié droite** (aigus : cymbales, sifflantes) est plus erratique et plus fine. La bande colorée en haut (bleu → rouge) rappelle la convention « gauche = graves, droite = aigus ». À l'étape suivante on prend cette même donnée et on s'en sert pour piloter le tunnel.
+
+---
+
+## Étape 17 — FFT pilote le **rayon du tube** (la paroi respire)
+
+**Notion :** on commence par le branchement le plus spectaculaire et le plus facile à observer : la **forme du tunnel elle-même** est modulée par la musique. Dans `map()`, on ajoute un terme `rad` au rayon :
+
+```glsl
+float rad = FFT(abs(p.z*.001)) * .25;
+return -(length(p.xy) - 2. - rad + sin(p.z*.25));
+```
+
+Deux choses à comprendre :
+
+1. **Pourquoi `abs(p.z*.001)` comme fréquence ?** Chaque tranche du tunnel (chaque valeur de `p.z`) interroge une fréquence FFT différente. Comme la caméra avance en Z, des tranches *différentes* sont sous tes yeux à chaque instant → toute la longueur du tunnel ressemble à une **barre d'égaliseur 3D**. Le `*.001` est l'échelle : il faut que `abs(p.z*.001)` reste dans `[0, 1]` pour balayer le spectre (sinon on tape en dehors de la texture FFT).
+2. **Pourquoi `* .25` ?** L'amplitude FFT est dans `[0, 1]`. Sans atténuation, le rayon varierait de 2 à 3 (50 % de plus). Avec `*.25`, il varie de 2 à 2.25 max → effet présent mais pas excessif.
 
 ```glsl
 #define sat(a) clamp(a, 0., 1.)
-// FFT : la texture iChannel1 contient le spectre audio en X (0=basses, 1=aigus).
-// On y lit l'amplitude (.x) de la bande "a" : ∈ [0, 1]
+// FFT : amplitude de la bande "a" (graves=0, aigus=1) lue dans iChannel1.
 #define FFT(a) texture(iChannel1, vec2(a, 0.)).x
 
 mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c,-s, s,c); }
@@ -1177,8 +1237,116 @@ float map(vec3 p)
 {
     p.xy -= vec2(sin(p.z + iTime), cos(p.z*.5 + iTime)) * .5;
     p.y  += sin(p.z*2. + iTime) * .1;
-    // Modulation du rayon par la FFT : chaque tranche du tunnel échantillonne une fréquence
-    // différente (abs(p.z*.001)) → toute la longueur affiche une "barre d'égalisation".
+    // ── NEW : rayon modulé par la FFT ──
+    // abs(p.z*.001) ∈ [0, 1] → balaye le spectre le long du tunnel.
+    // * .25 = amplitude raisonnable (rayon varie de ~2.0 à ~2.25)
+    float rad = FFT(abs(p.z*.001)) * .25;
+    return -(length(p.xy) - 2. - rad + sin(p.z*.25));
+}
+
+vec3 accCol;
+
+float trace(vec3 ro, vec3 rd, int steps, out float lastD)
+{
+    accCol = vec3(0.);
+    vec3 p = ro;
+    lastD = 0.;
+    for (int i = 0; i < steps; i++) {
+        float d = map(p);
+        lastD = d;
+        if (d < 0.01) return distance(p, ro);
+        accCol += vec3(1., .5, sin(p.z)*.5+.5) * pow(1. - sat(d/.7), 30.) * .3;
+        p += rd * d * .7;
+    }
+    return -1.;
+}
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p-e.xyy), map(p-e.yxy), map(p-e.yyx)));
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0.,1.,0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov*(r*uv.x + u*uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - .5*iResolution.xy) / iResolution.xx;
+
+    float t = iTime*2.;
+    vec3 ro = vec3(sin(iTime)*.15, cos(iTime*.5)*.12, -12.+t);
+    vec3 ta = vec3(0., 0., 0.+t);
+    vec3 rd = normalize(ta - ro);
+    rd.xz *= r2d(sin(iTime*.5)*.15);
+    rd.yz *= r2d(sin(iTime + .5)*.15);
+    rd = getCam(rd, uv);
+
+    float lastD;
+    float hit = trace(ro, rd, 256, lastD);
+
+    vec3 col = vec3(0.);
+    if (hit > 0.) {
+        vec3 hp = ro + rd*hit;
+        vec3 n  = getNorm(hp, lastD);
+        col = sat(dot(normalize(hp), n)) * vec3(1.);
+        col += accCol;
+        col = pow(col, vec3(3.));
+
+        // bandes inchangées par rapport à l'étape 15 (taille constante)
+        float an = atan(hp.y, hp.x);
+        vec2 rep = vec2(.9, .5);
+        vec2 luv = vec2(an, hp.z + iTime);
+        vec2 id  = floor((luv + .5*rep) / rep);
+        luv.x += sin(id.y*.5) * iTime * 2.;
+        luv = mod(luv + .5*rep, rep) - .5*rep;
+        float shape = _sqr(luv, vec2(.4, .05));
+        vec3 rgb = mix(col, vec3(1.), 1. - sat(shape*50.));
+        col = mix(col, rgb, sin(iTime*5. + hp.z*.5)*.5+.5);
+        col = mix(col, col.zyx, sin(iTime + hp.z*.1)*.5+.5);
+    }
+    fragColor = vec4(col, 1.);
+}
+```
+
+> **Ce qu'on doit voir :** la paroi du tunnel **gonfle et se contracte** au rythme de la musique, comme si elle respirait. Quand un kick passe, la paroi se rapproche (rayon plus grand depuis l'intérieur = paroi plus petite). Les bandes lumineuses sont toujours là mais elles ne réagissent pas encore au son : c'est uniquement la **géométrie** qui est animée.
+
+---
+
+## Étape 18 — FFT pilote **la grille** (bandes pulsantes + flash graves + gain global)
+
+**Notion :** maintenant qu'on sait brancher une FFT, on en branche trois autres en même temps — toutes affectent la **couleur** (pas la géométrie) :
+
+1. **Taille des bandes par ligne** : `vec2(5.4 * pow(FFT(abs(id.y*.01)), 5.), .05)`
+   - chaque rangée (`id.y`) tape sa propre fréquence
+   - `pow(...,5)` exagère les pics : seules les fréquences vraiment fortes étirent la bande, le reste reste fin
+   - facteur `5.4` permet à la bande, sur un pic franc, d'occuper presque toute la cellule
+
+2. **Flash graves** : `pow(FFT(.0), 2.) * 2.`
+   - `FFT(.0)` = niveau des graves uniquement → flash sur les kicks
+   - `pow(..,2)` adoucit (sinon ça flashe en permanence)
+   - on ajoute une couleur rose-orangé `vec3(1., .5, …)`, modulée par `(1 - sat(shape*1.))` (s'éteint dans les bandes) et `(1 - sat(length(uv)))` (vignettage : seul le centre flashe)
+
+3. **Gain global** : `col *= 1. + pow(FFT(.1), 1.) * 2.`
+   - en toute fin, on multiplie l'image par ~1 à 3 selon les bas-médiums
+   - donne l'effet "boost de volume visuel" sur les kicks et la basse
+
+```glsl
+#define sat(a) clamp(a, 0., 1.)
+#define FFT(a) texture(iChannel1, vec2(a, 0.)).x
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c,-s, s,c); }
+float _sqr(vec2 p, vec2 s) { vec2 l = abs(p)-s; return max(l.x, l.y); }
+
+float map(vec3 p)
+{
+    p.xy -= vec2(sin(p.z + iTime), cos(p.z*.5 + iTime)) * .5;
+    p.y  += sin(p.z*2. + iTime) * .1;
     float rad = FFT(abs(p.z*.001)) * .25;
     return -(length(p.xy) - 2. - rad + sin(p.z*.25));
 }
@@ -1244,31 +1412,46 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
         luv.x += sin(id.y*.5) * iTime * 2.;
         luv = mod(luv + .5*rep, rep) - .5*rep;
 
-        // largeur de la bande = 5.4 * FFT(fréquence_de_cette_ligne)^5
-        // → pow^5 : seuls les pics francs étendent la bande, le reste reste fin
+        // ── 1. taille des bandes pilotée par la FFT de la ligne ──
+        // pow(..,5) : seuls les pics francs étirent la bande
         float shape = _sqr(luv, vec2(5.4 * pow(FFT(abs(id.y*.01)), 5.), .05));
         vec3 rgb = mix(col, vec3(1.), 1. - sat(shape*50.));
-        // Boost ponctuel sur les graves (FFT(0)) :
-        //   - couleur rose-orangé qui module en p.z
-        //   - éteint à l'intérieur des bandes (1-sat(shape*1.)) ET en périphérie de l'écran
-        rgb += pow(FFT(.0), 2.) * 2. * vec3(1., .5, sin(hp.z*10.)*.5+.5)
-               * (1. - sat(shape*1.)) * (1. - sat(length(uv)));
+
+        // ── 2. flash graves : seulement au centre, éteint dans les bandes ──
+        rgb += pow(FFT(.0), 2.) * 2.
+             * vec3(1., .5, sin(hp.z*10.)*.5+.5)
+             * (1. - sat(shape*1.))                  // pas par-dessus les bandes
+             * (1. - sat(length(uv)));               // vignettage : centre uniquement
 
         col = mix(col, rgb, sin(iTime*5. + hp.z*.5)*.5+.5);
         col = mix(col, col.zyx, sin(iTime + hp.z*.1)*.5+.5);
     }
 
-    // Gain global piloté par les bas-médiums (~bande .1)
+    // ── 3. gain global modulé par les bas-médiums (~bande .1) ──
     col *= 1. + pow(FFT(.1), 1.) * 2.;
     fragColor = vec4(col, 1.);
 }
 ```
 
+> **Ce qu'on doit voir :** les bandes lumineuses sur la paroi **changent de longueur** par rangée selon la musique (chaque ligne sa fréquence). Sur les **kicks**, un halo rose-orangé apparaît au centre de l'image (flash graves), et toute la luminance globale grimpe d'un coup (gain global). C'est maintenant un vrai shader audio-réactif.
+
 ---
 
-## Étape 17 — Texture sur la paroi (`iChannel0`)
+## Étape 19 — Texture sur la paroi (`iChannel0`), **sans défilement**
 
-**Notion :** on échantillonne une texture 2D en utilisant **les coordonnées cylindriques du point d'impact** : angle horizontal `atan(p.y, p.x)`, position le long de l'axe `length(p.xy*.1) - .25*iTime`. Comme la coord. verticale dépend du temps, la texture défile → impression de matière qui glisse.
+**Notion :** on **plaque une texture 2D** sur la paroi du tunnel. La question essentielle : *comment passer d'un point 3D `hp` à une coordonnée 2D `(U, V)` pour samplé la texture ?* On utilise des **UV cylindriques**, mais avec deux composantes très différentes de celles utilisées pour les bandes :
+
+```glsl
+vec2 texUV = vec2(atan(hp.y, hp.x) * 2.,     // U = angle * 2 → 2 répétitions sur le tour
+                  length(hp.xy * .1)) * .1;  // V = distance radiale (≈ constante)
+col += 0.2 * texture(iChannel0, texUV).xyz;
+```
+
+- **U** = `atan(hp.y, hp.x) * 2.` : l'angle autour du tube, multiplié par 2 → la texture fait **2 tours complets** sur la circonférence (sinon elle serait trop étirée). Le `*.1` final fait du zoom.
+- **V** = `length(hp.xy * .1)` : la distance radiale. Comme on touche toujours la paroi (rayon ≈ 2), `length(hp.xy*.1) ≈ 0.2` → **V est presque constant**. Donc on ne sample qu'une fine "tranche horizontale" de la texture.
+- `* 0.2` : on ajoute la texture *par-dessus* à 20 % d'intensité (sinon elle tue le lighting et les bandes).
+
+**Conséquence à cette étape :** comme V est quasi-fixe, la texture est **figée** sur la paroi — elle tourne avec nous parce que `atan` dépend de la position, mais elle **ne défile pas le long du tunnel**. C'est volontaire : on isole d'abord le concept de mapping, on ajoutera le défilement à l'étape suivante.
 
 > **Bind :** clique sur `iChannel0` → onglet *Misc* ou *Textures* → choisis par exemple *Abstract 1* (texture marbrée).
 
@@ -1354,14 +1537,10 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
                * (1. - sat(shape*1.)) * (1. - sat(length(uv)));
         col = mix(col, rgb, sin(iTime*5. + hp.z*.5)*.5+.5);
 
-        // ── texture sur la paroi en UV cylindriques ──
-        //   U = atan(y,x)*2  → 2 répétitions de la texture sur le tour du tunnel
-        //   V = length(xy*.1) - .25*iTime → défilement temporel le long de l'axe
-        //   * .1 final = zoom sur la texture
-        //   * 0.2 = mélange léger pour ne pas tuer le lighting
+        // ── texture sur la paroi, mapping cylindrique SANS défilement temporel ──
         col += 0.2 * texture(iChannel0,
-                             vec2(atan(hp.y, hp.x)*2.,
-                                  length(hp.xy*.1) - .25*iTime) * .1).xyz;
+                             vec2(atan(hp.y, hp.x) * 2.,
+                                  length(hp.xy * .1)) * .1).xyz;
 
         col = mix(col, col.zyx, sin(iTime + hp.z*.1)*.5+.5);
     }
@@ -1371,9 +1550,121 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 }
 ```
 
+> **Ce qu'on doit voir :** la paroi du tunnel a maintenant une **matière** — un motif marbré (selon la texture choisie). Mais ce motif est **fixe** : il tourne quand on roule autour de l'axe, mais il ne défile pas le long du tunnel quand on avance. À l'étape suivante on le fait glisser.
+
 ---
 
-## Étape 18 — FINAL : feedback Buffer A (`iChannel2`)
+## Étape 20 — Faire défiler la texture le long de l'axe
+
+**Notion :** un simple terme `- .25*iTime` dans la coordonnée V suffit à faire **défiler** la texture vers nous : à chaque frame on sample un peu plus haut dans la texture. Combiné avec le mouvement de la caméra, ça donne une impression de matière qui glisse / coule le long du tunnel.
+
+```glsl
+length(hp.xy * .1) - .25 * iTime
+```
+
+C'est *exactement* la même technique que pour les bandes lumineuses à l'étape 11 (`luv = vec2(an, hp.z + iTime)`) : décaler une UV dans le temps = animation gratuite.
+
+```glsl
+#define sat(a) clamp(a, 0., 1.)
+#define FFT(a) texture(iChannel1, vec2(a, 0.)).x
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c,-s, s,c); }
+float _sqr(vec2 p, vec2 s) { vec2 l = abs(p)-s; return max(l.x, l.y); }
+
+float map(vec3 p)
+{
+    p.xy -= vec2(sin(p.z + iTime), cos(p.z*.5 + iTime)) * .5;
+    p.y  += sin(p.z*2. + iTime) * .1;
+    float rad = FFT(abs(p.z*.001)) * .25;
+    return -(length(p.xy) - 2. - rad + sin(p.z*.25));
+}
+
+vec3 accCol;
+
+float trace(vec3 ro, vec3 rd, int steps, out float lastD)
+{
+    accCol = vec3(0.);
+    vec3 p = ro;
+    lastD = 0.;
+    for (int i = 0; i < steps; i++) {
+        float d = map(p);
+        lastD = d;
+        if (d < 0.01) return distance(p, ro);
+        accCol += vec3(1., .5, sin(p.z)*.5+.5) * pow(1. - sat(d/.7), 30.) * .3;
+        p += rd * d * .7;
+    }
+    return -1.;
+}
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p-e.xyy), map(p-e.yxy), map(p-e.yyx)));
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0.,1.,0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov*(r*uv.x + u*uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - .5*iResolution.xy) / iResolution.xx;
+
+    float t = iTime*2.;
+    vec3 ro = vec3(sin(iTime)*.15, cos(iTime*.5)*.12, -12.+t);
+    vec3 ta = vec3(0., 0., 0.+t);
+    vec3 rd = normalize(ta - ro);
+    rd.xz *= r2d(sin(iTime*.5)*.15);
+    rd.yz *= r2d(sin(iTime + .5)*.15);
+    rd = getCam(rd, uv);
+
+    float lastD;
+    float hit = trace(ro, rd, 256, lastD);
+
+    vec3 col = vec3(0.);
+    if (hit > 0.) {
+        vec3 hp = ro + rd*hit;
+        vec3 n  = getNorm(hp, lastD);
+        col = sat(dot(normalize(hp), n)) * vec3(1.);
+        col += accCol;
+        col = pow(col, vec3(3.));
+
+        float an = atan(hp.y, hp.x);
+        vec2 rep = vec2(.9, .5);
+        vec2 luv = vec2(an, hp.z + iTime);
+        vec2 id  = floor((luv + .5*rep) / rep);
+        luv.x += sin(id.y*.5) * iTime * 2.;
+        luv = mod(luv + .5*rep, rep) - .5*rep;
+        float shape = _sqr(luv, vec2(5.4 * pow(FFT(abs(id.y*.01)), 5.), .05));
+
+        vec3 rgb = mix(col, vec3(1.), 1. - sat(shape*50.));
+        rgb += pow(FFT(.0), 2.) * 2. * vec3(1., .5, sin(hp.z*10.)*.5+.5)
+               * (1. - sat(shape*1.)) * (1. - sat(length(uv)));
+        col = mix(col, rgb, sin(iTime*5. + hp.z*.5)*.5+.5);
+
+        // ── texture sur la paroi, AVEC défilement temporel ──
+        //   V = length(xy*.1) - .25*iTime → la texture remonte vers nous
+        col += 0.2 * texture(iChannel0,
+                             vec2(atan(hp.y, hp.x) * 2.,
+                                  length(hp.xy * .1) - .25 * iTime) * .1).xyz;
+
+        col = mix(col, col.zyx, sin(iTime + hp.z*.1)*.5+.5);
+    }
+
+    col *= 1. + pow(FFT(.1), 1.) * 2.;
+    fragColor = vec4(col, 1.);
+}
+```
+
+> **Ce qu'on doit voir :** la matière de la paroi **glisse maintenant vers nous** comme si on était emporté par un fluide. C'est cette texture animée qui donne au shader son côté "vivant" — sans elle, la paroi paraît métallique et figée.
+
+---
+
+## Étape 21 — FINAL : feedback Buffer A (`iChannel2`)
 
 **Notion :** **feedback temporel**. On mélange l'image courante avec le frame **précédent**, échantillonné via `iChannel2`. Pour que ça marche dans Shadertoy :
 
@@ -1529,6 +1820,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 | 13 | Visualiser `sin(id.y*.5)` : graine **stable par ligne**, signe → futur sens |
 | 14 | Décalage **par ligne** : `sin(id.y*.5)*iTime*2.` → vitesses différentes par rangée |
 | 15 | Color shifting : `mix(col, col.zyx, …)` + pulsation des bandes |
-| 16 | **FFT audio** (`iChannel1`) sur le rayon, les bandes et le gain global |
-| 17 | Texture sur la paroi en UV cylindriques (`iChannel0`) |
-| 18 | **Feedback Buffer A** (`iChannel2`) modulé par la FFT = trails audio-réactifs |
+| 16 | **Spectre FFT visualisé plein écran** : égaliseur didactique pur (`iChannel1`) |
+| 17 | FFT pilote le **rayon du tube** : la paroi respire avec la musique |
+| 18 | FFT pilote la grille : bandes pulsantes (`pow^5`) + flash graves + gain global |
+| 19 | Texture sur la paroi en UV cylindriques (`iChannel0`), **sans défilement** |
+| 20 | Faire **défiler** la texture : `-.25*iTime` dans la coord V |
+| 21 | **Feedback Buffer A** (`iChannel2`) modulé par la FFT = trails audio-réactifs |
