@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "shaders/synthese-sonore.md",
+                "file": "shaders/tunnel/tunnel3.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "synthese-sonore"
+              "title": "tunnel3"
             }
           }
         ]
@@ -184,8 +184,17 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3bc6372029bf4d1a",
+  "active": "40709fdb4462e534",
   "lastOpenFiles": [
+    "shaders/tunnel/tunnel1.md",
+    "shaders/tunnel/tunnel3.md",
+    "shaders/synthese-sonore.md",
+    "shaders/synthese-sonore/00 - INDEX.md",
+    "shaders/synthese-sonore/00 - INDEX.md.tmp.10004.86cd61781bf6",
+    "shaders/synthese-sonore/30 - Récapitulatif général.md",
+    "shaders/synthese-sonore/30 - Récapitulatif général.md.tmp.10004.05d2fc935322",
+    "shaders/synthese-sonore/29 - Le Trautonium et le Thérémine.md",
+    "shaders/synthese-sonore/29 - Le Trautonium et le Thérémine.md.tmp.10004.7040ae000b3f",
     "shaders/synthese-sonore/28 - Les Ondes Martenot et l'Ondioline.md",
     "shaders/synthese-sonore/28 - Les Ondes Martenot et l'Ondioline.md.tmp.10004.b24db7b364e9",
     "shaders/synthese-sonore/27 - Synthèse stochastique et graphique.md",
@@ -201,11 +210,8 @@
     "shaders/synthese-sonore/22 - Le spectre dans la synthèse FM.md",
     "shaders/synthese-sonore/22 - Le spectre dans la synthèse FM.md.tmp.10004.0c4e9e927343",
     "shaders/synthese-sonore/21 - La synthèse FM.md",
-    "shaders/synthese-sonore/21 - La synthèse FM.md.tmp.10004.075a14bd8860",
     "shaders/synthese-sonore/20 - Les formes de synthèse granulaire.md",
-    "shaders/synthese-sonore/20 - Les formes de synthèse granulaire.md.tmp.10004.c5834b75d694",
     "shaders/synthese-sonore/19 - Présentation de la synthèse granulaire.md",
-    "shaders/synthese-sonore/19 - Présentation de la synthèse granulaire.md.tmp.10004.1eda2c642640",
     "shaders/synthese-sonore/18 - Les tables d'ondes (Wavetable).md",
     "shaders/synthese-sonore/17 - L'échantillonnage.md",
     "shaders/synthese-sonore/16 - La synthèse additive.md",
@@ -216,12 +222,6 @@
     "shaders/synthese-sonore/11 - Présentation de la norme MIDI.md",
     "shaders/synthese-sonore/10 - Polyphonie, paraphonie et multitimbralité.md",
     "shaders/synthese-sonore/09 - Polyphonie et monodie.md",
-    "shaders/synthese-sonore/08 - L'enveloppe ADSR.md",
-    "shaders/synthese-sonore/07 - Les différents types de filtres.md",
-    "shaders/synthese-sonore/06 - Les différents types d'oscillateurs.md",
-    "shaders/synthese-sonore/05 - Les différents types de bruits.md",
-    "shaders/synthese-sonore/04 - Les différentes formes d'ondes.md",
-    "shaders/synthese-sonore/03 - Les fréquences dans les ondes sonores.md",
     "Pasted image 20260306160524.png",
     "Pasted image 20260306160431.png",
     "Pasted image 20260306155535.png",
