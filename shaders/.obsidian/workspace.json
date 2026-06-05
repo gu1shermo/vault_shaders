@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "music/code/code3/Étape 06 - Séquenceur de basse.md",
-                "mode": "source",
+                "file": "tunnel/tunnel3 - étapes.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Étape 06 - Séquenceur de basse"
+              "title": "tunnel3 - étapes"
             }
           }
         ],
@@ -171,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "music/code/code3/Étape 06 - Séquenceur de basse.md",
+                "file": "tunnel/tunnel3 - étapes.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Étape 06 - Séquenceur de basse"
+              "title": "Outline of tunnel3 - étapes"
             }
           }
         ],
@@ -200,28 +200,34 @@
   },
   "active": "b89a60efb2c0054e",
   "lastOpenFiles": [
+    "tunnel/tunnel3 - étapes.md.tmp.25320.bd8940bb3e30",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.75f1f8e7a2cc",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.1396ca46dd3c",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.5705cb61a465",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.fcf63a2ee54c",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.c3e7aab54314",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.71c29396f940",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.b6e847345ed4",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.0b0072cc53ad",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.bb80ce30d0ed",
+    "tunnel/tunnel3 - étapes.md.tmp.25320.763663857c28",
+    "evaluation CC.md",
+    "tunnel/tunnel3 - étapes.md",
+    "tunnel/tunnel3.md",
+    "tunnel/tunnel2.md",
+    "tunnel/tunnel2 - étapes.md",
+    "music/code/code3/Étape 06 - Séquenceur de basse.md",
     "music/code/code3/Étape 05 - bassSynth saw stab.md",
     "music/code/code3/Étape 04 - Saw filtrée anti-aliasée.md",
     "music/code/code3/Étape 03 - Séquenceur de marimba.md",
     "music/code/code3/Étape 02 - Marimba FM inharmonique.md",
     "music/code/code3/Étape 01 - Boîte à outils FM.md",
     "music/code/code3/Étape 10 - Sidechain et mix final.md",
-    "music/code/code3/Étape 10 - Sidechain et mix final.md.tmp.17016.869984cdaee8",
     "music/code/shadertoy3 code.md",
     "music/code/code3/Étape 09 - Pad et lead réutilisés.md",
-    "music/code/code3/Étape 09 - Pad et lead réutilisés.md.tmp.17016.98d4766a85b2",
     "music/code/code3/Étape 08 - Séquenceur wah et delay.md",
-    "music/code/code3/Étape 08 - Séquenceur wah et delay.md.tmp.17016.2e6b671dda01",
     "music/code/code3/Étape 07 - wahLead balayage de filtre.md",
-    "music/code/code3/Étape 07 - wahLead balayage de filtre.md.tmp.17016.5fdce27da743",
-    "music/code/code3/Étape 06 - Séquenceur de basse.md",
-    "music/code/code3/Étape 05 - bassSynth saw stab.md.tmp.17016.408a7664e710",
-    "music/code/code3/Étape 04 - Saw filtrée anti-aliasée.md.tmp.17016.815787c4f3c9",
-    "music/code/code3/Étape 03 - Séquenceur de marimba.md.tmp.17016.df34e0388c8d",
-    "music/code/code3/Étape 02 - Marimba FM inharmonique.md.tmp.17016.e6ab7564c3ab",
-    "music/code/code3/Étape 01 - Boîte à outils FM.md.tmp.17016.a2e9f5134f6e",
     "music/code/code3/_Index - Décomposition shadertoy3.md",
-    "music/code/code3/_Index - Décomposition shadertoy3.md.tmp.17016.4df4608d9afa",
     "music/code/code3/Étape 09 - Rebond et phase pseudo-aléatoire.md",
     "music/code/code3/Étape 08 - Grille de notes répétées.md",
     "music/code/code3/Étape 07 - Défilement et double repère.md",
@@ -230,12 +236,6 @@
     "music/code/code3/Étape 04 - La hampe et l'union.md",
     "music/code/code3/Étape 03 - Ellipse et rotation.md",
     "music/code/code3/Étape 02 - SDF et anti-aliasing.md",
-    "music/code/code3/Étape 01 - Repère normalisé.md",
-    "ref shaders.md",
-    "music/Cours 2 - FM Synthesis, Pad, Lead Synth.md",
-    "music/code/code1/Étape 01 - Sinus pur.md",
-    "music/code/code2/Étape 07 - Réverbération par échos.md",
-    "music/code/code2/Étape 05 - Empiler un accord.md",
     "Pasted image 20260501143205.png"
   ]
 }
