@@ -22,7 +22,7 @@ sons avec des shaders
 
 https://www.youtube.com/watch?v=3mteFftC7fE
 
-spectogramme
+spectrogramme
 
 https://youtu.be/37zCgCdV468
 
