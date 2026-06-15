@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "tunnel/test.md",
+                "file": "music/code/code2/Étape 08 - Vibrato correct.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "test"
+              "title": "Étape 08 - Vibrato correct"
             }
           }
         ],
@@ -185,13 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "tunnel/test.md",
+                "file": "music/code/code2/Étape 08 - Vibrato correct.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of test"
+              "title": "Outline of Étape 08 - Vibrato correct"
             }
           }
         ],
@@ -215,32 +215,32 @@
   },
   "active": "4ef7ec3827c76bbc",
   "lastOpenFiles": [
-    "tunnel/refract1.md",
-    "tunnel/test.md",
+    "music/code/shadertoy2 code.md",
+    "music/code/code2/Étape 08 - Vibrato correct.md",
+    "music/code/code2/Étape 06 - Séquenceur d'accords.md",
+    "music/code/code2/Étape 07 - Réverbération par échos.md",
+    "music/code/code2/Étape 04 - padSynth la personnalité.md",
+    "ref shaders.md",
+    "music/code/code2/Étape 01 - Temps musical et notes.md",
+    "music/code/code2/_Index - Décomposition shadertoy2.md",
+    "music/code/code1/Étape 04 - Modulation FM.md",
+    "music/code/code1/Étape 03 - Square et Saw.md",
+    "music/code/code1/Étape 02 - Enveloppe et sinPluck.md",
+    "music/code/code1/Étape 01 - Sinus pur.md",
+    "music/code/code1/_Index - Décomposition shadertoy1.md",
+    "music/code/code1/Étape 08 - Séquenceur jingle.md",
     "tunnel/tunnel3 - étapes.md",
+    "synthese-sonore/01 - Qu'est-ce que la synthèse sonore.md",
+    "synthese-sonore/07 - Les différents types de filtres.md",
+    "synthese-sonore/05 - Les différents types de bruits.md",
+    "synthese-sonore/00 - INDEX.md",
+    "tunnel/test.md",
+    "tunnel/refract1.md",
     "tunnel/tunnel3.md",
     "conflict-files-obsidian-git.md",
     "synthese-sonore/30 - Récapitulatif général.md",
     "synthese-sonore/29 - Le Trautonium et le Thérémine.md",
     "synthese-sonore/28 - Les Ondes Martenot et l'Ondioline.md",
-    "synthese-sonore/27 - Synthèse stochastique et graphique.md",
-    "synthese-sonore/25 - Synthèse pulsar et distorsion de phase.md",
-    "synthese-sonore/26 - Synthèse formantique et arithmétique linéaire.md",
-    "synthese-sonore/24 - Applications de la synthèse par modèle physique.md",
-    "synthese-sonore/23 - La synthèse par modèle physique.md",
-    "synthese-sonore/22 - Le spectre dans la synthèse FM.md",
-    "synthese-sonore/21 - La synthèse FM.md",
-    "synthese-sonore/20 - Les formes de synthèse granulaire.md",
-    "synthese-sonore/19 - Présentation de la synthèse granulaire.md",
-    "synthese-sonore/18 - Les tables d'ondes (Wavetable).md",
-    "synthese-sonore/17 - L'échantillonnage.md",
-    "synthese-sonore/16 - La synthèse additive.md",
-    "synthese-sonore/14 - Flanger, phaser, chorus et modulation.md",
-    "synthese-sonore/15 - La synthèse soustractive.md",
-    "synthese-sonore/13 - Pitch bend, unisson, portamento et vibrato.md",
-    "synthese-sonore/12 - Les différents types de messages MIDI.md",
-    "synthese-sonore/11 - Présentation de la norme MIDI.md",
-    "synthese-sonore/10 - Polyphonie, paraphonie et multitimbralité.md",
     "synthese-sonore",
     "tunnel/tunnel3 - étapes.md.tmp.25320.bd8940bb3e30",
     "tunnel/tunnel3 - étapes.md.tmp.25320.75f1f8e7a2cc",

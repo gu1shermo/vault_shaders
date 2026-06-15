@@ -63,7 +63,7 @@ $$ \frac{d}{dt}\big[f(t)\cdot t\big] = f(t) + f'(t)\cdot t $$
 
 La fréquence réellement entendue est `f(t) + f'(t)·t`. Le terme parasite `f'(t)·t` **croît avec le temps** : plus la note dure, plus le vibrato déforme la hauteur moyenne. La note **dérive** — faux musicalement.
 
-> C'est le commentaire `// WRONG` / `// RIGHT` du code source de [[shadertoy2 code]]. Une erreur si fréquente qu'Alexis Thibault l'a laissée en toutes lettres dans le shader.
+> C'est le commentaire `// WRONG` / `// RIGHT` du code source de [[shadertoy2 code]]. 
 
 ### La correction : intégrer la fréquence en phase
 
