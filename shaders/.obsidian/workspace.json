@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "music/code/code2/Étape 08 - Vibrato correct.md",
+                "file": "ref shaders.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Étape 08 - Vibrato correct"
+              "title": "ref shaders"
             }
           }
         ],
@@ -185,13 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "music/code/code2/Étape 08 - Vibrato correct.md",
+                "file": "ref shaders.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Étape 08 - Vibrato correct"
+              "title": "Outline of ref shaders"
             }
           }
         ],
@@ -215,8 +215,11 @@
   },
   "active": "4ef7ec3827c76bbc",
   "lastOpenFiles": [
-    "music/code/shadertoy2 code.md",
+    "music/code/code3/Étape 01 - Boîte à outils FM.md",
+    "music/code/code2/Étape 10 - Séquenceur lead et mix final.md",
+    "music/code/code2/Étape 09 - leadSynth.md",
     "music/code/code2/Étape 08 - Vibrato correct.md",
+    "music/code/shadertoy2 code.md",
     "music/code/code2/Étape 06 - Séquenceur d'accords.md",
     "music/code/code2/Étape 07 - Réverbération par échos.md",
     "music/code/code2/Étape 04 - padSynth la personnalité.md",
@@ -238,9 +241,6 @@
     "tunnel/refract1.md",
     "tunnel/tunnel3.md",
     "conflict-files-obsidian-git.md",
-    "synthese-sonore/30 - Récapitulatif général.md",
-    "synthese-sonore/29 - Le Trautonium et le Thérémine.md",
-    "synthese-sonore/28 - Les Ondes Martenot et l'Ondioline.md",
     "synthese-sonore",
     "tunnel/tunnel3 - étapes.md.tmp.25320.bd8940bb3e30",
     "tunnel/tunnel3 - étapes.md.tmp.25320.75f1f8e7a2cc",

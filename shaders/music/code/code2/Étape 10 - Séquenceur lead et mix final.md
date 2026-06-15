@@ -164,19 +164,19 @@ Les deux garde-fous dans la macro :
 - `step(0.0, t)` : vaut 0 si `t < 0` → une note **pas encore commencée** est muette. (`leadSynth` fait déjà `max(t,0)` en interne — d'où ce `step` complémentaire qui coupe vraiment le son.)
 - `smoothstep((b)*beatdur, (b)*beatdur-0.01, t)` : fondu décroissant de 10 ms en **fin** de note → coupe proprement avant la note suivante, pas de clic.
 
-| `P(nn, b)` | Note | Durée |
-|---|---|---|
-| `P(7, 0.25)`  | Sol4 | croche |
-| `P(9, 0.5)`   | La4  | — |
-| `P(7, 1.0)`   | Sol4 | noire |
-| `P(9, 1.0)`   | La4  | noire |
-| `P(21, 0.5)`  | La5 (octave) | — |
-| `P(16, 0.5)`  | Mi5  | — |
-| `P(14, 1.0)`  | Ré5  | noire |
-| `P(12, 0.5)`  | Do5  | — |
-| `P(9, 0.25)`  | La4  | croche |
-| `P(7, 0.25)`  | Sol4 | croche |
-| `P(9, 1.5)`   | La4  | longue finale |
+| `P(nn, b)`   | Note         | Durée         |
+| ------------ | ------------ | ------------- |
+| `P(7, 0.25)` | Sol4         | croche        |
+| `P(9, 0.5)`  | La4          | —             |
+| `P(7, 1.0)`  | Sol4         | noire         |
+| `P(9, 1.0)`  | La4          | noire         |
+| `P(21, 0.5)` | La5 (octave) | —             |
+| `P(16, 0.5)` | Mi5          | —             |
+| `P(14, 1.0)` | Ré5          | noire         |
+| `P(12, 0.5)` | Do5          | —             |
+| `P(9, 0.25)` | La4          | croche        |
+| `P(7, 0.25)` | Sol4         | croche        |
+| `P(9, 1.5)`  | La4          | longue finale |
 
 Total : 8 temps, exactement la période `mod(t, 8.0*beatdur)`.
 

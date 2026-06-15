@@ -103,9 +103,9 @@ phase = vibratoPhase(f, 0.2*vibEnv, 5.0, tn);
 
 `FM2` est la jumelle de `FM` (étape 02), avec une différence d'**interface** :
 
-| Macro | Reçoit | Wrapping |
-|---|---|---|
-| `FM(fc, fm, iom)` | des **fréquences** | `TWOPI*fract(f*t)` |
+| Macro              | Reçoit                   | Wrapping            |
+| ------------------ | ------------------------ | ------------------- |
+| `FM(fc, fm, iom)`  | des **fréquences**       | `TWOPI*fract(f*t)`  |
 | `FM2(pc, pm, iom)` | des **phases** (radians) | `mod(phase, TWOPI)` |
 
 `FM` calcule la phase elle-même (`f*t`). `FM2` suppose qu'on lui donne la phase **déjà construite** — ici la sortie de `vibratoPhase`, qui contient le vibrato. Le `mod(·, TWOPI)` joue le même rôle de précision que le `fract` de `FM` : ramener la phase dans `[0, 2π)`.
