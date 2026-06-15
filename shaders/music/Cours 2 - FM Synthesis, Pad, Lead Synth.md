@@ -1,8 +1,5 @@
 # Cours 2 — FM Synthesis, Pad et Lead Synth
 
-> Module **Shadertoy Audio** — 5e année ESGI
-> Source : *Making Music in Shadertoy — Episode 2* (Alexis Thibault)
-> Pré-requis : [[Cours 1 - Bases, waveforms et melodie]]
 
 ---
 

@@ -114,8 +114,6 @@ Bonus :
 | 2. FM Synthesis, Pad, Lead Synth | <https://www.youtube.com/watch?v=CqDrw0l0tas> | ~40 min |
 | 3. Marimba, Saw Bass, Wah Synth | <https://www.youtube.com/watch?v=9XeE0v5JLiQ> | ~25 min |
 
-Auteur : **Alexis Thibault**. Une excellente série, rare en français/anglais sur ce sujet de niche.
-
 ---
 
 ## Limites à garder en tête tout au long du module

@@ -1,7 +1,5 @@
 # Cours 1 — Bases, waveforms et mélodie
 
-> Module **Shadertoy Audio** — 5e année ESGI
-> Source : *Making Music in Shadertoy — Episode 1* (Alexis Thibault)
 
 ---
 
