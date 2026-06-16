@@ -399,6 +399,10 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 3. **8.3** — `max(tube, cut)` = intersection → la paroi est percée (fenêtres)
 4. **8.4** — `min(cut, p.y + .3)` = sol continu (version finale)
 
+![[etape8-illustration.svg]]
+
+*Coupe latérale du tunnel : on lit de haut en bas les 4 sous-étapes. `mod()` répète une cellule de 1 m → `cut` n'y garde qu'une rondelle → `max` (intersection) ne laisse que les arceaux, avec des fenêtres (et des trous au sol) → `min` (union) rebouche le sol.*
+
 ---
 
 ### Étape 8.1 — Replier l'axe Z avec `mod` (voir les cellules)
