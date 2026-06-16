@@ -1166,21 +1166,24 @@ Ce code = le shader original.
 // Fork of "Tunnel raymarching glow" by avgilles. https://shadertoy.com/view/WXs3Df
 // 2026-03-25 05:11:02
 
-#define sat(a) clamp(a, 0., 1.)
-#define rot(a) mat2(cos(a+vec4(0., 11., 33. ,0.)))
+#define sat(a) clamp(a, 0., 1.)                       // raccourci clamp [0,1]
+#define rot(a) mat2(cos(a+vec4(0., 11., 33. ,0.)))    // matrice de rotation 2D (astuce vec4)
 #define PI 3.1415
 
+// SDF d'un carré (box 2D) de demi-taille s : <0 dedans, 0 sur le bord, >0 dehors
 float sqr(vec2 uv, vec2 s)
 {
     vec2 l = abs(uv)-s;
     return max(l.x, l.y);
 }
 
+// Décalage latéral du tunnel selon Z -> il ondule en S
 vec2 offset(float z)
 {
     return vec2(sin(z*.1), 0.);
 }
 
+// Union de deux SDF taggées (distance, id) : on garde la plus proche
 vec2 _min(vec2 a, vec2 b)
 {
     if(a.x < b.x)
@@ -1189,125 +1192,135 @@ vec2 _min(vec2 a, vec2 b)
 }
 
 
+// Carte de la scène : renvoie (distance signée, id matériau) au point p
 vec2 map(vec3 p)
 {
-    vec2 acc = vec2(1000., -1.);
+    vec2 acc = vec2(1000., -1.);                 // accumulateur : très loin, aucun id
+
+    p.z += iTime *2.;                            // on avance dans le tunnel avec le temps
+    p.xy += offset(p.z);                         // courbure : décale XY selon Z
+
+    vec3 pt2 = p;                                // copie pour le câble 1
+    pt2.xy *= rot(pt2.z*1.);                      // vrille la section selon Z -> spirale
+    float tube2 = length(pt2.xy-vec2(0., .5))-.05; // cylindre fin (rayon .05) décentré
+
+    vec3 pt3 = p;                                // copie pour le câble 2
+    pt3.xy *= rot(pt2.z*1.+2.4);                  // même vrille, déphasée de 2.4 rad
+    float tube3 = length(pt3.xy-vec2(0., .5))-.05; // 2e câble en spirale
+
+    vec3 pc = p;                                 // copie pour la découpe
+    float rep = 1.;                              // période de répétition (1 m)
+    pc.z = mod(pc.z+rep*.5, rep)-rep*.5;          // mod centré -> cellules répétées en Z
+
+    float cut = abs(pc.z)-.1;                     // "rondelle" : dalle gardée de ±.1
+    cut = min(cut, p.y+.3);                       // union avec le plan de sol (y=-.3)
 
 
-    p.z += iTime *2.;
-    p.xy += offset(p.z);
-
-    vec3 pt2 = p;
-    pt2.xy *= rot(pt2.z*1.);
-    float tube2 = length(pt2.xy-vec2(0., .5))-.05;
-
-    vec3 pt3 = p;
-    pt3.xy *= rot(pt2.z*1.+2.4);
-    float tube3 = length(pt3.xy-vec2(0., .5))-.05;
-
-    vec3 pc = p;
-    float rep = 1.;
-    pc.z = mod(pc.z+rep*.5, rep)-rep*.5;
-
-    float cut = abs(pc.z)-.1;
-    cut = min(cut, p.y+.3);
-
-
-    float tube = -sqr(p.xy*rot(PI*.25), vec2(1.));
-    tube -= sin(p.x*100. + p.z*100.)*.00005;
-    //return length(p)-.1;
-    vec2 tube_m1 = vec2(max(tube, cut), 1.);
-    acc = _min(tube_m1, vec2(tube2, 2.));
-    //return min(min(, tube2), tube3);
-    acc = _min(acc, vec2(tube3, 3.));
+    float tube = -sqr(p.xy*rot(PI*.25), vec2(1.)); // tube : carré tourné 45°, signe inversé (on est dedans)
+    tube -= sin(p.x*100. + p.z*100.)*.00005;       // micro-relief cosmétique sur la paroi
+    //return length(p)-.1;                          // (debug : une simple sphère)
+    vec2 tube_m1 = vec2(max(tube, cut), 1.);       // intersection paroi ∩ découpe -> id 1
+    acc = _min(tube_m1, vec2(tube2, 2.));          // ajoute le câble 1 (id 2)
+    //return min(min(, tube2), tube3);              // (ancienne version)
+    acc = _min(acc, vec2(tube3, 3.));              // ajoute le câble 2 (id 3)
 
     return acc;
 }
 
+// Normale par gradient : différences finies de la SDF autour de p
 vec3 getNorm(vec3 p){
-    vec2 e = vec2(0.001, 0.);
+    vec2 e = vec2(0.001, 0.);                      // pas d'échantillonnage
     return normalize(
-        //vec3(map(p+e.xyy), map(p+e.yxy), map(p+e.yyx))-
-        vec3(map(p).x)-
-        vec3(map(p-e.xyy).x,map(p-e.yxy).x, map(p-e.yyx).x)
+        //vec3(map(p+e.xyy), map(p+e.yxy), map(p+e.yyx))-  // (variante centrée)
+        vec3(map(p).x)-                            // distance au centre
+        vec3(map(p-e.xyy).x,map(p-e.yxy).x, map(p-e.yyx).x) // moins distances décalées en x,y,z
 
         );
 
 }
 
+// Couleur de base selon l'id matériau
 vec3 getMat(vec3 p, vec3 n, vec2 res)
 {
     vec3 col = vec3(0.);
 
-    if (res.y == 1.)
-        col = vec3(0.000,0.000,0.000);
+    if (res.y == 1.)                              // paroi du tunnel
+        col = vec3(0.000,0.000,0.000);            // noire (n'apparaît que via glow/reflet)
 
-    if (res.y == 3.)
-        col = vec3(1.,  0. , 0. );
+    if (res.y == 3.)                              // câble 2
+        col = vec3(1.,  0. , 0. );                // rouge
 
-
-    if (res.y == 2.)
-        col = vec3(0.239,0.259,0.780);
+    if (res.y == 2.)                              // câble 1
+        col = vec3(0.239,0.259,0.780);            // bleu
     return col;
 }
 
-vec3 accCol;
+vec3 accCol;                                       // glow accumulé (globale, lue après trace)
+// Sphere tracing : avance le long du rayon, renvoie (distance, id) au 1er contact
 vec2 trace(vec3 ro, vec3 rd)
 {
-    vec3 p = ro;
-    accCol = vec3(0.);
-    for (float i=.0; i<512.;++i){
-            vec2 dist = map(p);
+    vec3 p = ro;                                   // on part de l'origine du rayon
+    accCol = vec3(0.);                             // reset du glow à chaque trace
+    for (float i=.0; i<512.;++i){                  // jusqu'à 512 pas
+            vec2 dist = map(p);                    // distance à la scène
 
-            if (dist.x <.001)
+            if (dist.x <.001)                      // assez proche -> on a touché
             {
-                return vec2(distance(ro, p), dist.y);
+                return vec2(distance(ro, p), dist.y); // (distance parcourue, id)
             }
-            p += rd*dist.x;
-            accCol += getMat(p,vec3(0.), dist)*(1.-sat(dist.x / 0.5))*.05;
+            p += rd*dist.x;                        // sinon on avance de "dist" (pas sûr)
+            accCol += getMat(p,vec3(0.), dist)*(1.-sat(dist.x / 0.5))*.05; // glow : + on frôle, + on cumule
         }
-        return vec2(-1., -1.);
+        return vec2(-1., -1.);                     // rien touché
 }
 
 
 
 
+// Rendu d'un rayon écran (uv) -> couleur
 vec3 render(vec2 uv){
 
-    vec3 col = vec3(0.);
+    vec3 col = vec3(0.);                            // couleur de départ (fond)
 
-    vec3 ro = vec3(offset(-iTime*2.),  -.5);
-    vec3 rd = normalize(vec3(uv, 1.));
+    vec3 ro = vec3(offset(-iTime*2.),  -.5);        // caméra : suit la courbe pour rester centrée
+    vec3 rd = normalize(vec3(uv, 1.));              // direction du rayon (vers +Z)
     vec3 p = ro;
 
-    vec2 dist = trace(ro, rd);
-    float true_dist = 10.;
-    if (dist.x >.0){
+    vec2 dist = trace(ro, rd);                      // 1er rayon : la géométrie
+    float true_dist = 10.;                          // distance par défaut (rayon dans le vide)
+    if (dist.x >.0){                                // si on a touché quelque chose
 
-        true_dist = dist.x;
-        p = ro + rd*dist.x;
-        vec3 acc1 = accCol;
+        true_dist = dist.x;                         // mémorise la profondeur (pour le brouillard)
+        p = ro + rd*dist.x;                         // point d'impact
+        vec3 acc1 = accCol;                         // on SAUVE le glow du rayon primaire (trace va l'écraser)
 
 
 
-        vec3 n = getNorm(p);
-        col  = n*.5+.5;
+        vec3 n = getNorm(p);                        // normale au point
+        col  = n*.5+.5;                             // (debug : normales en couleur, écrasé juste après)
 
-        col = getMat(p, n, dist);
+        col = getMat(p, n, dist);                   // couleur de base du matériau touché
 
-        vec3 refl = reflect(rd, n);
-        vec3 rorefl = p + n * 0.01;
-        vec2 resrefl = trace(rorefl, refl);
-        if (resrefl.x > 0.)
+        vec3 refl = reflect(rd, n);                 // direction réfléchie
+        vec3 rorefl = p + n * 0.01;                 // décollée de la surface (anti auto-contact)
+        vec2 resrefl = trace(rorefl, refl);         // 2e rayon : la réflexion
+        if (resrefl.x > 0.)                         // si le reflet touche un objet
         {
-            vec3 prefl = rorefl + refl * resrefl.x;
-            vec3 nref1 = getNorm(prefl);
-            col += getMat(prefl, nref1, resrefl);
-            col += acc1;
+            vec3 prefl = rorefl + refl * resrefl.x; // point touché par le reflet
+            vec3 nref1 = getNorm(prefl);            // sa normale
+            col += getMat(prefl, nref1, resrefl);   // + couleur du reflet
+            col += acc1;                            // + glow primaire restauré
 
         }
     }
-    col += accCol;
+    col += accCol;                                  // + glow du dernier rayon tracé
+
+    // --- BROUILLARD ---
+    // t = exp(-d*.1) : poids de distance. t=1 tout PRÈS, t->0 au LOIN (true_dist=10 si rien touché).
+    // mix(col, violet, t) = col*(1-t) + violet*t.
+    // Comme on fait "+= ... * .5", on développe en :
+    //   col_final = col*(1 + .5*(1-t))  +  .5*t*violet
+    //   -> PRÈS (t=1) : forte teinte violette ;  LOIN (t=0) : col éclairci x1.5, sans violet.
     col += mix(col, vec3(0.384,0.192,0.667), exp(-true_dist *.1)) * .5;
     return col;
 
@@ -1316,13 +1329,13 @@ vec3 render(vec2 uv){
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    // Normalized pixel coordinates (from 0 to 1)
+    // UV centrées et normalisées (aspect ratio préservé via .xx)
     vec2 uv = (fragCoord-.5 * iResolution.xy)/iResolution.xx;
 
-    // Time varying pixel color
+    // Roll caméra : on fait tourner les UV au rythme de sin(iTime)
     vec3 col = render(uv *rot(sin(iTime)*.4));
 
-    // Output to screen
+    // Sortie écran
     fragColor = vec4(col,1.0);
 }
 ```
