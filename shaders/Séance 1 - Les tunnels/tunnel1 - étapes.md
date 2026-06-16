@@ -392,13 +392,228 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ## Étape 8 — Découper le tunnel (répétition modulaire + intersection)
 
-**Notion :** des "fenêtres" régulières dans la paroi.
+**Notion :** percer des "fenêtres" régulières dans la paroi. On y va en **4 sous-étapes**, chacune copiable telle quelle dans Shadertoy. Les deux premières ne touchent pas à la géométrie : elles **peignent** les grandeurs intermédiaires pour les rendre visibles. Les deux suivantes découpent réellement.
 
-1. répéter Z avec `mod()` → bandes infinies tous les `rep` mètres
-2. intersecter le tunnel avec ces bandes via `max()` (= AND booléen sur SDF)
-3. garder un sol en intersectant avec `p.y + .3`
+1. **8.1** — replier l'axe Z avec `mod()` → cellules répétées (visualisation)
+2. **8.2** — construire `cut = abs(pc.z) - .1` → rondelles tous les 1 m (visualisation)
+3. **8.3** — `max(tube, cut)` = intersection → la paroi est percée (fenêtres)
+4. **8.4** — `min(cut, p.y + .3)` = sol continu (version finale)
 
-Bonus : on perturbe la surface avec un `sin(p.x*100)` pour un micro-relief gratuit.
+---
+
+### Étape 8.1 — Replier l'axe Z avec `mod` (voir les cellules)
+
+**Notion :** `mod()` ramène un axe infini dans **une seule cellule** de longueur `rep`, répétée à l'infini. On ne coupe rien encore : on **colore** la coordonnée locale de cellule sur la paroi lisse (issue de l'étape 7). On doit voir apparaître des **bandes** qui défilent tous les 1 m.
+
+```glsl
+#define rot(a) mat2(cos(a + vec4(0., 11., 33., 0.)))
+#define PI 3.1415
+
+float sqr(vec2 uv, vec2 s) { vec2 l = abs(uv) - s; return max(l.x, l.y); }
+vec2 _min(vec2 a, vec2 b) { return (a.x < b.x) ? a : b; }
+
+// Tunnel LISSE de l'étape 7 — aucune découpe pour l'instant
+vec2 map(vec3 p)
+{
+    p.z += iTime * 2.;
+
+    vec3 pt2 = p; pt2.xy *= rot(pt2.z);
+    float tube2 = length(pt2.xy - vec2(0., .5)) - .05;
+    vec3 pt3 = p; pt3.xy *= rot(pt2.z + 2.4);
+    float tube3 = length(pt3.xy - vec2(0., .5)) - .05;
+
+    float tube = -sqr(p.xy * rot(PI * .25), vec2(1.));
+
+    vec2 acc = _min(vec2(tube, 1.), vec2(tube2, 2.));
+    acc = _min(acc, vec2(tube3, 3.));
+    return acc;
+}
+
+vec2 trace(vec3 ro, vec3 rd)
+{
+    vec3 p = ro;
+    for (float i = 0.; i < 256.; ++i) {
+        vec2 d = map(p);
+        if (d.x < .001) return vec2(distance(ro, p), d.y);
+        p += rd * d.x;
+    }
+    return vec2(-1., -1.);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - .5 * iResolution.xy) / iResolution.xx;
+    vec3 ro = vec3(0., 0., -.5);
+    vec3 rd = normalize(vec3(uv, 1.));
+
+    vec2 res = trace(ro, rd);
+    vec3 col = vec3(0.);
+    if (res.x > 0.) {
+        vec3 p = ro + rd * res.x;
+        float zc = p.z + iTime * 2.;     // MÊME repère que dans map()
+        // coordonnée locale de cellule : rampe 0→1 tous les 1 m
+        col = vec3(fract(zc));
+    }
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ Lecture : chaque dégradé noir→blanc = une cellule de `mod`. Les centres de cellule (`z` entier) sont là où on placera les rondelles.
+
+---
+
+### Étape 8.2 — Construire `cut` : les rondelles (voir les trous)
+
+**Notion :** `abs(pc.z) - .1` est la SDF d'une **dalle** centrée sur chaque cellule : négative dans une bande de ±0,1 m (la *rondelle*), positive ailleurs (le futur *trou*). Toujours sans couper : on peint en **blanc la matière gardée**, en **noir les trous**. On voit alors des **anneaux** tous les 1 m.
+
+```glsl
+#define rot(a) mat2(cos(a + vec4(0., 11., 33., 0.)))
+#define PI 3.1415
+
+float sqr(vec2 uv, vec2 s) { vec2 l = abs(uv) - s; return max(l.x, l.y); }
+vec2 _min(vec2 a, vec2 b) { return (a.x < b.x) ? a : b; }
+
+vec2 map(vec3 p)
+{
+    p.z += iTime * 2.;
+
+    vec3 pt2 = p; pt2.xy *= rot(pt2.z);
+    float tube2 = length(pt2.xy - vec2(0., .5)) - .05;
+    vec3 pt3 = p; pt3.xy *= rot(pt2.z + 2.4);
+    float tube3 = length(pt3.xy - vec2(0., .5)) - .05;
+
+    float tube = -sqr(p.xy * rot(PI * .25), vec2(1.));
+
+    vec2 acc = _min(vec2(tube, 1.), vec2(tube2, 2.));
+    acc = _min(acc, vec2(tube3, 3.));
+    return acc;
+}
+
+vec2 trace(vec3 ro, vec3 rd)
+{
+    vec3 p = ro;
+    for (float i = 0.; i < 256.; ++i) {
+        vec2 d = map(p);
+        if (d.x < .001) return vec2(distance(ro, p), d.y);
+        p += rd * d.x;
+    }
+    return vec2(-1., -1.);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - .5 * iResolution.xy) / iResolution.xx;
+    vec3 ro = vec3(0., 0., -.5);
+    vec3 rd = normalize(vec3(uv, 1.));
+
+    vec2 res = trace(ro, rd);
+    vec3 col = vec3(0.);
+    if (res.x > 0.) {
+        vec3 p = ro + rd * res.x;
+        float zc = p.z + iTime * 2.;
+        float pcz = mod(zc + .5, 1.) - .5;  // mod CENTRÉ → [-0.5, +0.5]
+        float cut = abs(pcz) - .1;          // dalle : <0 dans la rondelle
+        col = vec3(step(cut, 0.));          // blanc = gardé, noir = trou
+    }
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ Lecture : les anneaux blancs (0,2 m de large) sont ce qui restera de la paroi ; les bandes noires (0,8 m) deviendront les fenêtres à l'étape suivante.
+
+---
+
+### Étape 8.3 — `max()` = intersection : la paroi est percée
+
+**Notion :** on injecte enfin `cut` dans la géométrie. `max(tube, cut)` = **intersection** (ET booléen sur SDF) : la paroi du tunnel n'existe **que** là où `cut` l'autorise (les rondelles). Entre les rondelles, le rayon traverse → on voit le fond : ce sont les **fenêtres**. ⚠️ Pas encore de sol → il y a des trous sous les pieds (corrigé en 8.4).
+
+```glsl
+#define rot(a) mat2(cos(a + vec4(0., 11., 33., 0.)))
+#define PI 3.1415
+
+float sqr(vec2 uv, vec2 s) { vec2 l = abs(uv) - s; return max(l.x, l.y); }
+vec2 _min(vec2 a, vec2 b) { return (a.x < b.x) ? a : b; }
+
+vec2 map(vec3 p)
+{
+    vec2 acc = vec2(1000., -1.);
+    p.z += iTime * 2.;
+
+    vec3 pt2 = p; pt2.xy *= rot(pt2.z);
+    float tube2 = length(pt2.xy - vec2(0., .5)) - .05;
+    vec3 pt3 = p; pt3.xy *= rot(pt2.z + 2.4);
+    float tube3 = length(pt3.xy - vec2(0., .5)) - .05;
+
+    // 1) replier Z   2) rondelles
+    vec3 pc = p; float rep = 1.;
+    pc.z = mod(pc.z + rep * .5, rep) - rep * .5;
+    float cut = abs(pc.z) - .1;          // (pas encore de sol)
+
+    float tube = -sqr(p.xy * rot(PI * .25), vec2(1.));
+
+    // 3) intersection : la paroi n'existe QUE dans les rondelles
+    vec2 tube_m1 = vec2(max(tube, cut), 1.);
+
+    acc = _min(tube_m1, vec2(tube2, 2.));
+    acc = _min(acc, vec2(tube3, 3.));
+    return acc;
+}
+
+vec3 getMat(vec3 p, vec3 n, vec2 res)
+{
+    if (res.y == 1.) return vec3(.30, .35, .45);
+    if (res.y == 2.) return vec3(.239, .259, .780);
+    if (res.y == 3.) return vec3(1., 0., 0.);
+    return vec3(0.);
+}
+
+vec3 getNorm(vec3 p)
+{
+    vec2 e = vec2(0.001, 0.);
+    return normalize(vec3(map(p).x) - vec3(
+        map(p - e.xyy).x,
+        map(p - e.yxy).x,
+        map(p - e.yyx).x
+    ));
+}
+
+vec2 trace(vec3 ro, vec3 rd)
+{
+    vec3 p = ro;
+    for (float i = 0.; i < 256.; ++i) {
+        vec2 d = map(p);
+        if (d.x < .001) return vec2(distance(ro, p), d.y);
+        p += rd * d.x;
+    }
+    return vec2(-1., -1.);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - .5 * iResolution.xy) / iResolution.xx;
+    vec3 ro = vec3(0., 0., -.5);
+    vec3 rd = normalize(vec3(uv, 1.));
+
+    vec2 res = trace(ro, rd);
+    vec3 col = vec3(0.);
+    if (res.x > 0.) {
+        vec3 p = ro + rd * res.x;
+        vec3 n = getNorm(p);
+        vec3 L = normalize(vec3(.3, .8, -.3));
+        float lambert = max(dot(n, L), 0.) * .7 + .3;
+        col = getMat(p, n, res) * lambert;
+    }
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ Lecture : tu traverses une suite d'**arceaux** ; entre eux, du noir (le fond) là où la paroi a été retirée — mais aussi sous toi : c'est le problème que 8.4 règle.
+
+---
+
+### Étape 8.4 — `min()` = ajouter un sol (version finale)
+
+**Notion :** `min(cut, p.y + .3)` = **union** de la zone gardée avec un **plan de sol** (à `y = -0.3`). Résultat : le bas du tunnel reste plein **en continu** entre les rondelles → on ne tombe plus. Bonus : `sin(p.x*100 + p.z*100)*.00005` ajoute un micro-relief gratuit. C'est le shader complet de l'étape 8.
 
 ```glsl
 #define rot(a) mat2(cos(a + vec4(0., 11., 33., 0.)))
@@ -499,6 +714,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     fragColor = vec4(col, 1.);
 }
 ```
+
+> **Rappel SDF :** `min(a,b)` = union (OU), `max(a,b)` = intersection (ET). Toute la découpe de cette étape tient dans ces deux opérations + le pliage `mod`.
 
 ---
 
