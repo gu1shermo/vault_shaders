@@ -399,9 +399,83 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 3. **8.3** — `max(tube, cut)` = intersection → la paroi est percée (fenêtres)
 4. **8.4** — `min(cut, p.y + .3)` = sol continu (version finale)
 
-![[etape8-illustration.svg]]
+### Illustration 2D (shader à coller dans Shadertoy)
 
-*Coupe latérale du tunnel : on lit de haut en bas les 4 sous-étapes. `mod()` répète une cellule de 1 m → `cut` n'y garde qu'une rondelle → `max` (intersection) ne laisse que les arceaux, avec des fenêtres (et des trous au sol) → `min` (union) rebouche le sol.*
+**Notion :** avant le tunnel 3D, on visualise la même logique en **2D pur** (aucun raymarching). On dessine la **coupe latérale** du tunnel — `x = Z` (le long du couloir), `y = hauteur` — en **4 bandes empilées**, une par sous-étape (de haut en bas : 8.1 → 8.4). Le motif **défile en Z** pour rappeler la marche.
+
+```glsl
+// Illustration 2D de l'étape 8 : mod / cut / max / min
+// Coupe latérale du tunnel (x = Z le long du couloir, y = hauteur).
+// 4 bandes empilées = les 4 sous-étapes (haut->bas : 8.1, 8.2, 8.3, 8.4).
+
+const vec3 WALL  = vec3(.247, .318, .439); // matière (paroi)
+const vec3 IN    = vec3(.914, .933, .965); // vide intérieur du tube
+const vec3 FOND  = vec3(.059, .086, .133); // dehors / fond (on voit dehors)
+const vec3 FLOOR = vec3(.420, .310, .180); // sol ajouté en 8.4
+const vec3 RIB   = vec3(.435, .525, .678); // surbrillance "rondelle" (cut<0)
+const vec3 GRID  = vec3(.604, .655, .741); // lignes de frontière de cellule
+
+void mainImage( out vec4 O, in vec2 F )
+{
+    vec2 U = F / iResolution.xy;            // coords écran normalisées 0..1
+
+    // Découpe verticale de l'écran en 4 bandes ; bande 0 = tout en haut
+    float fs = (1.0 - U.y) * 4.0;           // 0..4 du haut vers le bas
+    int  stage = int(floor(fs));            // 0,1,2,3 -> sous-étapes 8.1..8.4
+    float yl = fract(fs);                   // position verticale DANS la bande
+
+    // Fine séparation claire entre deux bandes
+    if (yl < 0.012 || yl > 0.988) { O = vec4(vec3(.85), 1.); return; }
+
+    // Coordonnées "monde" de la coupe
+    float z = U.x * 6.0 + iTime * 0.6;      // Z en mètres (6 m de large), défile
+    float y = (0.5 - yl) * 2.4;             // hauteur ~[-1.2, 1.2], + vers le haut
+
+    // Géométrie de base : tube creux -> paroi si |y| > 0.5, intérieur sinon
+    bool wall = abs(y) > 0.5;
+
+    // 1) REPLI mod : coordonnée locale de cellule (-0.5..0.5), période 1 m
+    float cellLocal = mod(z + 0.5, 1.0) - 0.5;
+    // 2) CUT : "rondelle" = dalle cut<0 sur une bande de ±0.1 autour du centre
+    bool inRib = abs(cellLocal) < 0.1;
+
+    // Région solide (matière) selon la sous-étape
+    bool matter;
+    bool isFloor = false;                   // pour colorer le sol autrement
+    if (stage == 0) {
+        matter = wall;                      // 8.1 : paroi lisse et continue
+    } else if (stage == 1) {
+        matter = wall;                      // 8.2 : géométrie inchangée (on visualise cut)
+    } else if (stage == 2) {
+        matter = wall && inRib;             // 8.3 : max() -> il ne reste que les arceaux
+    } else {
+        bool top = (y > 0.5) && inRib;      // 8.4 : plafond gardé SEULEMENT aux arceaux
+        bool flo = (y < -0.5);              // sol continu sur tout Z (min = union)
+        matter  = top || flo;
+        isFloor = flo;
+    }
+
+    // Couleur de base par région
+    vec3 col;
+    if (matter)            col = isFloor ? FLOOR : WALL; // matière
+    else if (abs(y) < 0.5) col = IN;                     // intérieur du tube
+    else                   col = FOND;                   // dehors / fond
+
+    // Surcouches pédagogiques
+    if (stage == 0 && abs(abs(cellLocal) - 0.5) < 0.012) // 8.1 : frontières de cellule
+        col = mix(col, GRID, 0.85);
+    if (stage == 1 && inRib)                              // 8.2 : surligne les rondelles
+        col = mix(col, RIB, 0.45);
+
+    O = vec4(col, 1.0);
+}
+```
+
+**Comment lire l'image (de haut en bas) :**
+- **Bande 1 — 8.1 `mod`** : duct lisse et fermé ; les traits clairs verticaux = les **frontières de cellule** (tous les 1 m).
+- **Bande 2 — 8.2 `cut`** : mêmes parois, mais on **surligne les rondelles** (`cut < 0`) gardées au centre de chaque cellule.
+- **Bande 3 — 8.3 `max`** : l'intersection ne laisse que les **arceaux** ; entre eux, le fond sombre — y compris **sous les pieds** (trous).
+- **Bande 4 — 8.4 `min`** : on ajoute le **sol** (marron) continu sur tout Z ; le plafond, lui, reste percé → **fenêtres**.
 
 ---
 
