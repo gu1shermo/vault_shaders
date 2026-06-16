@@ -851,14 +851,314 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ---
 
-## Étape 10 — FINAL : courbure, réflexions, brouillard, roll caméra
+## Étape 10 — Finitions : courbure, roll, réflexions, brouillard
 
-**Notions finales :**
-- `offset(z)` décale XY selon Z → le tunnel ondule en S
-- `ro` suit l'offset inverse → la caméra reste centrée dans le tunnel
-- réflexion : un second `trace()` depuis le point d'impact
-- brouillard : `mix` vers une couleur violette pondéré par `exp(-dist)`
-- roll caméra : `rot(sin(iTime)*.4)` appliqué aux UV → balancement2
+Cette dernière étape empilait **4 notions** d'un coup. On les sépare en **4 sous-étapes**, chacune un shader complet copiable. On repart de l'étape 9 (avec le glow) et on ajoute **une notion à la fois**.
+
+1. **10.1** — `offset(z)` : le tunnel **ondule** (et la caméra suit pour rester centrée)
+2. **10.2** — **roll caméra** : balancement par `rot(sin(iTime))` appliqué aux UV
+3. **10.3** — **réflexions** : un 2e `trace()` lancé depuis le point d'impact
+4. **10.4** — **brouillard** : fondu vers le violet par `exp(-dist)` (= shader original)
+
+---
+
+### Étape 10.1 — Courbure : le tunnel ondule
+
+**Notion :** on ajoute `offset(z) = vec2(sin(z*.1), 0.)` et, dans `map`, `p.xy += offset(p.z)` : tout l'espace est décalé latéralement selon Z → le tunnel **serpente en S**. Pour ne pas se cogner aux parois, la caméra `ro` suit la même courbe (`ro.xy = offset(-iTime*2.)`), donc elle reste **au centre** du tunnel.
+
+```glsl
+#define sat(a) clamp(a, 0., 1.)
+#define rot(a) mat2(cos(a + vec4(0., 11., 33., 0.)))
+#define PI 3.1415
+
+float sqr(vec2 uv, vec2 s) { vec2 l = abs(uv) - s; return max(l.x, l.y); }
+vec2 _min(vec2 a, vec2 b) { return (a.x < b.x) ? a : b; }
+
+// NOUVEAU : décalage XY en fonction de Z -> le tunnel ondule
+vec2 offset(float z) { return vec2(sin(z * .1), 0.); }
+
+vec2 map(vec3 p)
+{
+    vec2 acc = vec2(1000., -1.);
+
+    p.z += iTime * 2.;
+    p.xy += offset(p.z);          // NOUVEAU : on courbe l'espace selon Z
+
+    vec3 pt2 = p; pt2.xy *= rot(pt2.z);
+    float tube2 = length(pt2.xy - vec2(0., .5)) - .05;
+    vec3 pt3 = p; pt3.xy *= rot(pt2.z + 2.4);
+    float tube3 = length(pt3.xy - vec2(0., .5)) - .05;
+
+    vec3 pc = p; float rep = 1.;
+    pc.z = mod(pc.z + rep * .5, rep) - rep * .5;
+    float cut = abs(pc.z) - .1;
+    cut = min(cut, p.y + .3);
+
+    float tube = -sqr(p.xy * rot(PI * .25), vec2(1.));
+    tube -= sin(p.x * 100. + p.z * 100.) * .00005;
+
+    vec2 tube_m1 = vec2(max(tube, cut), 1.);
+    acc = _min(tube_m1, vec2(tube2, 2.));
+    acc = _min(acc, vec2(tube3, 3.));
+    return acc;
+}
+
+vec3 getMat(vec3 p, vec3 n, vec2 res)
+{
+    if (res.y == 1.) return vec3(.30, .35, .45);
+    if (res.y == 2.) return vec3(.239, .259, .780);
+    if (res.y == 3.) return vec3(1., 0., 0.);
+    return vec3(0.);
+}
+
+vec3 getNorm(vec3 p)
+{
+    vec2 e = vec2(0.001, 0.);
+    return normalize(vec3(map(p).x) - vec3(
+        map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 accCol;
+vec2 trace(vec3 ro, vec3 rd)
+{
+    vec3 p = ro; accCol = vec3(0.);
+    for (float i = 0.; i < 512.; ++i) {
+        vec2 d = map(p);
+        if (d.x < .001) return vec2(distance(ro, p), d.y);
+        p += rd * d.x;
+        accCol += getMat(p, vec3(0.), d) * (1. - sat(d.x / .5)) * .05;
+    }
+    return vec2(-1., -1.);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - .5 * iResolution.xy) / iResolution.xx;
+
+    // NOUVEAU : la caméra suit la courbe -> elle reste au centre du tunnel
+    vec3 ro = vec3(offset(-iTime * 2.), -.5);
+    vec3 rd = normalize(vec3(uv, 1.));
+
+    vec2 res = trace(ro, rd);
+    vec3 col = vec3(0.);
+    if (res.x > 0.) {
+        vec3 p = ro + rd * res.x;
+        vec3 n = getNorm(p);
+        vec3 L = normalize(vec3(.3, .8, -.3));
+        float lambert = max(dot(n, L), 0.) * .7 + .3;
+        col = getMat(p, n, res) * lambert;
+    }
+    col += accCol;
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ Lecture : le couloir n'est plus rectiligne, il ondule doucement de gauche à droite, mais tu restes toujours au milieu.
+
+---
+
+### Étape 10.2 — Roll caméra (balancement)
+
+**Notion :** une seule ligne, dans `mainImage` : `uv *= rot(sin(iTime) * .4)`. On fait **tourner les UV** autour du centre de l'écran → l'image tangue (roll) au rythme de `sin(iTime)`, comme un roulis. C'est purement caméra : la géométrie ne change pas.
+
+```glsl
+#define sat(a) clamp(a, 0., 1.)
+#define rot(a) mat2(cos(a + vec4(0., 11., 33., 0.)))
+#define PI 3.1415
+
+float sqr(vec2 uv, vec2 s) { vec2 l = abs(uv) - s; return max(l.x, l.y); }
+vec2 _min(vec2 a, vec2 b) { return (a.x < b.x) ? a : b; }
+
+vec2 offset(float z) { return vec2(sin(z * .1), 0.); }
+
+vec2 map(vec3 p)
+{
+    vec2 acc = vec2(1000., -1.);
+
+    p.z += iTime * 2.;
+    p.xy += offset(p.z);
+
+    vec3 pt2 = p; pt2.xy *= rot(pt2.z);
+    float tube2 = length(pt2.xy - vec2(0., .5)) - .05;
+    vec3 pt3 = p; pt3.xy *= rot(pt2.z + 2.4);
+    float tube3 = length(pt3.xy - vec2(0., .5)) - .05;
+
+    vec3 pc = p; float rep = 1.;
+    pc.z = mod(pc.z + rep * .5, rep) - rep * .5;
+    float cut = abs(pc.z) - .1;
+    cut = min(cut, p.y + .3);
+
+    float tube = -sqr(p.xy * rot(PI * .25), vec2(1.));
+    tube -= sin(p.x * 100. + p.z * 100.) * .00005;
+
+    vec2 tube_m1 = vec2(max(tube, cut), 1.);
+    acc = _min(tube_m1, vec2(tube2, 2.));
+    acc = _min(acc, vec2(tube3, 3.));
+    return acc;
+}
+
+vec3 getMat(vec3 p, vec3 n, vec2 res)
+{
+    if (res.y == 1.) return vec3(.30, .35, .45);
+    if (res.y == 2.) return vec3(.239, .259, .780);
+    if (res.y == 3.) return vec3(1., 0., 0.);
+    return vec3(0.);
+}
+
+vec3 getNorm(vec3 p)
+{
+    vec2 e = vec2(0.001, 0.);
+    return normalize(vec3(map(p).x) - vec3(
+        map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 accCol;
+vec2 trace(vec3 ro, vec3 rd)
+{
+    vec3 p = ro; accCol = vec3(0.);
+    for (float i = 0.; i < 512.; ++i) {
+        vec2 d = map(p);
+        if (d.x < .001) return vec2(distance(ro, p), d.y);
+        p += rd * d.x;
+        accCol += getMat(p, vec3(0.), d) * (1. - sat(d.x / .5)) * .05;
+    }
+    return vec2(-1., -1.);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - .5 * iResolution.xy) / iResolution.xx;
+    uv *= rot(sin(iTime) * .4);   // NOUVEAU : roll (balancement) de la caméra
+
+    vec3 ro = vec3(offset(-iTime * 2.), -.5);
+    vec3 rd = normalize(vec3(uv, 1.));
+
+    vec2 res = trace(ro, rd);
+    vec3 col = vec3(0.);
+    if (res.x > 0.) {
+        vec3 p = ro + rd * res.x;
+        vec3 n = getNorm(p);
+        vec3 L = normalize(vec3(.3, .8, -.3));
+        float lambert = max(dot(n, L), 0.) * .7 + .3;
+        col = getMat(p, n, res) * lambert;
+    }
+    col += accCol;
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ Lecture : l'horizon penche d'un côté puis de l'autre — l'image roule comme une caméra à l'épaule.
+
+---
+
+### Étape 10.3 — Réflexions (second rayon)
+
+**Notion :** au point d'impact `p`, on calcule la direction **réfléchie** `reflect(rd, n)` et on relance un `trace()` depuis `p` (légèrement décollé par `+ n*.01` pour ne pas se toucher soi-même). La couleur trouvée par ce 2e rayon est **ajoutée** → les parois renvoient un reflet des objets voisins. ⚠️ `trace()` réécrit la globale `accCol` : on **sauvegarde** le glow du rayon primaire dans `acc1` avant de relancer.
+
+```glsl
+#define sat(a) clamp(a, 0., 1.)
+#define rot(a) mat2(cos(a + vec4(0., 11., 33., 0.)))
+#define PI 3.1415
+
+float sqr(vec2 uv, vec2 s) { vec2 l = abs(uv) - s; return max(l.x, l.y); }
+vec2 _min(vec2 a, vec2 b) { return (a.x < b.x) ? a : b; }
+
+vec2 offset(float z) { return vec2(sin(z * .1), 0.); }
+
+vec2 map(vec3 p)
+{
+    vec2 acc = vec2(1000., -1.);
+
+    p.z += iTime * 2.;
+    p.xy += offset(p.z);
+
+    vec3 pt2 = p; pt2.xy *= rot(pt2.z);
+    float tube2 = length(pt2.xy - vec2(0., .5)) - .05;
+    vec3 pt3 = p; pt3.xy *= rot(pt2.z + 2.4);
+    float tube3 = length(pt3.xy - vec2(0., .5)) - .05;
+
+    vec3 pc = p; float rep = 1.;
+    pc.z = mod(pc.z + rep * .5, rep) - rep * .5;
+    float cut = abs(pc.z) - .1;
+    cut = min(cut, p.y + .3);
+
+    float tube = -sqr(p.xy * rot(PI * .25), vec2(1.));
+    tube -= sin(p.x * 100. + p.z * 100.) * .00005;
+
+    vec2 tube_m1 = vec2(max(tube, cut), 1.);
+    acc = _min(tube_m1, vec2(tube2, 2.));
+    acc = _min(acc, vec2(tube3, 3.));
+    return acc;
+}
+
+vec3 getMat(vec3 p, vec3 n, vec2 res)
+{
+    if (res.y == 1.) return vec3(.30, .35, .45);
+    if (res.y == 2.) return vec3(.239, .259, .780);
+    if (res.y == 3.) return vec3(1., 0., 0.);
+    return vec3(0.);
+}
+
+vec3 getNorm(vec3 p)
+{
+    vec2 e = vec2(0.001, 0.);
+    return normalize(vec3(map(p).x) - vec3(
+        map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 accCol;
+vec2 trace(vec3 ro, vec3 rd)
+{
+    vec3 p = ro; accCol = vec3(0.);
+    for (float i = 0.; i < 512.; ++i) {
+        vec2 d = map(p);
+        if (d.x < .001) return vec2(distance(ro, p), d.y);
+        p += rd * d.x;
+        accCol += getMat(p, vec3(0.), d) * (1. - sat(d.x / .5)) * .05;
+    }
+    return vec2(-1., -1.);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - .5 * iResolution.xy) / iResolution.xx;
+    uv *= rot(sin(iTime) * .4);
+
+    vec3 ro = vec3(offset(-iTime * 2.), -.5);
+    vec3 rd = normalize(vec3(uv, 1.));
+
+    vec2 res = trace(ro, rd);
+    vec3 col = vec3(0.);
+    if (res.x > 0.) {
+        vec3 p = ro + rd * res.x;
+        vec3 acc1 = accCol;               // on sauve le glow du rayon primaire
+        vec3 n = getNorm(p);
+        vec3 L = normalize(vec3(.3, .8, -.3));
+        float lambert = max(dot(n, L), 0.) * .7 + .3;
+        col = getMat(p, n, res) * lambert;
+
+        // NOUVEAU : réflexion = 2e trace depuis le point d'impact
+        vec3 refl = reflect(rd, n);
+        vec3 rorefl = p + n * .01;         // décollé de la surface
+        vec2 resr = trace(rorefl, refl);
+        if (resr.x > 0.) {
+            vec3 pr = rorefl + refl * resr.x;
+            col += getMat(pr, getNorm(pr), resr) * .5;  // couleur du reflet
+            col += acc1;                                // glow primaire restauré
+        }
+    }
+    col += accCol;                         // glow du dernier rayon tracé
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ Lecture : les facettes du tunnel se renvoient mutuellement des taches de couleur (le bleu des câbles, le rouge…).
+
+---
+
+### Étape 10.4 — Brouillard (version finale = shader original)
+
+**Notion :** dernière touche, le **brouillard** : on mélange la couleur vers un violet par `mix(col, violet, exp(-dist*.1))` → plus un point est loin, plus il se fond dans la brume. C'est le shader original complet (structure `render()`, légèrement différente des sous-étapes mais équivalente).
 
 Ce code = le shader original.
 
