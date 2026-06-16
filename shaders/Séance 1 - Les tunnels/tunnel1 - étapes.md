@@ -401,61 +401,25 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ### Illustration 2D du `mod` + `abs` (shader à coller dans Shadertoy)
 
-**Notion :** pour comprendre *uniquement* ces deux lignes —
+**Notion :** la version minimale. On applique `mod` puis `abs` à `uv.x` et on sort `cut` directement dans le canal rouge. On voit des **bandes répétées** : `mod` crée la répétition, `abs` fait le motif en V dans chaque cellule.
 
 ```glsl
-pc.z = mod(pc.z + rep * .5, rep) - rep * .5;   // répétition de l'espace
-float cut = abs(pc.z) - .1;                    // abs -> bandes
-```
-
-— on les trace en **graphe 2D** : l'axe **X = la coordonnée `z`** (l'espace), l'axe **Y = la valeur**. On superpose deux courbes : `pc` (effet du `mod`) et `cut` (effet du `abs`). Les bandes vertes = la zone `cut < 0`, c'est-à-dire les « rondelles » répétées.
-
-```glsl
-// Illustration 2D : répétition de l'espace (mod) + abs
-// X = z (la coordonnée d'espace), Y = valeur. On trace deux courbes le long de z :
-//   pc  = mod(z+.5,1)-.5   -> "dent de scie" : mod replie l'espace tous les 1 m
-//   cut = abs(pc) - .1     -> abs plie la dent en V ; le -0.1 fait plonger le
-//                             creux sous 0 -> une "rondelle" (bande) par cellule
-
-// distance verticale à une courbe, adoucie -> trait épais antialiasé
-float plot(float v, float f, float th) { return smoothstep(th, 0.0, abs(v - f)); }
-
-void mainImage( out vec4 O, in vec2 F )
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    vec2 uv = F / iResolution.xy;           // coords écran 0..1
+    vec2 uv = fragCoord / iResolution.xy;     // coords écran 0..1
 
-    float z = uv.x * 4.0 + iTime * 0.5;     // espace visible : 4 m de large, défile
-    float v = (uv.y - 0.5) * 1.2;           // valeur affichée : -0.6 .. +0.6
+    vec2 uvc = uv;
+    float rep = 0.5;                          // période de répétition
+    // mod centré : ramène uvc.x dans [-rep/2, +rep/2], répété tous les "rep"
+    uvc.x = mod(uvc.x + rep * .5, rep) - rep * .5;
 
-    // Les deux seules opérations qu'on illustre
-    float rep = 1.0;
-    float pc  = mod(z + rep * 0.5, rep) - rep * 0.5; // mod : repli en cellules de 1 m
-    float cut = abs(pc) - 0.1;                        // abs (+offset) : creux qui passe < 0
+    float cut = abs(uvc.x);                   // abs -> 0 au centre, max aux bords
 
-    // Fond : on surligne les bandes gardées (cut < 0) = les rondelles répétées
-    vec3 col = (cut < 0.0) ? vec3(.14, .30, .20) : vec3(.07, .08, .11);
-
-    // Repères verticaux aux frontières de cellule (là où le mod "saute")
-    float frac = fract(z + 0.5);
-    if (frac < 0.006 || frac > 0.994) col = mix(col, vec3(.30), 0.8);
-
-    // Axe horizontal v = 0 (le seuil que abs vient franchir)
-    col = mix(col, vec3(.40), plot(v, 0.0, 0.005));
-
-    // Courbe bleue : pc -> ce que fait le mod (dent de scie répétée)
-    col = mix(col, vec3(.36, .62, 1.0), plot(v, pc, 0.012));
-
-    // Courbe orange : cut = abs(pc) - .1 -> ce que fait le abs (V répété)
-    col = mix(col, vec3(1.0, .60, .22), plot(v, cut, 0.012));
-
-    O = vec4(col, 1.0);
+    fragColor = vec4(cut, 0., 0., 1.0);       // on visualise cut dans le rouge
 }
 ```
 
-**Comment lire le graphe :**
-- La courbe **bleue** (`pc`) est une **dent de scie** : `mod` ramène sans cesse `z` dans `[-0.5, +0.5]` → l'espace se **répète** tous les 1 m.
-- La courbe **orange** (`cut`) est cette dent **pliée par `abs`** (des V), puis abaissée de `0.1`. Là où le V passe **sous 0**, on obtient une **bande** (vert) : c'est la « rondelle » de matière, **répétée à chaque cellule**.
-- Largeur d'une bande verte = `2 × 0.1` ; change le `-.1` ou le `rep` et tu vois directement épaisseur et espacement bouger.
+**Comment lire l'image :** chaque cellule de largeur `rep = 0.5` montre le même dégradé rouge — **noir au centre** (`uvc.x = 0`, donc `abs = 0`) et **rouge aux bords** (`abs` maximal). C'est exactement `mod` (la répétition) + `abs` (le V), isolés. Le `- .1` du vrai shader décalerait ce dégradé pour créer le seuil de la « rondelle ».
 
 ---
 
