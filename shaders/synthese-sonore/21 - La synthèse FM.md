@@ -54,9 +54,9 @@ Un **opérateur** en synthèse FM est un bloc composé de :
 
 ### Comportement des opérateurs
 
-| Rôle | Terme | Description |
-|---|---|---|
-| Opérateur **porteuse** | Carrier | Sa sortie est entendue |
+| Rôle                    | Terme     | Description                         |
+| ----------------------- | --------- | ----------------------------------- |
+| Opérateur **porteuse**  | Carrier   | Sa sortie est entendue              |
 | Opérateur **modulante** | Modulator | Modifie la fréquence de la porteuse |
 
 Un même opérateur peut jouer les deux rôles selon la configuration.
