@@ -1158,7 +1158,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ### Étape 10.4 — Brouillard (version finale = shader original)
 
-**Notion :** dernière touche, le **brouillard** : on mélange la couleur vers un violet par `mix(col, violet, exp(-dist*.1))` → plus un point est loin, plus il se fond dans la brume. C'est le shader original complet (structure `render()`, légèrement différente des sous-étapes mais équivalente).
+**Notion :** dernière touche, une **ambiance violette** via `col += mix(col, violet, exp(-dist*.1)) * .5`. ⚠️ Ce n'est *pas* un brouillard de distance classique : comme `exp(-dist*.1)` vaut **1 tout près** et tend vers **0 au loin**, et que c'est **additif** (`+=`), l'effet réel est un **halo violet concentré près de la caméra** + un **fond lointain éclairci (~×1.5)**, pas un objet qui se fond dans la brume au loin. (Pour un vrai brouillard de profondeur : `fog = 1.-exp(-dist*.1)` puis `col = mix(col, violet, fog)`.) C'est le shader original complet (structure `render()`, légèrement différente des sous-étapes mais équivalente).
 
 Ce code = le shader original.
 
