@@ -11,10 +11,14 @@
             "id": "3d26268bdfeda57b",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Séance 1 - Les tunnels/tunnel2 - étapes.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "tunnel2 - étapes"
             }
           }
         ]
@@ -152,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "soutenance.md",
+                "file": "Séance 1 - Les tunnels/tunnel2 - étapes.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of soutenance"
+              "title": "Outline of tunnel2 - étapes"
             }
           }
         ],
@@ -180,19 +184,21 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "ccf4c3d5d50b9e8d",
+  "active": "3d26268bdfeda57b",
   "lastOpenFiles": [
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.2858c5efa771",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.4f1fc42b1ad5",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.3ca6ecf879dd",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.dd0b1d1f09b9",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.9d757972f6f4",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.ebc20c6f076f",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.8c21819af0ee",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.033347df4ea2",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.12274723a60b",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.50651557f761",
+    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.7af1f020d7ac",
     "Séance 1 - Les tunnels/tunnel1 - étapes.md",
-    "Séance 1 - Les tunnels/tunnel1 - étapes.md.tmp.13556.aa9962e81db4",
-    "Séance 1 - Les tunnels/tunnel1 - étapes.md.tmp.13556.655b0545648e",
-    "Séance 1 - Les tunnels/tunnel1 - étapes.md.tmp.13556.824a9d08e1bf",
-    "Séance 1 - Les tunnels/tunnel1 - étapes.md.tmp.13556.547f0fb491e3",
-    "Séance 1 - Les tunnels/tunnel1 - étapes.md.tmp.13556.aecd79deadc6",
-    "Séance 1 - Les tunnels/tunnel1 - étapes.md.tmp.13556.40e7cd8170de",
-    "Séance 1 - Les tunnels/tunnel1 - étapes.md.tmp.13556.3f406bcea325",
     "Séance 1 - Les tunnels/etape8-illustration.svg",
-    "Séance 1 - Les tunnels/etape8-illustration.svg.tmp.13556.26e8949d3b36",
-    "Séance 1 - Les tunnels/tunnel1 - étapes.md.tmp.13556.b5808fb6bb25",
     "Annexes/test.md",
     "Séance 2 - La réfraction/travel - report.md",
     "Séance 2 - La réfraction/travel - étapes.md",
@@ -203,7 +209,6 @@
     "Séance 3 - La synthèse sonore/theorie/01 - Qu'est-ce que la synthèse sonore.md",
     "soutenance.md",
     "ref shaders.md",
-    "Concepts-clés - vue d'ensemble.md.tmp.13556.1522f84bfcb0",
     "Annexes/travel.md",
     "Annexes/travel - étapes.md",
     "Annexes/travel - report.md",
