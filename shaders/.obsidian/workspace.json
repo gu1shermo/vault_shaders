@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Séance 1 - Les tunnels/tunnel3 - étapes.md",
+                "file": "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "tunnel3 - étapes"
+              "title": "exemple minimal 3D - sphère dans cube miroir - étapes"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Séance 1 - Les tunnels/tunnel3 - étapes.md",
+                "file": "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of tunnel3 - étapes"
+              "title": "Outline of exemple minimal 3D - sphère dans cube miroir - étapes"
             }
           }
         ],
@@ -186,21 +186,27 @@
   },
   "active": "3d26268bdfeda57b",
   "lastOpenFiles": [
-    "Séance 1 - Les tunnels/tunnel3.md",
-    "Séance 1 - Les tunnels/tunnel3 - étapes.md",
-    "Séance 2 - La réfraction/refract1.md",
+    "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md.tmp.28356.bda68865f4b0",
+    "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md.tmp.28356.1d97f219e654",
+    "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md.tmp.28356.197e55976dc9",
+    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md",
+    "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md",
+    "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md.tmp.28356.812e6f759187",
+    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.9a3fc9f4d1f5",
+    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.f75a64b65402",
+    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.8d0da673e726",
+    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.c65bc0d474ad",
+    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.20eaae6aa4e2",
+    "Séance 2 - La réfraction/exemple minimal - miroir interne.md",
+    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.8a2f32526a64",
+    "Séance 2 - La réfraction/refract2 - étapes.md",
+    "Séance 2 - La réfraction/exemple minimal - miroir interne.md.tmp.28356.27a411c745c8",
+    "Séance 2 - La réfraction/refract2.md",
     "Séance 2 - La réfraction/refract1 - étapes.md",
+    "Séance 2 - La réfraction/refract1.md",
+    "Séance 1 - Les tunnels/tunnel3 - étapes.md",
+    "Séance 1 - Les tunnels/tunnel3.md",
     "Séance 1 - Les tunnels/tunnel2 - étapes.md",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.2600aedd0ea5",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.9f2085bb2865",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.fa17deee35a7",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.d182f3e0e8aa",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.3f421d315a8a",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.7e8a3baaa7e0",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.8fc3bf8f16ce",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.2858c5efa771",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.4f1fc42b1ad5",
-    "Séance 1 - Les tunnels/tunnel2 - étapes.md.tmp.25368.3ca6ecf879dd",
     "Séance 1 - Les tunnels/tunnel1 - étapes.md",
     "Séance 1 - Les tunnels/etape8-illustration.svg",
     "Annexes/test.md",
@@ -217,12 +223,6 @@
     "Annexes/travel - étapes.md",
     "Annexes/travel - report.md",
     "00 - Plan des 3 séances.md",
-    "Séance 1 - Les tunnels/Concepts-clés - Séance 1.md",
-    "Séance 2 - La réfraction/Concepts-clés - Séance 2.md",
-    "synthese-sonore/21 - La synthèse FM.md",
-    "Séance 3 - La synthèse sonore/Concepts-clés - Séance 3.md",
-    "Séance 3 - La synthèse sonore/shaders-audio/code/code2/Étape 09 - leadSynth.md",
-    "Séance 3 - La synthèse sonore/shaders-audio/code/code2/Étape 10 - Séquenceur lead et mix final.md",
     "Pasted image 20260501143205.png"
   ]
 }

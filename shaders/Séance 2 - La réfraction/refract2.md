@@ -1,7 +1,4 @@
 ```glsl
-// Fork of "Let's self reflect" by mrange. https://shadertoy.com/view/XfyXRV
-// 2026-05-02 05:46:59
-
 // CC0: Let's self reflect
 //  Always enjoyed the videos of Platonic solids with inner mirrors
 //  I made some previous attempts but thought I make another attempt it
@@ -370,6 +367,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
   
   fragColor = vec4(col, 1.0);
 }
+
+
 
 
 ```

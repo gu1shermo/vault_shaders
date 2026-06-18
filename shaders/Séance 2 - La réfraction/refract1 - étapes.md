@@ -930,7 +930,353 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ## Étape 12 — Réfraction approximée par raymarching intérieur
 
-**Notion :** la **vraie** réfraction (loi de Snell-Descartes : `refract()`) plie le rayon à l'entrée selon les indices de réfraction (n1, n2), puis le re-plie à la sortie. Coût : il faut traverser l'objet pour trouver le point de sortie. Approche bon marché ici : on **ne plie pas** le rayon, on raymarche juste **l'intérieur** du diamant pour trouver la face arrière, en utilisant `-_diamond(p)` (SDF inversée → positive à l'intérieur).
+**Notion :** la **vraie** réfraction (loi de Snell-Descartes : `refract()`) plie le rayon à l'entrée du verre selon les indices (n1, n2), puis le re-plie à la sortie. Pour la calculer il faut de toute façon **traverser l'objet** pour trouver le point de sortie. Notre approche bon marché garde uniquement cette traversée et **saute le pliage** : on prolonge le rayon `rd` **en ligne droite** à travers le diamant jusqu'à la face arrière. Le cœur de l'astuce tient en un signe : `-_diamond(p)`.
+
+C'est l'étape la plus dense du shader, donc on la **décompose au maximum** en 4 sous-étapes, chacune un shader complet copiable. Pour bien isoler la réfraction, les sous-étapes 12.1→12.3 **mettent de côté le reflet** de l'étape 11 (on le recombine en 12.4).
+
+1. **12.1** — inverser la SDF (`-_diamond`) pour marcher **à l'intérieur** → tentative **naïve** (échoue : sortie immédiate)
+2. **12.2** — le **décollage** `p -= n*0.05` qui corrige tout → **carte d'épaisseur** lisible
+3. **12.3** — afficher la **normale de la face arrière** atteinte → on voit qu'on traverse vraiment
+4. **12.4** — couleur de sortie + **recombinaison avec le reflet** (= état final de l'étape 12)
+
+```
+                  diamant
+              ┌───────────────┐
+   rd  ●──────┼──▶──▶──▶──▶───┼───●   p (sortie, face arrière)
+   (vue)      │  bonds =      │
+              │  -_diamond(p) │
+              └───────────────┘
+              op (entrée = point de hit)
+```
+
+> **L'idée du signe.** À l'extérieur du diamant `_diamond(p) > 0` (distance jusqu'à la surface). À l'intérieur, `_diamond(p) < 0`. Donc `-_diamond(p)` est **positif quand on est dedans** et vaut la distance jusqu'à la paroi la plus proche : c'est exactement le pas de raymarching dont on a besoin pour avancer dans la matière sans la traverser d'un coup.
+
+> **Setup channels :** ces sous-étapes n'ont besoin que de **iChannel3** = `Cubemap` (pour le fond). Le seed/`rand()` et **iChannel0**/**iChannel2** ne reviennent qu'en **12.4** (avec le reflet glossy).
+
+---
+
+### Étape 12.1 — Inverser la SDF pour marcher à l'intérieur (tentative naïve)
+
+**Notion :** au point de hit (face avant), on lance une **2e boucle** de raymarching, mais cette fois on avance avec `-_diamond(p)` pour rester **à l'intérieur** et trouver la face de sortie. On mesure la **distance parcourue** dans la matière (`thickness`) et on l'affiche en niveaux de gris. ⚠️ Version volontairement **buggée** : on part **pile** du point de hit, sans décollage.
+
+```glsl
+#define PI 3.14159265
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+// On ISOLE la réfraction : pas de reflet ici (recombiné en 12.4)
+vec3 getMat(vec3 p, vec3 n, vec3 rd)
+{
+    vec3 op = p;                       // point d'ENTRÉE (face avant touchée)
+
+    // 2e raymarching, mais À L'INTÉRIEUR du diamant
+    for (float i = 0.; i < 32.; i++)   // budget fixe : ~35 pas suffisent pour traverser
+    {
+        float dist = -_diamond(p);     // SDF INVERSÉE : >0 dedans = distance jusqu'à la paroi
+        if (dist < 0.01) break;        // on a rejoint une paroi → on "sort"
+        p += rd * dist;                // rayon NON plié (c'est toute l'approximation)
+    }
+
+    float thickness = distance(p, op); // distance parcourue dans la matière
+    return vec3(thickness * 0.5);      // visualisation : épaisseur en gris
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);                 // fond = cubemap
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);        // on REMPLACE col : on isole la réfraction
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ **Lecture :** le diamant est **tout noir** (épaisseur ≈ 0 partout). Au point de hit, `_diamond(p) ≈ 0`, donc `-_diamond(p) ≈ 0 < 0.01` → la boucle `break` **dès la 1re itération** : on "sort" sans avoir avancé. C'est le bug qu'on corrige juste après.
+
+> **Pourquoi une 2e boucle séparée ?** Le 1er raymarching (dans `mainImage`) cherche la **face avant** depuis l'extérieur. Une fois dedans, il faut une logique inverse (rester dans la matière, viser la **face arrière**) : d'où une seconde boucle, dans `getMat`, qui marche sur `-_diamond`.
+
+---
+
+### Étape 12.2 — Le décollage `p -= n*0.05` : la carte d'épaisseur
+
+**Notion :** une seule ligne corrige 12.1 : `p -= n * 0.05;`. On pousse le point de départ **vers l'intérieur**, le long de `-n` (n = normale sortante, donc `-n` rentre). On démarre alors franchement dans la matière (`-_diamond(p)` nettement positif) et la boucle peut avancer jusqu'à la face arrière. La `thickness` devient une vraie **carte d'épaisseur** du diamant.
+
+```glsl
+#define PI 3.14159265
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+vec3 getMat(vec3 p, vec3 n, vec3 rd)
+{
+    vec3 op = p;
+    p -= n * 0.05;                     // ✅ DÉCOLLAGE : on entre franchement dans le diamant
+    for (float i = 0.; i < 32.; i++)
+    {
+        float dist = -_diamond(p);
+        if (dist < 0.01) break;
+        p += rd * dist;
+    }
+    return vec3(distance(p, op) * 0.5);   // carte d'épaisseur
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ **Lecture :** le diamant s'éclaire en dégradé — **clair au centre** (le rayon traverse beaucoup de matière) et **sombre vers les bords/arêtes** (épaisseur fine). C'est littéralement la longueur de verre traversée par chaque rayon. Cette grandeur va servir de "carburant" à l'absorption colorée de l'étape 13 (Beer-Lambert).
+
+> **Pourquoi `0.05` ?** C'est un compromis : assez grand pour dépasser le bruit du SDF (`±0.03` à cause du `noise`) et le seuil de hit `0.01`, assez petit pour ne pas trouer les détails fins du diamant. Essayez `0.005` → le bug de 12.1 réapparaît par endroits (taches noires). Essayez `0.3` → les arêtes minces disparaissent (on saute par-dessus).
+
+> **`-n` pointe bien vers l'intérieur ?** Oui : `getNorm` renvoie le gradient de la SDF, qui pointe vers les distances **croissantes** = vers l'**extérieur**. Donc `-n` rentre dans l'objet. C'est la même convention que pour décoller un rayon de réflexion (`+n`) — ici on fait l'inverse.
+
+---
+
+### Étape 12.3 — Voir la face arrière : normale de sortie
+
+**Notion :** pour prouver que la boucle atteint bien la **paroi opposée** (et pas n'importe quoi), on affiche la **normale du point de sortie** au lieu de l'épaisseur. À la fin de la boucle, `p` est sur une facette arrière : `getNorm(p, map(p).x)` donne sa normale, qu'on remappe `-1..1 → 0..1` en couleur. On voit alors les **facettes du fond** du diamant, vues "à travers" la pierre.
+
+```glsl
+#define PI 3.14159265
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+vec3 getMat(vec3 p, vec3 n, vec3 rd)
+{
+    p -= n * 0.05;
+    for (float i = 0.; i < 32.; i++)
+    {
+        float dist = -_diamond(p);
+        if (dist < 0.01) break;
+        p += rd * dist;
+    }
+    // p est maintenant sur la face ARRIÈRE : on affiche sa normale
+    vec3 nb = getNorm(p, map(p).x);
+    return nb * 0.5 + 0.5;
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ **Lecture :** des **plages de couleurs franches** apparaissent dans le diamant : ce sont les facettes de la **paroi opposée**, chacune avec une orientation (donc une couleur) différente. Comparez avec l'étape 9 (normales de la face **avant**) : ici on regarde le **dos** de la pierre, atteint en la traversant. La preuve visuelle que la traversée fonctionne.
+
+> **Limite assumée :** le rayon n'étant **pas plié**, ces facettes arrière sont vues "tout droit", sans la déformation en lentille d'une vraie réfraction. C'est acceptable parce qu'à l'étape suivante on ne **montre pas** vraiment le fond : on le remplace par une couleur d'absorption.
+
+---
+
+### Étape 12.4 — Couleur de sortie + recombinaison avec le reflet (état final)
+
+**Notion :** on ne garde de la face arrière qu'une **couleur de sortie** (verte fixe pour l'instant — l'étape 13 la rendra colorée et absorbante), et on la **rajoute au reflet** de l'étape 11 (`col += transp`). On réintroduit donc le matériau glossy complet : retour de `rand()`/`_seed` (**iChannel0**) et de la roughness map (**iChannel2**). C'est le shader complet de l'étape 12.
 
 > **Setup :** **iChannel0** = `Noise Medium`, **iChannel2** = `Noise Medium`, **iChannel3** = `Cubemap`.
 
@@ -984,7 +1330,6 @@ vec3 getNorm(vec3 p, float d)
 
 vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
 
-// === NOUVEAU : matériau réflexion + réfraction approximée ===
 vec3 getMat(vec3 p, vec3 n, vec3 rd)
 {
     // --- Réflexion (étape 11) ---
@@ -995,23 +1340,22 @@ vec3 getMat(vec3 p, vec3 n, vec3 rd)
     vec3 col = getEnv(refl);
     col = pow(col, vec3(3.2));
 
-    // --- Réfraction approximée ---
-    vec3 op = p;                        // origine (utile à l'étape 13 pour mesurer la distance traversée)
-    p -= n * 0.05;                      // on se décolle de la surface entrante (sinon on ressort tout de suite)
+    // --- Réfraction approximée (12.1 → 12.3) ---
+    vec3 op = p;                        // point d'entrée (mémorisé pour l'épaisseur, étape 13)
+    p -= n * 0.05;                      // décollage vers l'intérieur
 
-    vec3 transp = vec3(0.);             // accumulateur de la couleur "vue à travers"
+    vec3 transp = vec3(0.);             // couleur "vue à travers"
     for (float i = 0.; i < 32.; i++)
     {
-        float dist = -_diamond(p);      // SDF inversée : positive à l'intérieur, négative à l'extérieur
+        float dist = -_diamond(p);      // SDF inversée : distance à la paroi depuis l'intérieur
         if (dist < 0.01)
         {
-            // On vient de sortir de l'autre côté
-            transp = vec3(0.2, 0.85, 0.65);   // couleur fixe pour l'instant (verte) ; étape 13 raffinera
+            transp = vec3(0.2, 0.85, 0.65);   // couleur de sortie fixe (verte) ; étape 13 la rendra absorbante
             break;
         }
-        p += rd * dist;                  // on avance dans l'objet le long de rd (rayon NON plié → c'est l'approximation)
+        p += rd * dist;                  // rayon NON plié → approximation
     }
-    col += transp;                       // on ajoute la couleur transparente par dessus le reflet
+    col += transp;                       // on AJOUTE la transparence par-dessus le reflet
     return col;
 }
 
@@ -1051,22 +1395,437 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 }
 ```
 
-> **Pourquoi `p -= n * 0.05;` ?** Au point de hit, `_diamond(p) ≈ 0`. Si on raymarche tout de suite en utilisant `-_diamond`, le test `dist < 0.01` se déclenche immédiatement (le SDF flotte autour de 0). En se décollant légèrement vers l'intérieur (le long de `-n`), on garantit qu'on est franchement dans l'objet avant de chercher la sortie.
+> 👁️ **Lecture :** le diamant combine maintenant le **reflet** de la cubemap (sur les facettes face caméra) et une **lueur verte** intérieure (la couleur de sortie additionnée). Comme `col += transp` est **additif**, le vert éclaircit la pierre sans masquer le reflet — un look "gemme lumineuse". L'étape 13 remplace ce vert plat par une couleur qui dépend de l'épaisseur (12.2) → vrai effet d'absorption.
 
-> **Pas besoin de `rand()` ici dans la boucle :** on pourrait perturber `rd` aussi avec une roughness "interne" pour simuler une réfraction floue (effet "verre dépoli"). C'est ce que fait le shader original avec `roughtrans = texture(iChannel2, p.xy * 5.1).x;` — ajoutez-le après les premières expériences.
+> **Pourquoi additif (`+=`) et pas un `mix` ?** Un `mix(reflet, transp, k)` simulerait une surface **opaque** teintée. Le `+=` simule un milieu **translucide** qui laisse passer le reflet ET émet/transmet sa propre couleur — physiquement plus proche d'un cristal éclairé de l'intérieur. C'est un choix stylistique, pas une loi.
 
-> **Approximation :** sans `refract()`, on perd l'effet "lentille" (déformation de l'arrière-plan vu à travers). Pour un caillou opaque ou semi-transparent stylisé, c'est invisible. Pour un cristal très clair, ça fait défaut. À l'étape 13 on compense visuellement par une absorption volumétrique colorée.
+> **`op` mémorisé pour rien... encore.** Ici `op` ne sert pas (la couleur de sortie est fixe). On le garde parce que l'étape 13 en a besoin : `distance(p, op)` = l'épaisseur traversée (la carte de 12.2) pilote l'absorption Beer-Lambert.
 
-> **Pourquoi un budget fixe de 32 itérations ?** Un diamant unité a une diagonale de ~3.5 unités. Avec un step moyen de 0.1, on ressort en ~35 itérations max. 32 suffit ; au-delà, c'est qu'on est coincé sur une SDF dégénérée (sortir de la boucle silencieusement vaut mieux qu'un freeze).
+> **Budget de 32 itérations :** un diamant unité a une diagonale de ~3.5 unités ; avec un pas moyen de ~0.1 on ressort en ~35 itérations max. 32 suffit en pratique ; au-delà, c'est qu'on est coincé sur une SDF dégénérée → sortir silencieusement de la boucle vaut mieux qu'un freeze.
 
 ---
 
 ## Étape 13 — Absorption volumétrique colorée
 
-**Notion :** dans un volume coloré (vitrail, eau, cristal, jade), plus la lumière voyage dans la matière, plus elle est absorbée — typiquement plus dans certaines longueurs d'onde (loi de Beer-Lambert : `I = I0 * exp(-σ * d)`). Ici on stylise :
-1. Choisir une teinte de base variant spatialement (mix entre vert et bleu, modulée par la roughness map → veines colorées).
-2. Assombrir le bas du diamant (faux GI).
-3. **Tirer** la couleur vers une teinte "absorbée" (magenta saturé) avec une courbe Beer-Lambert exponentielle de la **distance traversée** dans l'objet.
+**Notion :** dans un volume coloré (vitrail, eau, cristal, jade), plus la lumière voyage dans la matière, plus elle est absorbée — typiquement plus dans certaines longueurs d'onde (loi de **Beer-Lambert** : `I = I0 · exp(-σ · d)`). À l'étape 12 la couleur de sortie était une **constante verte** ; ici on la rend vivante. On part de **12.4** et on empile **4 idées**, une par sous-étape, toutes localisées dans le **bloc de sortie** de la boucle de réfraction :
+
+1. **13.1** — **Beer-Lambert** : la couleur de sortie vire vers le magenta selon l'**épaisseur traversée** (la carte de 12.2 devient de la couleur)
+2. **13.2** — **couleur de base variable** : veines vert↔bleu pilotées par la roughness map
+3. **13.3** — **faux GI** : on assombrit le **bas** du diamant
+4. **13.4** — **réfraction floue** : on perturbe le rayon **interne** (verre dépoli) → shader final
+
+```
+1 - exp(-d * 0.25)   (poids d'absorption en fonction de l'épaisseur d traversée)
+
+ 1 ┤                         ____________------------
+   │                ___-----
+   │           __---
+   │        _--
+   │      _-
+   │    _-
+ 0 ┤__--
+   └────────────────────────────────────────────────▶ d
+   0   épaisseur fine (bords)        épaisseur forte (centre)
+```
+
+> **Lecture de la courbe :** au point de sortie immédiat (`d ≈ 0`) le poids vaut 0 → on garde la couleur de base. Plus le rayon a traversé de verre, plus le poids monte vers 1 → la couleur "absorbée" (magenta) domine. C'est exactement la **carte d'épaisseur de 12.2** transformée en gradient de couleur.
+
+> **Setup :** **iChannel0** = `Noise Medium`, **iChannel2** = `Noise Medium`, **iChannel3** = `Cubemap` (idem 12.4).
+
+---
+
+### Étape 13.1 — Beer-Lambert : absorption pilotée par l'épaisseur
+
+**Notion :** on garde la **couleur de base verte unique** de 12.4, mais au lieu de la sortir telle quelle, on la **mélange vers du magenta** par `mix(base, magenta, 1 - exp(-d·0.25))`, où `d = distance(p, op)` est l'épaisseur traversée. Un seul `mix` ajouté → la pierre se colore par l'intérieur selon son volume.
+
+```glsl
+#define PI 3.14159265
+#define sat(a) clamp(a, 0., 1.)
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
+float _seed;
+float rand() { _seed++; return hash11(_seed); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+vec3 getMat(vec3 p, vec3 n, vec3 rd)
+{
+    // --- Réflexion (étapes 10-11) ---
+    vec3 refl = reflect(rd, n);
+    float rough = texture(iChannel2, p.xy * 0.3).x;
+    vec3 offset = (vec3(rand(), rand(), rand()) - 0.5) * rough;
+    refl = normalize(refl + offset);
+    vec3 col = getEnv(refl);
+    col = pow(col, vec3(3.2));
+
+    // --- Réfraction (étape 12) + absorption Beer-Lambert (NOUVEAU) ---
+    vec3 op = p;                        // point d'entrée → sert à mesurer l'épaisseur
+    p -= n * 0.05;                      // décollage vers l'intérieur
+
+    vec3 transp = vec3(0.);
+    for (float i = 0.; i < 32.; i++)
+    {
+        float dist = -_diamond(p);
+        if (dist < 0.01)
+        {
+            transp = vec3(0.2, 0.85, 0.65);                  // couleur de base UNIQUE (verte), comme en 12.4
+            // Beer-Lambert : plus l'épaisseur traversée est grande, plus on tire vers le magenta "absorbé"
+            transp = mix(transp, vec3(1., 0., 1.),
+                         1. - exp(-distance(p, op) * 0.25)); // poids : 0 si épaisseur nulle → 1 si très épais
+            break;
+        }
+        p += rd * dist;
+    }
+    col += transp;
+    return col;
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+    _seed = iTime + texture(iChannel0, uv).x;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    fragColor = vec4(sat(col), 1.);   // clamp final : le magenta additif peut dépasser 1
+}
+```
+
+> 👁️ **Lecture :** comparé à 12.4 (vert plat partout), la pierre est maintenant **verte sur les bords fins** et **magenta au centre épais**. C'est la carte d'épaisseur de 12.2 traduite en couleur. Réglez le `0.25` : à `0.1` la pierre reste verte (absorption lente), à `1.0` elle vire magenta presque partout.
+
+> **Pourquoi `1 - exp(-d·k)` et pas une rampe linéaire ?** La courbe exponentielle est la vraie loi d'absorption (Beer-Lambert) : démarre à 0, monte vite, sature en douceur. Une rampe linéaire produirait des cassures visibles aux discontinuités d'épaisseur (arêtes du diamant). Le `0.25` est la "longueur d'absorption" inverse : plus grand = opaque plus vite.
+
+> **`sat(col)` en sortie :** comme `col += transp` est additif et que le magenta vaut `(1,0,1)`, la somme avec le reflet peut dépasser 1 dans le rouge/bleu. Le `sat` final borne à `[0,1]` pour éviter les artefacts de saturation (et l'emballement du feedback à l'étape 14).
+
+---
+
+### Étape 13.2 — Couleur de base variable : les veines vert↔bleu
+
+**Notion :** on remplace le vert constant par un **mélange vert↔bleu** dont le facteur est lu dans la roughness map (`texture(iChannel2, p.xy*0.2).x`). Comme ce facteur varie d'un point de sortie à l'autre, la pierre se couvre de **veines** colorées sous l'absorption magenta.
+
+```glsl
+#define PI 3.14159265
+#define sat(a) clamp(a, 0., 1.)
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
+float _seed;
+float rand() { _seed++; return hash11(_seed); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+vec3 getMat(vec3 p, vec3 n, vec3 rd)
+{
+    vec3 refl = reflect(rd, n);
+    float rough = texture(iChannel2, p.xy * 0.3).x;
+    vec3 offset = (vec3(rand(), rand(), rand()) - 0.5) * rough;
+    refl = normalize(refl + offset);
+    vec3 col = getEnv(refl);
+    col = pow(col, vec3(3.2));
+
+    vec3 op = p;
+    p -= n * 0.05;
+
+    vec3 transp = vec3(0.);
+    for (float i = 0.; i < 32.; i++)
+    {
+        float dist = -_diamond(p);
+        if (dist < 0.01)
+        {
+            // Couleur de base VARIABLE : veines vert↔bleu pilotées par la roughness map
+            transp = mix(vec3(0.200, 0.851, 0.655),          // vert
+                         vec3(0.106, 0.294, 0.804),          // bleu
+                         texture(iChannel2, p.xy * 0.2).x);  // facteur de mix variable selon le point de sortie
+            transp = mix(transp, vec3(1., 0., 1.),
+                         1. - exp(-distance(p, op) * 0.25));
+            break;
+        }
+        p += rd * dist;
+    }
+    col += transp;
+    return col;
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+    _seed = iTime + texture(iChannel0, uv).x;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    fragColor = vec4(sat(col), 1.);
+}
+```
+
+> 👁️ **Lecture :** le fond vert uni de 13.1 devient un **camaïeu vert/bleu** : des plages bleutées apparaissent là où la roughness map est élevée. L'absorption magenta reste pilotée par l'épaisseur — les deux effets se superposent.
+
+> **Fréquence `0.2` :** basse → grandes plages douces (veines larges). Montez à `2.0` pour un marbrage fin, ou échangez `iChannel2` pour une autre texture afin de changer le motif des veines.
+
+---
+
+### Étape 13.3 — Faux GI : assombrir la base du diamant
+
+**Notion :** une pierre posée reçoit plus de lumière par le haut (ciel) que par le bas (sol/ombre). On simule ça d'un trait : on **multiplie la couleur de base** par `sat(sat(-p.y + 0.5) + 0.3)`, qui vaut ~1 en haut et descend vers ~0.3 en bas. Pur trucage, mais ça "pose" le diamant au lieu de le laisser flotter, uniformément lumineux.
+
+```glsl
+#define PI 3.14159265
+#define sat(a) clamp(a, 0., 1.)
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
+float _seed;
+float rand() { _seed++; return hash11(_seed); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+vec3 getMat(vec3 p, vec3 n, vec3 rd)
+{
+    vec3 refl = reflect(rd, n);
+    float rough = texture(iChannel2, p.xy * 0.3).x;
+    vec3 offset = (vec3(rand(), rand(), rand()) - 0.5) * rough;
+    refl = normalize(refl + offset);
+    vec3 col = getEnv(refl);
+    col = pow(col, vec3(3.2));
+
+    vec3 op = p;
+    p -= n * 0.05;
+
+    vec3 transp = vec3(0.);
+    for (float i = 0.; i < 32.; i++)
+    {
+        float dist = -_diamond(p);
+        if (dist < 0.01)
+        {
+            transp = mix(vec3(0.200, 0.851, 0.655),
+                         vec3(0.106, 0.294, 0.804),
+                         texture(iChannel2, p.xy * 0.2).x)
+                   * sat(sat(-p.y + 0.5) + 0.3);             // NOUVEAU : faux GI, assombrit le bas
+            transp = mix(transp, vec3(1., 0., 1.),
+                         1. - exp(-distance(p, op) * 0.25));
+            break;
+        }
+        p += rd * dist;
+    }
+    col += transp;
+    return col;
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+    _seed = iTime + texture(iChannel0, uv).x;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    vec3 p = ro;
+    vec3 col = getEnv(rd);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01)
+        {
+            vec3 n = getNorm(p, res.x);
+            col = getMat(p, n, rd);
+            break;
+        }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    fragColor = vec4(sat(col), 1.);
+}
+```
+
+> 👁️ **Lecture :** le **bas** de la pierre s'éteint, le **haut** reste lumineux → la gemme paraît posée et éclairée d'en haut. Subtil mais ça change la lecture du volume.
+
+> **Décomposer `sat(sat(-p.y + 0.5) + 0.3)` :** `-p.y + 0.5` est grand en haut (`p.y` négatif), petit en bas. Premier `sat` → borne `[0,1]`. `+ 0.3` relève le plancher (le bas ne tombe jamais à 0 noir). Second `sat` → re-borne. Résultat : un facteur ∈ `[0.3, 1]` qui décroît du haut vers le bas. C'est de la triche assumée : aucun rayon d'occlusion réel n'est lancé.
+
+---
+
+### Étape 13.4 — Réfraction floue (verre dépoli) = shader final
+
+**Notion :** dernière touche. Avant de traverser la pierre, on **perturbe légèrement `rd`** par un offset aléatoire d'amplitude `roughtrans` (lue à haute fréquence `5.1` → petites inclusions). Le rayon interne n'est plus droit mais "dispersé" → le fond de la pierre devient **dépoli** au lieu de net. C'est le shader complet de l'étape 13.
 
 > **Setup :** **iChannel0** = `Noise Medium`, **iChannel2** = `Noise Medium`, **iChannel3** = `Cubemap`.
 
@@ -1121,7 +1880,6 @@ vec3 getNorm(vec3 p, float d)
 
 vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
 
-// === NOUVEAU : matériau complet réflexion + réfraction + absorption Beer-Lambert ===
 vec3 getMat(vec3 p, vec3 n, vec3 rd)
 {
     // --- Réflexion ---
@@ -1132,11 +1890,11 @@ vec3 getMat(vec3 p, vec3 n, vec3 rd)
     vec3 col = getEnv(refl);
     col = pow(col, vec3(3.2));
 
-    // --- Réfraction + absorption ---
-    // Roughness "interne" pour fluer un peu rd dans l'objet (verre dépoli)
-    float roughtrans = texture(iChannel2, p.xy * 5.1).x;
+    // --- Réfraction floue : on disperse rd à l'entrée (verre dépoli) ---
+    float roughtrans = texture(iChannel2, p.xy * 5.1).x;     // grain interne haute fréquence
     rd = normalize(rd + (vec3(rand(), rand(), rand()) - 0.5) * 0.5 * roughtrans);
 
+    // --- Réfraction + absorption Beer-Lambert ---
     vec3 op = p;
     p -= n * 0.05;
 
@@ -1146,19 +1904,12 @@ vec3 getMat(vec3 p, vec3 n, vec3 rd)
         float dist = -_diamond(p);
         if (dist < 0.01)
         {
-            // Couleur de base : mix vert↔bleu modulé par la roughness map (veines colorées)
-            transp = mix(
-                vec3(0.200, 0.851, 0.655),                   // vert
-                vec3(0.106, 0.294, 0.804),                   // bleu
-                texture(iChannel2, p.xy * 0.2).x             // mix variable par échantillon
-            ) * sat(sat(-p.y + 0.5) + 0.3);                  // assombrit le bas du diamant (faux GI)
-
-            // Beer-Lambert : la couleur de base se "remplit" de magenta avec la distance traversée
-            transp = mix(
-                transp,
-                vec3(1., 0., 1.),                            // couleur "absorbée" (= ce qui reste après absorption massive)
-                1. - exp(-distance(p, op) * 0.25)            // courbe exponentielle : 0 à d=0, →1 à d→∞
-            );
+            transp = mix(vec3(0.200, 0.851, 0.655),
+                         vec3(0.106, 0.294, 0.804),
+                         texture(iChannel2, p.xy * 0.2).x)
+                   * sat(sat(-p.y + 0.5) + 0.3);
+            transp = mix(transp, vec3(1., 0., 1.),
+                         1. - exp(-distance(p, op) * 0.25));
             break;
         }
         p += rd * dist;
@@ -1203,11 +1954,154 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 }
 ```
 
-> **Pourquoi `1 - exp(-d * k)` et pas une rampe linéaire ?** La courbe exponentielle est physiquement plausible (loi d'absorption de Beer-Lambert) et reste élégante : démarre à 0 (pas de teinte au point de sortie immédiat), monte rapidement, sature en douceur. Linéaire produirait des transitions visibles aux discontinuités d'épaisseur (cassures aux arêtes du diamant). Le `0.25` règle la "longueur d'absorption" : plus grand = plus opaque vite.
+> 👁️ **Lecture :** le fond de la pierre, net en 13.3, devient **granuleux/dépoli** : chaque pixel disperse son rayon interne différemment, donc trouve une face de sortie légèrement différente → l'épaisseur (et donc la teinte d'absorption) fourmille. Ça **scintille** image par image, parce que `rand()` change à chaque frame. C'est ce grain que l'**étape 14** (feedback temporel) va lisser en moyennant plusieurs frames.
 
-> **`sat(sat(-p.y + 0.5) + 0.3)` :** double-clamp pour simuler un sky-occlusion grossier qui éteint la base du diamant. C'est de la triche pure ; un vrai pipeline calculerait l'AO ou un sky-occlusion via raymarching d'occlusion.
+> **Pourquoi perturber `rd` *avant* la boucle (et pas dedans) ?** Une seule perturbation à l'entrée = un rayon dévié mais **droit** dans la pierre (un seul échantillon de réfraction floue). Le perturber à chaque pas simulerait une diffusion volumétrique (sous-surface), bien plus coûteuse et instable. Ici on reste mono-sample, à la manière de la réflexion glossy de l'étape 10.
 
-> **`roughtrans` à fréquence `5.1` :** beaucoup plus haute fréquence que la roughness "externe" (`0.3`) pour un grain interne fin → effet "petites inclusions". À ajuster selon la cubemap utilisée.
+> **Amplitude `0.5` :** plage de dispersion. À `0.` on retombe sur 13.3 (réfraction nette). Au-delà de `~1.`, le rayon part dans tous les sens → la couleur de sortie devient un bruit illisible (l'épaisseur n'a plus de sens géométrique).
+
+> **`roughtrans` à fréquence `5.1`** (vs `0.3` pour la roughness externe) : beaucoup plus haute → grain interne fin, façon "petites inclusions". À ajuster selon la cubemap utilisée.
+
+#### Mieux voir l'effet : comparatif net / dépoli (split-screen)
+
+**Notion :** dans le shader ci-dessus l'effet est presque invisible, pour **deux** raisons : (1) c'est **un seul échantillon par frame** → du grain qui scintille, pas un flou lisible ; (2) le **reflet** le recouvre. Ce shader de diagnostic corrige les deux : on **isole la transparence** (pas de reflet), on **amplifie** la dispersion, et surtout on **moyenne 16 échantillons** par pixel pour transformer le bruit en vrai flou. À **gauche** = réfraction **nette** (amplitude 0). À **droite** = réfraction **floue** (amplitude exagérée, moyennée).
+
+```glsl
+#define PI 3.14159265
+#define sat(a) clamp(a, 0., 1.)
+
+mat2 r2d(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+float hash11(float seed) { return mod(sin(seed * 123.456789) * 123.456, 1.); }
+float _seed;
+float rand() { _seed++; return hash11(_seed); }
+
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  mod289(vec4 x)  { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4  perm(vec4 x)    { return mod289(((x * 34.0) + 1.0) * x); }
+float noise(vec3 p)
+{
+    vec3 a = floor(p); vec3 d = p - a; d = d * d * (3.0 - 2.0 * d);
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy); vec4 k2 = perm(k1.xyxy + b.zzww);
+    vec4 c = k2 + a.zzzz; vec4 k3 = perm(c); vec4 k4 = perm(c + 1.0);
+    vec4 o1 = fract(k3 * (1.0 / 41.0)); vec4 o2 = fract(k4 * (1.0 / 41.0));
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+float _cube(vec3 p, vec3 s) { vec3 l = abs(p) - s; return max(l.x, max(l.y, l.z)); }
+
+float _diamond(vec3 p)
+{
+    vec3 p2 = p;
+    p.yz *= r2d(PI * 0.25); p.xy *= r2d(PI * 0.25);
+    float diamond = _cube(p, vec3(1.));
+    p2.xz *= r2d(PI * 0.23);
+    float cut = _cube(p2, vec3(1.));
+    cut -= noise(p * 3.) * 0.02;
+    diamond = max(diamond, cut);
+    diamond += noise(p * 5.) * 0.01;
+    return diamond;
+}
+
+vec2 _min(vec2 a, vec2 b) { return a.x < b.x ? a : b; }
+vec2 map(vec3 p) { return _min(vec2(10000., -1.), vec2(_diamond(p), 0.)); }
+
+vec3 getNorm(vec3 p, float d)
+{
+    vec2 e = vec2(0.01, 0.);
+    return normalize(vec3(d) - vec3(map(p - e.xyy).x, map(p - e.yxy).x, map(p - e.yyx).x));
+}
+
+vec3 getEnv(vec3 rd) { return texture(iChannel3, rd * vec3(1., -1., 1.)).xyz; }
+
+// La réfraction SEULE (sans reflet), avec une amplitude de dispersion réglable.
+// roughAmp = 0  -> réfraction nette (rd non perturbé)
+// roughAmp > 0  -> réfraction floue (rd dispersé par rand())
+vec3 refractColor(vec3 p, vec3 n, vec3 rd, float roughAmp)
+{
+    float roughtrans = texture(iChannel2, p.xy * 5.1).x;
+    rd = normalize(rd + (vec3(rand(), rand(), rand()) - 0.5) * roughAmp * roughtrans);
+
+    vec3 op = p;
+    p -= n * 0.05;
+    vec3 transp = vec3(0.);
+    for (float i = 0.; i < 32.; i++)
+    {
+        float dist = -_diamond(p);
+        if (dist < 0.01)
+        {
+            transp = mix(vec3(0.200, 0.851, 0.655),
+                         vec3(0.106, 0.294, 0.804),
+                         texture(iChannel2, p.xy * 0.2).x)
+                   * sat(sat(-p.y + 0.5) + 0.3);
+            transp = mix(transp, vec3(1., 0., 1.),
+                         1. - exp(-distance(p, op) * 0.25));
+            break;
+        }
+        p += rd * dist;
+    }
+    return transp;
+}
+
+vec3 getCam(vec3 rd, vec2 uv)
+{
+    float fov = 1.;
+    vec3 r = normalize(cross(rd, vec3(0., 1., 0.)));
+    vec3 u = normalize(cross(rd, r));
+    return normalize(rd + fov * (r * uv.x + u * uv.y));
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord - 0.5 * iResolution.xy) / iResolution.xx;
+    _seed = iTime + texture(iChannel0, uv).x;
+
+    float d = 5., t = iTime * 0.4;
+    vec3 ro = vec3(sin(t) * d, sin(iTime * 0.33) * d, cos(t) * d);
+    vec3 rd = getCam(normalize(vec3(0.) - ro), uv);
+
+    // 1er raymarching : on cherche la face avant
+    vec3 p = ro; bool hit = false; vec3 n = vec3(0., 1., 0.);
+    for (int i = 0; i < 128; ++i)
+    {
+        vec2 res = map(p);
+        if (res.x < 0.01) { hit = true; n = getNorm(p, res.x); break; }
+        p += rd * res.x * 0.5;
+        if (distance(p, ro) > 50.) break;
+    }
+
+    vec3 col = getEnv(rd);                              // fond cubemap
+    if (hit)
+    {
+        if (fragCoord.x < iResolution.x * 0.5)
+        {
+            col = refractColor(p, n, rd, 0.0);         // GAUCHE : NET (amplitude 0)
+        }
+        else
+        {
+            // DROITE : FLOU exagéré, MOYENNÉ sur 16 tirages → le grain devient un flou lisse
+            vec3 acc = vec3(0.);
+            for (int s = 0; s < 16; ++s)
+                acc += refractColor(p, n, rd, 2.0);    // amplitude 2.0 (vs 0.5 dans le vrai shader)
+            col = acc / 16.;
+        }
+    }
+
+    // trait blanc de séparation au milieu
+    if (abs(fragCoord.x - iResolution.x * 0.5) < 1.) col = vec3(1.);
+
+    fragColor = vec4(sat(col), 1.);
+}
+```
+
+> 👁️ **Lecture :** **à gauche** les facettes arrière et les variations d'épaisseur sont **nettes** (couleurs franches, bords précis). **À droite** tout est **fondu** : les détails internes se diluent, la teinte d'absorption se lisse → l'aspect "verre dépoli / givré". C'est exactement la modification de 13.4, rendue lisible.
+
+> **Le rôle du moyennage (les 16 tirages).** Un seul `refractColor(..., 2.0)` donnerait du **bruit** (un point de sortie aléatoire). En moyennant 16 tirages décorrélés, ce bruit converge vers le **flou** réel de la réfraction floue. C'est précisément ce que fait l'étape 14, mais **dans le temps** (1 tirage/frame moyenné sur N frames) au lieu de **dans le pixel** (16 tirages/frame). Le shader final reste à 1 tirage justement pour laisser le feedback temporel faire le moyennage — moins cher par frame.
+
+> **Pour expérimenter :** passez l'amplitude de droite de `2.0` à `0.5` (la vraie valeur de 13.4) → l'écart gauche/droite devient subtil, comme dans le shader final. Montez le nombre de tirages (`16` → `64`) → le flou de droite devient parfaitement propre (mais 4× plus cher).
 
 ---
 
@@ -1593,8 +2487,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 | 9  | Réflexion miroir : `reflect()` + sample cubemap, gamma stylisé |
 | 10 | Roughness map → réflexion glossy par offset random (pas de RNG temporel) |
 | 11 | RNG stateful (`_seed` + `rand()`), décorrélation spatio-temporelle |
-| 12 | Réfraction approximée : raymarching de la SDF inversée |
-| 13 | Absorption volumétrique exponentielle (Beer-Lambert stylisé) |
+| 12 | Réfraction approximée : raymarching de la SDF inversée (`-_diamond`). 12.1 marche naïve (échoue) · 12.2 décollage `-n*0.05` + carte d'épaisseur · 12.3 normale de sortie · 12.4 couleur + recombinaison reflet |
+| 13 | Absorption volumétrique exponentielle (Beer-Lambert stylisé). 13.1 absorption par épaisseur · 13.2 couleur de base à veines vert↔bleu · 13.3 faux GI (assombrit le bas) · 13.4 réfraction floue (verre dépoli) |
 | 14 | Feedback temporel : Image → Buffer A via iChannel1 (mix 0.5) |
 | 15 | Post-process : box blur 2D séparable (Buffer B horizontal → Image vertical) |
 
