@@ -18,11 +18,11 @@ code commenté: https://wiki.fuz.re/doku.php?id=atelier:creative_coding:code_des
 ressources: https://wiki.fuz.re/doku.php?id=atelier:creative_coding:shader_links
 
 
-sons avec des shaders
+### son dans shadertoy
 
 https://www.youtube.com/watch?v=3mteFftC7fE
 
-spectrogramme
+### spectrogramme
 
 https://youtu.be/37zCgCdV468
 
@@ -30,3 +30,10 @@ https://youtu.be/37zCgCdV468
 
 ### Pure data
 http://www.pd-tutorial.com/english/
+
+
+### Super Collider
+
+https://www.youtube.com/playlist?list=PLPYzvS8A_rTaNDweXe6PX4CXSGq4iEWYC
+
+
