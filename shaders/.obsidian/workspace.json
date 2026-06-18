@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md",
+                "file": "Séance 2 - La réfraction/sphère dans cube miroir (SDF) - étapes.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "exemple minimal 3D - sphère dans cube miroir - étapes"
+              "title": "sphère dans cube miroir (SDF) - étapes"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md",
+                "file": "Séance 2 - La réfraction/sphère dans cube miroir (SDF) - étapes.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of exemple minimal 3D - sphère dans cube miroir - étapes"
+              "title": "Outline of sphère dans cube miroir (SDF) - étapes"
             }
           }
         ],
@@ -186,21 +186,23 @@
   },
   "active": "3d26268bdfeda57b",
   "lastOpenFiles": [
+    "Séance 2 - La réfraction/sphère dans cube miroir (SDF) - étapes.md.tmp.28356.5bce16afbf37",
+    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md",
+    "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md",
+    "Séance 2 - La réfraction/cube miroir simple (SDF classique).md",
+    "Séance 2 - La réfraction/cube miroir simple (SDF classique).md.tmp.28356.2c833c3dd1b5",
+    "Séance 2 - La réfraction/sphère dans cube miroir (SDF) - étapes.md",
+    "Séance 2 - La réfraction/sphère dans cube miroir (SDF) - étapes.md.tmp.28356.7c0da5c9216d",
     "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md.tmp.28356.bda68865f4b0",
     "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md.tmp.28356.1d97f219e654",
     "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md.tmp.28356.197e55976dc9",
-    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md",
-    "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md",
     "Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md.tmp.28356.812e6f759187",
     "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.9a3fc9f4d1f5",
     "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.f75a64b65402",
     "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.8d0da673e726",
     "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.c65bc0d474ad",
-    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.20eaae6aa4e2",
     "Séance 2 - La réfraction/exemple minimal - miroir interne.md",
-    "Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md.tmp.28356.8a2f32526a64",
     "Séance 2 - La réfraction/refract2 - étapes.md",
-    "Séance 2 - La réfraction/exemple minimal - miroir interne.md.tmp.28356.27a411c745c8",
     "Séance 2 - La réfraction/refract2.md",
     "Séance 2 - La réfraction/refract1 - étapes.md",
     "Séance 2 - La réfraction/refract1.md",
@@ -221,8 +223,6 @@
     "ref shaders.md",
     "Annexes/travel.md",
     "Annexes/travel - étapes.md",
-    "Annexes/travel - report.md",
-    "00 - Plan des 3 séances.md",
     "Pasted image 20260501143205.png"
   ]
 }
