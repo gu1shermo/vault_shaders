@@ -29,3 +29,4 @@ https://youtu.be/37zCgCdV468
 
 
 ### Pure data
+http://www.pd-tutorial.com/english/
