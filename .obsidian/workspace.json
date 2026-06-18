@@ -11,14 +11,10 @@
             "id": "40709fdb4462e534",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "shaders/tunnel/tunnel3.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "tunnel3"
+              "title": "New tab"
             }
           }
         ]
@@ -180,8 +176,7 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false,
-      "obsidian-git:Open Git source control": false
+      "bases:Create new base": false
     }
   },
   "active": "40709fdb4462e534",
