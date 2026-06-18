@@ -2283,12 +2283,177 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ## Étape 12 — Tore + roundpipes (anneaux radiaux)
 
-**Notion :** combinaison `torus + moda(18) + cylindre` :
-- `torus(p, vec2(R, r))` → anneau circulaire (R = rayon principal, r = épaisseur)
-- `moda(p.xz, 18.)` → 18 secteurs angulaires → 18 petites bornes le long de l'anneau
-- `min(torus, cyl)` → l'anneau et les bornes fusionnés en une seule SDF
+**Notion :** on ajoute des **anneaux** autour du tunnel. Le `roundpipe()` empile une nouvelle primitive (le **tore**) et des **bornes radiales**. On découpe en **2 sous-étapes** copiables.
 
-Répétition tous les 15m → période différente du tunnel pour casser la régularité.
+1. **12.1** — `torus()` : des **anneaux lisses** tous les 15 m, collés à la paroi
+2. **12.2** — `moda(18)` + `cyl` : on greffe **18 bornes** le long de chaque anneau (version finale)
+
+### Étape 12.1 — Le tore (anneaux lisses)
+
+**Notion :** nouvelle primitive `torus(p, vec2(R, r))`. Sa SDF se lit en deux temps : `length(p.xz) - R` est la **distance signée à un cercle** de rayon `R` dans le plan XZ ; on en fait un `vec2` avec la hauteur `p.y`, et `length(...) - r` donne un **tube d'épaisseur `r`** suivant ce cercle. On le pose comme nouvel objet (matériau 4) répété tous les **15 m** — période différente du tunnel (10 m) pour casser la régularité.
+
+```glsl
+#define PI acos(-1.)
+#define TAU 6.283185
+#define rot(a) mat2(cos(a),sin(a),-sin(a),cos(a))
+#define cyl(p,r,h) max(length(p.xy)-r, abs(p.z)-h)
+#define mo(uv,d) uv=abs(uv)-d;if(uv.y>uv.x)uv=uv.yx;
+#define crep(p,c,l) p=p-c*clamp(round(p/c),-l,l)
+#define ITER 64.
+#define time iTime
+#define dt(speed) fract(time*speed)
+
+void moda(inout vec2 p, float rep)
+{
+    float per = TAU / rep;
+    float a = mod(atan(p.y, p.x), per) - per*.5;
+    p = vec2(cos(a), sin(a)) * length(p);
+}
+
+struct obj { float d; int mat_id; };
+
+obj minobj(obj a, obj b) { if (a.d < b.d) return a; return b; }
+
+float box(vec3 p, vec3 c)
+{
+    vec3 q = abs(p) - c;
+    return min(0., max(q.x, max(q.y, q.z))) + length(max(q, 0.));
+}
+
+float torus(vec3 p, vec2 t) // t = (R rayon principal, r épaisseur)
+{
+    vec2 q = vec2(length(p.xz) - t.x, p.y); // distance au cercle de rayon R, + hauteur
+    return length(q) - t.y;                 // tube d'épaisseur r suivant ce cercle
+}
+
+float heightmap(vec2 uv)
+{
+    uv = fract(uv) - .5;
+    uv = abs(uv);
+    float pattern = max(uv.x * 0.5, uv.y * 1.0);
+    return smoothstep(0.2, 0.27, pattern);
+}
+
+obj tunnel(vec3 p)
+{
+    vec2 tuv = vec2(atan(p.x, p.z) * 10., p.y * .4);
+    float td = -cyl(p.xzy, 10. - heightmap(tuv) * 0.1, 1e10);
+    float per = 10.;
+    float id  = floor(p.y / per);
+    p.xz *= rot((TAU/6.) * id);
+    p.y = mod(p.y, per) - per*.5;
+    float holes = -cyl(p, 1.5, 25.);
+    td = max(holes, td);
+    p.z = abs(p.z) - 10.;
+    float rings = cyl(p, 1.8, 0.5);
+    td = min(td, max(holes, rings));
+    return obj(td, 1);
+}
+
+float pipe(vec3 p)
+{
+    float pd = cyl(p.xzy, 0.2, 1e10);
+    float per = 1.;
+    p.y = mod(p.y, per) - per*.5;
+    pd = min(pd, cyl(p.xzy, 0.25, 0.1));
+    return pd;
+}
+
+obj pipes(vec3 p)
+{
+    moda(p.xz, 4.);
+    p.x -= 10.;
+    crep(p.z, 0.6, 2.);
+    return obj(pipe(p), 2);
+}
+
+float g1 = 0.;
+
+float platform(vec3 p)
+{
+    p.xz *= rot(TAU/6.);
+    float s = length(p) - .5;
+    g1 += 0.1 / (0.1 + s*s);
+    mo(p.xz, vec2(.2, .1));
+    float d = box(p, vec3(10., 0.2, 1.));
+    crep(p.xz, 0.3, vec2(30., 2.));
+    d = max(-box(p, vec3(0.11, 0.5, 0.1)), d);
+    d = min(d, s);
+    return d;
+}
+
+obj platforms(vec3 p)
+{
+    float per = 10.;
+    p.y = mod(p.y - per*.5, per) - per*.5;
+    return obj(platform(p), 3);
+}
+
+float roundpipe(vec3 p)
+{
+    return torus(p, vec2(10., .2)); // anneau lisse collé à la paroi (R=10, épaisseur 0.2)
+}
+
+obj roundpipes(vec3 p)
+{
+    float per = 15.;
+    p.y = mod(p.y, per) - per*.5; // un anneau tous les 15 m (≠ 10 m du tunnel)
+    return obj(roundpipe(p), 4);
+}
+
+obj SDF(vec3 p)
+{
+    p.y -= dt(1./10.) * 60.;
+    obj so = minobj(tunnel(p), pipes(p));
+    so = minobj(so, platforms(p));
+    so = minobj(so, roundpipes(p)); // on ajoute les anneaux
+    return so;
+}
+
+vec3 getcam(vec3 ro, vec3 ta, vec2 uv)
+{
+    vec3 f = normalize(ta - ro);
+    vec3 l = normalize(cross(vec3(0., 1., 0.), f));
+    vec3 u = normalize(cross(f, l));
+    return normalize(f + l*uv.x + u*uv.y);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (2.*fragCoord.xy - iResolution.xy) / iResolution.y;
+
+    vec3 ro = vec3(0., 0., 3.);
+    vec3 rd = getcam(ro, vec3(0., -10., 0.), uv);
+
+    vec3 p = ro;
+    bool hit = false;
+    float shad = 0.;
+    obj O;
+    for (float i = 0.; i < ITER; i++) {
+        O = SDF(p);
+        if (O.d < .001) { hit = true; shad = i / ITER; break; }
+        p += rd * O.d;
+    }
+
+    vec3 col = vec3(0.);
+    if (hit) {
+        if (O.mat_id == 1) col = vec3(1.) * (1. - shad);
+        if (O.mat_id == 2) col = vec3(.7, 0., 0.) * (1. - shad);
+        if (O.mat_id == 3) col = vec3(.9, .1, .1) * (1. - shad);
+        if (O.mat_id == 4) col = vec3(.9, .4, 0.) * (1. - shad);
+    }
+    col += g1 * vec3(0.1, 0.8, 0.2);
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ Lecture : des anneaux lisses (orange) ceinturent le tunnel à intervalle régulier, sans relief le long de leur circonférence.
+
+---
+
+### Étape 12.2 — Les bornes radiales (`moda(18)` + `cyl`, version finale)
+
+**Notion :** on greffe **18 renflements** le long de chaque anneau. `moda(p.xz, 18.)` replie le plan XZ en **18 secteurs** identiques, `p.x -= 10.` place une borne au rayon de l'anneau, et `cyl(p, 0.25, 0.1)` la dessine. `min(torus, bornes)` fusionne le tout. On réutilise exactement la même mécanique radiale que pour les pipes (`moda` + décalage), mais avec 18 répétitions.
 
 ```glsl
 #define PI acos(-1.)
@@ -2453,9 +2618,259 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 ## Étape 13 — Normales + Ambient Occlusion
 
-**Notion :**
-- **Normales** : gradient de la SDF par différences finies.
-- **AO multi-échelle** : on échantillonne la SDF à plusieurs pas dans la direction de la normale. Si la SDF retourne moins que le pas, c'est qu'il y a de la géométrie proche → zone occluse (sombre). La somme à plusieurs échelles donne un effet doux qui assombrit coins et jonctions.
+**Notion :** deux concepts d'éclairage distincts et réutilisables. On découpe en **2 sous-étapes** copiables.
+
+1. **13.1** — `getnorm()` : on calcule la **normale** et on l'**affiche en couleur** pour la vérifier
+2. **13.2** — `AO()` : occlusion ambiante multi-échelle, qui **assombrit** coins et jonctions (version finale)
+
+À noter : `ITER` passe à **128** et le seuil de convergence à **`.0001`** dès cette étape, pour obtenir des points d'impact assez précis pour des normales propres.
+
+### Étape 13.1 — Les normales (affichées en couleur)
+
+**Notion :** la **normale** d'une surface SDF est le **gradient** de la SDF : la fonction distance croît le plus vite perpendiculairement à la surface, donc son gradient pointe vers l'extérieur. On l'approxime par **différences finies** : on évalue la SDF légèrement décalée (`±0.001`) sur chaque axe. Pour la rendre visible, on sort `n*.5 + .5` en couleur (une composante XYZ → RGB) : c'est le test classique pour valider des normales.
+
+```glsl
+#define PI acos(-1.)
+#define TAU 6.283185
+#define rot(a) mat2(cos(a),sin(a),-sin(a),cos(a))
+#define cyl(p,r,h) max(length(p.xy)-r, abs(p.z)-h)
+#define mo(uv,d) uv=abs(uv)-d;if(uv.y>uv.x)uv=uv.yx;
+#define crep(p,c,l) p=p-c*clamp(round(p/c),-l,l)
+#define ITER 128.
+#define time iTime
+#define dt(speed) fract(time*speed)
+
+void moda(inout vec2 p, float rep)
+{
+    float per = TAU / rep;
+    float a = mod(atan(p.y, p.x), per) - per*.5;
+    p = vec2(cos(a), sin(a)) * length(p);
+}
+
+struct obj { float d; int mat_id; };
+
+obj minobj(obj a, obj b) { if (a.d < b.d) return a; return b; }
+
+float box(vec3 p, vec3 c)
+{
+    vec3 q = abs(p) - c;
+    return min(0., max(q.x, max(q.y, q.z))) + length(max(q, 0.));
+}
+
+float torus(vec3 p, vec2 t)
+{
+    vec2 q = vec2(length(p.xz) - t.x, p.y);
+    return length(q) - t.y;
+}
+
+float heightmap(vec2 uv)
+{
+    uv = fract(uv) - .5;
+    uv = abs(uv);
+    float pattern = max(uv.x * 0.5, uv.y * 1.0);
+    return smoothstep(0.2, 0.27, pattern);
+}
+
+obj tunnel(vec3 p)
+{
+    vec2 tuv = vec2(atan(p.x, p.z) * 10., p.y * .4);
+    float td = -cyl(p.xzy, 10. - heightmap(tuv) * 0.1, 1e10);
+    float per = 10.;
+    float id  = floor(p.y / per);
+    p.xz *= rot((TAU/6.) * id);
+    p.y = mod(p.y, per) - per*.5;
+    float holes = -cyl(p, 1.5, 25.);
+    td = max(holes, td);
+    p.z = abs(p.z) - 10.;
+    float rings = cyl(p, 1.8, 0.5);
+    td = min(td, max(holes, rings));
+    return obj(td, 1);
+}
+
+float pipe(vec3 p)
+{
+    float pd = cyl(p.xzy, 0.2, 1e10);
+    float per = 1.;
+    p.y = mod(p.y, per) - per*.5;
+    pd = min(pd, cyl(p.xzy, 0.25, 0.1));
+    return pd;
+}
+
+obj pipes(vec3 p)
+{
+    moda(p.xz, 4.);
+    p.x -= 10.;
+    crep(p.z, 0.6, 2.);
+    return obj(pipe(p), 2);
+}
+
+float g1 = 0.;
+
+float platform(vec3 p)
+{
+    p.xz *= rot(TAU/6.);
+    float s = length(p) - .5;
+    g1 += 0.1 / (0.1 + s*s);
+    mo(p.xz, vec2(.2, .1));
+    float d = box(p, vec3(10., 0.2, 1.));
+    crep(p.xz, 0.3, vec2(30., 2.));
+    d = max(-box(p, vec3(0.11, 0.5, 0.1)), d);
+    d = min(d, s);
+    return d;
+}
+
+obj platforms(vec3 p)
+{
+    float per = 10.;
+    p.y = mod(p.y - per*.5, per) - per*.5;
+    return obj(platform(p), 3);
+}
+
+float roundpipe(vec3 p)
+{
+    float rpd = torus(p, vec2(10., .2));
+    moda(p.xz, 18.);
+    p.x -= 10.;
+    return min(rpd, cyl(p, 0.25, 0.1));
+}
+
+obj roundpipes(vec3 p)
+{
+    float per = 15.;
+    p.y = mod(p.y, per) - per*.5;
+    return obj(roundpipe(p), 4);
+}
+
+obj SDF(vec3 p)
+{
+    p.y -= dt(1./10.) * 60.;
+    obj so = minobj(tunnel(p), pipes(p));
+    so = minobj(so, platforms(p));
+    so = minobj(so, roundpipes(p));
+    return so;
+}
+
+vec3 getnorm(vec3 p)
+{
+    vec2 e = vec2(0.001, 0.);
+    // gradient de la SDF par différences finies (la SDF croît le plus vite
+    // perpendiculairement à la surface → ce gradient EST la normale)
+    return normalize(vec3(
+        SDF(p+e.xyy).d - SDF(p-e.xyy).d,  // ∂/∂x
+        SDF(p+e.yxy).d - SDF(p-e.yxy).d,  // ∂/∂y
+        SDF(p+e.yyx).d - SDF(p-e.yyx).d   // ∂/∂z
+    ));
+}
+
+vec3 getcam(vec3 ro, vec3 ta, vec2 uv)
+{
+    vec3 f = normalize(ta - ro);
+    vec3 l = normalize(cross(vec3(0., 1., 0.), f));
+    vec3 u = normalize(cross(f, l));
+    return normalize(f + l*uv.x + u*uv.y);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (2.*fragCoord.xy - iResolution.xy) / iResolution.y;
+
+    vec3 ro = vec3(0., 0., 3.);
+    vec3 rd = getcam(ro, vec3(0., -10., 0.), uv);
+
+    vec3 p = ro;
+    bool hit = false;
+    float shad = 0.;
+    obj O;
+    for (float i = 0.; i < ITER; i++) {
+        O = SDF(p);
+        if (O.d < .0001) { hit = true; shad = i / ITER; break; }
+        p += rd * O.d;
+    }
+
+    vec3 col = vec3(0.);
+    if (hit) {
+        vec3 n = getnorm(p);
+        col = n * .5 + .5;   // normale visualisée : XYZ → RGB
+    }
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ Lecture : le tunnel se pare de dégradés colorés. Chaque couleur code une **orientation** de surface (les faces tournées vers +X, +Y, +Z prennent des teintes différentes). Si une zone clignote ou paraît bruitée, c'est que l'impact est imprécis — d'où `ITER 128` et le seuil `.0001`.
+
+---
+
+### Étape 13.2 — Ambient Occlusion (version finale)
+
+**Notion :** on revient aux couleurs de matériau et on les **assombrit** dans les recoins. `AO(eps, n, p)` avance d'un pas `eps` le long de la normale et compare `SDF(p + eps*n)` à `eps` : si la distance est plus petite que le pas, c'est qu'une autre surface est proche → zone **occluse**. On somme **3 échelles** (`0.5`, `0.25`, `0.125`) pour un dégradé doux, et on multiplie la couleur par `ao/3.`.
+
+#### Illustration 3D de l'AO
+
+**Notion :** scène 3D minimale — **une sphère posée sur un sol**, avec un éclairage **purement ambiant** (blanc uniforme) pour isoler l'effet de l'AO. On affiche **sans AO à gauche / avec AO à droite** : la seule différence visible est l'ombrage. L'idée : on fait un pas `eps` le long de la normale (vers le vide) et on mesure l'espace libre restant. Sur le dessus de la sphère → espace ouvert → clair. **Là où la sphère touche le sol** → le pas retombe sur l'autre surface → sombre. C'est le **même `AO()`** que dans le tunnel.
+
+```glsl
+// Scène 3D minimale : une sphère posée sur un sol
+float map(vec3 p)
+{
+    float ground = p.y + 1.;        // sol horizontal à y = -1
+    float ball   = length(p) - 1.;  // sphère (rayon 1) posée dessus
+    return min(ground, ball);       // union sol ∪ sphère
+}
+
+vec3 getnorm(vec3 p) // normale = gradient de la SDF (comme dans le tunnel)
+{
+    vec2 e = vec2(.001, 0.);
+    return normalize(vec3(
+        map(p+e.xyy) - map(p-e.xyy),
+        map(p+e.yxy) - map(p-e.yxy),
+        map(p+e.yyx) - map(p-e.yyx)));
+}
+
+float AO(float eps, vec3 n, vec3 p) // identique au tunnel : distance libre / pas
+{
+    return map(p + eps*n) / eps;
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (2.*fragCoord - iResolution.xy) / iResolution.y;
+
+    // caméra qui cadre le contact sphère/sol
+    vec3 ro = vec3(0., 1.2, -3.5);
+    vec3 ta = vec3(0., -.2, 0.);
+    vec3 f = normalize(ta - ro);
+    vec3 r = normalize(cross(vec3(0., 1., 0.), f));
+    vec3 u = cross(f, r);
+    vec3 rd = normalize(f + uv.x*r + uv.y*u);
+
+    // raymarch
+    vec3 p = ro;
+    bool hit = false;
+    for (int i = 0; i < 100; i++)
+    {
+        float d = map(p);
+        if (d < .001) { hit = true; break; }
+        p += rd * d;
+    }
+
+    vec3 col = vec3(0.);
+    if (hit)
+    {
+        vec3 n = getnorm(p);
+        float ao = (AO(0.5, n, p) + AO(0.25, n, p) + AO(0.125, n, p)) / 3.;
+
+        col = vec3(1.);              // éclairage ambiant pur (blanc uniforme)
+        if (uv.x > 0.) col *= ao;    // moitié DROITE seulement : on applique l'AO
+    }
+
+    col = mix(col, vec3(1., .3, .1), smoothstep(.004, .0, abs(uv.x))); // trait central
+    fragColor = vec4(col, 1.);
+}
+```
+
+> 👁️ Lecture : à **gauche** (sans AO) la sphère et le sol sont d'un blanc plat, sans relief de contact. À **droite** (avec AO), un **halo sombre** apparaît là où la sphère rejoint le sol, et le bas de la sphère s'assombrit. C'est l'occlusion ambiante — le même effet qui noircit les coins et jonctions du tunnel en 3D.
+
+---
 
 ```glsl
 #define PI acos(-1.)
@@ -2641,6 +3056,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 **Notion :** quand tous les rayons font des pas synchronisés (la SDF), les artefacts d'échantillonnage forment des **bandes** régulières visibles. Astuce : on **multiplie chaque pas par un nombre pseudo-aléatoire par pixel** (`hash21(uv)`). Les rayons avancent désormais à des cadences différentes → le banding se transforme en **grain stochastique**, beaucoup plus naturel à l'œil.
 
+**Doser le grain :** ce qui compte, c'est l'**écart** du facteur de jitter, pas sa valeur moyenne. Ici `0.8 + dither*0.2` garde le pas dans `[0.8, 1.0]` (écart faible → grain discret). L'ancienne formule `dither*0.8` couvrait `[0, 0.8]` : un écart 4× plus grand, donc un grain beaucoup plus prononcé. Pour ajuster : augmente le coefficient `0.2` pour plus de grain, diminue-le pour un rendu plus lisse (à `0.` le banding réapparaît).
+
 `hash21` est un hash trigonométrique rapide qui retourne `[0, 1]` pour un `vec2`.
 
 ```glsl
@@ -2800,8 +3217,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     for (float i = 0.; i < ITER; i++) {
         O = SDF(p);
         if (O.d < .0001) { hit = true; shad = i / ITER; break; }
-        // Pas multiplié par un bruit blanc → casse le banding
-        O.d *= dither * 0.8;
+        // Pas jitté par pixel → casse le banding. Facteur dans [0.8, 1.0] :
+        // centré près de 1 avec un faible écart → grain discret (monter le 0.2 = plus de grain)
+        O.d *= 0.8 + dither * 0.2;
         p += rd * O.d;
     }
 
@@ -3046,7 +3464,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
             shad = i/ITER;
             break;
         }
-        O.d *=0.+dither*0.8;
+        O.d *= 0.8 + dither*0.2; // jitter discret dans [0.8,1.0] (anti-banding)
         p+= rd*O.d;
     }
 
