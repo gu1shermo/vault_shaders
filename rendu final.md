@@ -1,0 +1,5 @@
+- vous pouvez utiliser un de vos anciens travaux
+- rendu individuel
+- sans commentaire
+- interaction avec le son (fft ou plus avancé)
+- + tunnel / reflect / refractr
