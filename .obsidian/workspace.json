@@ -11,10 +11,14 @@
             "id": "40709fdb4462e534",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "CORRECTION_DETAILLEE_v2.md",
+                "mode": "preview",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "CORRECTION_DETAILLEE_v2"
             }
           }
         ]
@@ -176,11 +180,15 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "obsidian-git:Open Git source control": false
     }
   },
   "active": "40709fdb4462e534",
   "lastOpenFiles": [
+    "shaders/soutenance.md",
+    "CORRECTION_DETAILLEE_v2.md",
+    "shaders/Séance 2 - La réfraction/refract1.md",
     "shaders/tunnel/tunnel1.md",
     "shaders/tunnel/tunnel3.md",
     "shaders/synthese-sonore.md",
@@ -214,9 +222,6 @@
     "shaders/synthese-sonore/14 - Flanger, phaser, chorus et modulation.md",
     "shaders/synthese-sonore/13 - Pitch bend, unisson, portamento et vibrato.md",
     "shaders/synthese-sonore/12 - Les différents types de messages MIDI.md",
-    "shaders/synthese-sonore/11 - Présentation de la norme MIDI.md",
-    "shaders/synthese-sonore/10 - Polyphonie, paraphonie et multitimbralité.md",
-    "shaders/synthese-sonore/09 - Polyphonie et monodie.md",
     "Pasted image 20260306160524.png",
     "Pasted image 20260306160431.png",
     "Pasted image 20260306155535.png",
