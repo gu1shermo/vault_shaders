@@ -1,0 +1,4 @@
+- installer orca
+- spectrogramme dans reaper pour debug
+- programme soutenance individuelle
+- yt-dl pour dl du son

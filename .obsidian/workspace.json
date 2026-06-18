@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "shaders/tunnel/tunnel3.md",
+                "file": "todo.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "tunnel3"
+              "title": "todo"
             }
           }
         ]
@@ -94,8 +94,8 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "[esgi] shaders/evaluation CC.md",
-                "collapseAll": false,
+                "file": "shaders/tunnel/travel - étapes.md",
+                "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
                 "showSearch": false,
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for evaluation CC"
+              "title": "Backlinks for travel - étapes"
             }
           },
           {
@@ -156,21 +156,21 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "[esgi] shaders/evaluation CC.md",
+                "file": "todo.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of evaluation CC"
+              "title": "Outline of todo"
             }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -186,42 +186,42 @@
   },
   "active": "40709fdb4462e534",
   "lastOpenFiles": [
-    "shaders/tunnel/tunnel1.md",
-    "shaders/tunnel/tunnel3.md",
-    "shaders/synthese-sonore.md",
+    "shaders/Séance 1 - Les tunnels/tunnel2 - étapes.md",
+    "todo.md",
+    "shaders/Séance 2 - La réfraction/exemple minimal 3D - sphère dans cube miroir - étapes.md",
+    "shaders/Séance 2 - La réfraction/exemple minimal 3D - reflet et miroir interne.md",
+    "shaders/Séance 2 - La réfraction/exemple minimal - miroir interne.md",
+    "shaders/Séance 1 - Les tunnels/tunnel3 - étapes.md",
+    "conflict-files-obsidian-git.md",
     "shaders/synthese-sonore/00 - INDEX.md",
-    "shaders/synthese-sonore/00 - INDEX.md.tmp.10004.86cd61781bf6",
-    "shaders/synthese-sonore/30 - Récapitulatif général.md",
-    "shaders/synthese-sonore/30 - Récapitulatif général.md.tmp.10004.05d2fc935322",
-    "shaders/synthese-sonore/29 - Le Trautonium et le Thérémine.md",
-    "shaders/synthese-sonore/29 - Le Trautonium et le Thérémine.md.tmp.10004.7040ae000b3f",
-    "shaders/synthese-sonore/28 - Les Ondes Martenot et l'Ondioline.md",
-    "shaders/synthese-sonore/28 - Les Ondes Martenot et l'Ondioline.md.tmp.10004.b24db7b364e9",
-    "shaders/synthese-sonore/27 - Synthèse stochastique et graphique.md",
-    "shaders/synthese-sonore/27 - Synthèse stochastique et graphique.md.tmp.10004.5a753e3e431a",
-    "shaders/synthese-sonore/26 - Synthèse formantique et arithmétique linéaire.md",
-    "shaders/synthese-sonore/26 - Synthèse formantique et arithmétique linéaire.md.tmp.10004.a6745218d7db",
-    "shaders/synthese-sonore/25 - Synthèse pulsar et distorsion de phase.md",
-    "shaders/synthese-sonore/25 - Synthèse pulsar et distorsion de phase.md.tmp.10004.614455964045",
-    "shaders/synthese-sonore/24 - Applications de la synthèse par modèle physique.md",
-    "shaders/synthese-sonore/24 - Applications de la synthèse par modèle physique.md.tmp.10004.8e36e3471ffc",
-    "shaders/synthese-sonore/23 - La synthèse par modèle physique.md",
-    "shaders/synthese-sonore/23 - La synthèse par modèle physique.md.tmp.10004.ca5b21f7bc89",
-    "shaders/synthese-sonore/22 - Le spectre dans la synthèse FM.md",
-    "shaders/synthese-sonore/22 - Le spectre dans la synthèse FM.md.tmp.10004.0c4e9e927343",
-    "shaders/synthese-sonore/21 - La synthèse FM.md",
-    "shaders/synthese-sonore/20 - Les formes de synthèse granulaire.md",
-    "shaders/synthese-sonore/19 - Présentation de la synthèse granulaire.md",
-    "shaders/synthese-sonore/18 - Les tables d'ondes (Wavetable).md",
-    "shaders/synthese-sonore/17 - L'échantillonnage.md",
-    "shaders/synthese-sonore/16 - La synthèse additive.md",
-    "shaders/synthese-sonore/15 - La synthèse soustractive.md",
-    "shaders/synthese-sonore/14 - Flanger, phaser, chorus et modulation.md",
-    "shaders/synthese-sonore/13 - Pitch bend, unisson, portamento et vibrato.md",
-    "shaders/synthese-sonore/12 - Les différents types de messages MIDI.md",
-    "shaders/synthese-sonore/11 - Présentation de la norme MIDI.md",
-    "shaders/synthese-sonore/10 - Polyphonie, paraphonie et multitimbralité.md",
-    "shaders/synthese-sonore/09 - Polyphonie et monodie.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1/Étape 08 - Séquenceur jingle.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1/Étape 07 - Intervalles et tempérament.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1/Étape 06 - Panning constant power.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1/Étape 04 - Modulation FM.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1/Étape 05 - fmPluck stéréo.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1/Étape 03 - Square et Saw.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1/Étape 01 - Sinus pur.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1/Étape 02 - Enveloppe et sinPluck.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1/_Index - Décomposition shadertoy1.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code3/Étape 08 - Séquenceur wah et delay.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code3/Étape 10 - Sidechain et mix final.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code3/Étape 09 - Pad et lead réutilisés.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code3/Étape 07 - wahLead balayage de filtre.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code3/Étape 06 - Séquenceur de basse.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code3/Étape 04 - Saw filtrée anti-aliasée.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code3/Étape 03 - Séquenceur de marimba.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code3/Étape 05 - bassSynth saw stab.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code3/Étape 02 - Marimba FM inharmonique.md",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].vtt",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].txt",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].json",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].tsv",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].srt",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].vtt",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].txt",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].tsv",
+    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].srt",
     "Pasted image 20260306160524.png",
     "Pasted image 20260306160431.png",
     "Pasted image 20260306155535.png",
