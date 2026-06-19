@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CORRECTION_DETAILLEE_v2.md",
+                "file": "code shader toy.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CORRECTION_DETAILLEE_v2"
+              "title": "code shader toy"
             }
           }
         ]
@@ -186,8 +186,12 @@
   },
   "active": "40709fdb4462e534",
   "lastOpenFiles": [
-    "shaders/soutenance.md",
     "CORRECTION_DETAILLEE_v2.md",
+    "pipeline_test/sc_test.scd",
+    "pipeline_test/orca_test.orca",
+    "pipeline_test",
+    "Nouveau dossier",
+    "shaders/soutenance.md",
     "shaders/Séance 2 - La réfraction/refract1.md",
     "shaders/tunnel/tunnel1.md",
     "shaders/tunnel/tunnel3.md",
@@ -205,13 +209,9 @@
     "shaders/synthese-sonore/26 - Synthèse formantique et arithmétique linéaire.md",
     "shaders/synthese-sonore/26 - Synthèse formantique et arithmétique linéaire.md.tmp.10004.a6745218d7db",
     "shaders/synthese-sonore/25 - Synthèse pulsar et distorsion de phase.md",
-    "shaders/synthese-sonore/25 - Synthèse pulsar et distorsion de phase.md.tmp.10004.614455964045",
     "shaders/synthese-sonore/24 - Applications de la synthèse par modèle physique.md",
-    "shaders/synthese-sonore/24 - Applications de la synthèse par modèle physique.md.tmp.10004.8e36e3471ffc",
     "shaders/synthese-sonore/23 - La synthèse par modèle physique.md",
-    "shaders/synthese-sonore/23 - La synthèse par modèle physique.md.tmp.10004.ca5b21f7bc89",
     "shaders/synthese-sonore/22 - Le spectre dans la synthèse FM.md",
-    "shaders/synthese-sonore/22 - Le spectre dans la synthèse FM.md.tmp.10004.0c4e9e927343",
     "shaders/synthese-sonore/21 - La synthèse FM.md",
     "shaders/synthese-sonore/20 - Les formes de synthèse granulaire.md",
     "shaders/synthese-sonore/19 - Présentation de la synthèse granulaire.md",
@@ -221,7 +221,6 @@
     "shaders/synthese-sonore/15 - La synthèse soustractive.md",
     "shaders/synthese-sonore/14 - Flanger, phaser, chorus et modulation.md",
     "shaders/synthese-sonore/13 - Pitch bend, unisson, portamento et vibrato.md",
-    "shaders/synthese-sonore/12 - Les différents types de messages MIDI.md",
     "Pasted image 20260306160524.png",
     "Pasted image 20260306160431.png",
     "Pasted image 20260306155535.png",
