@@ -13,15 +13,28 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "game jam.md",
+                "file": "gamejam/game jam.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
               "title": "game jam"
             }
+          },
+          {
+            "id": "284f368dacdb1930",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "gamejam/pipelines.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "pipelines"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -181,13 +194,18 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
-      "obsidian-git:Open Git source control": false
+      "obsidian-git:Open Git source control": false,
+      "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "40709fdb4462e534",
+  "active": "3bc6372029bf4d1a",
   "lastOpenFiles": [
+    "gamejam/game jam.md",
+    "gamejam/pipelines.md",
+    "Excalidraw",
+    "gamejam/Untitled.md",
     "code shader toy.md",
-    "game jam.md",
+    "gamejam",
     "conflict-files-obsidian-git.md",
     "todo.md",
     "rendu final.md",
@@ -210,9 +228,7 @@
     "shaders/synthese-sonore/28 - Les Ondes Martenot et l'Ondioline.md",
     "shaders/synthese-sonore/28 - Les Ondes Martenot et l'Ondioline.md.tmp.10004.b24db7b364e9",
     "shaders/synthese-sonore/27 - Synthèse stochastique et graphique.md",
-    "shaders/synthese-sonore/27 - Synthèse stochastique et graphique.md.tmp.10004.5a753e3e431a",
     "shaders/synthese-sonore/26 - Synthèse formantique et arithmétique linéaire.md",
-    "shaders/synthese-sonore/26 - Synthèse formantique et arithmétique linéaire.md.tmp.10004.a6745218d7db",
     "shaders/synthese-sonore/25 - Synthèse pulsar et distorsion de phase.md",
     "shaders/synthese-sonore/24 - Applications de la synthèse par modèle physique.md",
     "shaders/synthese-sonore/23 - La synthèse par modèle physique.md",
@@ -220,8 +236,6 @@
     "shaders/synthese-sonore/21 - La synthèse FM.md",
     "shaders/synthese-sonore/20 - Les formes de synthèse granulaire.md",
     "shaders/synthese-sonore/19 - Présentation de la synthèse granulaire.md",
-    "shaders/synthese-sonore/18 - Les tables d'ondes (Wavetable).md",
-    "shaders/synthese-sonore/17 - L'échantillonnage.md",
     "Pasted image 20260306160524.png",
     "Pasted image 20260306160431.png",
     "Pasted image 20260306155535.png",
