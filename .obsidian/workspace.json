@@ -25,12 +25,14 @@
             "id": "284f368dacdb1930",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "gamejam/pipelines.md"
+                "file": "gamejam/game jam.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "excalidraw-icon",
-              "title": "pipelines"
+              "icon": "lucide-file",
+              "title": "game jam"
             }
           }
         ],
@@ -198,10 +200,10 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "3bc6372029bf4d1a",
+  "active": "284f368dacdb1930",
   "lastOpenFiles": [
-    "gamejam/game jam.md",
     "gamejam/pipelines.md",
+    "gamejam/game jam.md",
     "Excalidraw",
     "gamejam/Untitled.md",
     "code shader toy.md",
