@@ -27,16 +27,15 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "gamejam/game jam.md",
+                "file": "shaders/Séance 1 - Les tunnels/tunnel3.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "game jam"
+              "title": "tunnel3"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -200,12 +199,17 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "284f368dacdb1930",
+  "active": "40709fdb4462e534",
   "lastOpenFiles": [
-    "gamejam/pipelines.md",
+    "shaders/Séance 1 - Les tunnels/tunnel3.md",
+    "shaders/Séance 1 - Les tunnels/tunnel3 - étapes.md",
+    "shaders/Séance 1 - Les tunnels/tunnel2 - étapes.md",
+    "shaders/Séance 1 - Les tunnels/tunnel1.md",
+    "shaders/Séance 1 - Les tunnels/tunnel1 - étapes.md",
     "gamejam/game jam.md",
-    "Excalidraw",
     "gamejam/Untitled.md",
+    "gamejam/pipelines.md",
+    "Excalidraw",
     "code shader toy.md",
     "gamejam",
     "conflict-files-obsidian-git.md",
@@ -233,11 +237,6 @@
     "shaders/synthese-sonore/26 - Synthèse formantique et arithmétique linéaire.md",
     "shaders/synthese-sonore/25 - Synthèse pulsar et distorsion de phase.md",
     "shaders/synthese-sonore/24 - Applications de la synthèse par modèle physique.md",
-    "shaders/synthese-sonore/23 - La synthèse par modèle physique.md",
-    "shaders/synthese-sonore/22 - Le spectre dans la synthèse FM.md",
-    "shaders/synthese-sonore/21 - La synthèse FM.md",
-    "shaders/synthese-sonore/20 - Les formes de synthèse granulaire.md",
-    "shaders/synthese-sonore/19 - Présentation de la synthèse granulaire.md",
     "Pasted image 20260306160524.png",
     "Pasted image 20260306160431.png",
     "Pasted image 20260306155535.png",

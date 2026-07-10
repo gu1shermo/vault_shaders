@@ -1,11 +1,14 @@
-- definiton pipeline
+- definition pipeline
 - présenter 3 pipelines:
 	-  Orca > SC > Kodelife
 	- Keyboard > WebAudio > Webgl 
 	- Osc > OpenGL
+	- editeur de shader ou moteur 2d?
 - wendy carlos intro film youtube
-- Squarepusher - A Journey To Reedham (7am Mix)
+- Squarepusher - A Journey To R eedham (7am Mix)
 - amen break
+- pipeline avec machines en réseau?
+- 
 
 
 # contraintes
