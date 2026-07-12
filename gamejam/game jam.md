@@ -8,6 +8,7 @@
 - Squarepusher - A Journey To R eedham (7am Mix)
 - amen break
 - pipeline avec machines en réseau?
+- méthodologie claude code: CLAUDE.md, itérations
 - 
 
 
