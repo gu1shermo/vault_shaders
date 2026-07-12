@@ -2,4 +2,4 @@
 - rendu individuel
 - sans commentaire
 - interaction avec le son (fft ou plus avancé)
-- + tunnel / reflect / refractr
+- + tunnel / reflect / refract
