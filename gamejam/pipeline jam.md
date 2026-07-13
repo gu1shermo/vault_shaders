@@ -9,13 +9,14 @@
 # refs
 
 - wendy carlos intro film youtube
-- Squarepusher - A Journey To R eedham (7am Mix)
-- amen break
+- Squarepusher - A Journey To Reedham (7am Mix) / Autechre
+- amen break / chopping 
 - shadertoy en webgl: https://webglfundamentals.org/webgl/lessons/webgl-shadertoy.html
 - fork d orca (azertype): https://nx93919.your-storageshare.de/s/L82Trf7ePfreP7r
 - tuto SC: https://composerprogrammer.com/teaching/supercollider/sctutorial/tutorial.html
 - orca: https://github.com/hundredrabbits/Orca
 - pilot pour orca: https://github.com/hundredrabbits/Pilot
+- musique algorithjmique: https://musiquealgorithmique.fr/
 - 
 
 

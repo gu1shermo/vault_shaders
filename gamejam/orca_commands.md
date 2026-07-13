@@ -21,11 +21,11 @@ nom:arg1;arg2;arg3
 
 ## Transport / lecture
 
-| Commande | Exemple | Effet |
-|---|---|---|
-| `play`   | `play`     | Démarre la lecture |
-| `stop`   | `stop`     | Arrête la lecture |
-| `run`    | `run`      | Exécute **une seule** frame (pas à pas) |
+| Commande | Exemple | Effet                                   |
+| -------- | ------- | --------------------------------------- |
+| `play`   | `play`  | Démarre la lecture                      |
+| `stop`   | `stop`  | Arrête la lecture                       |
+| `run`    | `run`   | Exécute **une seule** frame (pas à pas) |
 
 ## Tempo & temps
 
