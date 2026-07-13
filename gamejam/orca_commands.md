@@ -52,14 +52,14 @@ nom:arg1;arg2;arg3
 
 ## Sortie MIDI / OSC / UDP (routage vers SuperCollider)
 
-| Commande | Exemple | Effet |
-|---|---|---|
-| `midi`   | `midi:1;2`        | Choisit les périphériques MIDI `sortie;entrée` (indices) |
-| `udp`    | `udp:1234;5678`   | Configure UDP `port_sortie;port_entrée` (entrée optionnelle) |
-| `osc`    | `osc:1234`        | Choisit le port OSC |
-| `ip`     | `ip:127.0.0.1`    | Définit l'IP cible |
-| `cc`     | `cc:0`            | **Décalage des CC** (voir note ci-dessous) |
-| `pg`     | `pg:1;0;0;5`      | Program Change `canal;bank;sub;program` |
+| Commande | Exemple         | Effet                                                        |
+| -------- | --------------- | ------------------------------------------------------------ |
+| `midi`   | `midi:1;2`      | Choisit les périphériques MIDI `sortie;entrée` (indices)     |
+| `udp`    | `udp:1234;5678` | Configure UDP `port_sortie;port_entrée` (entrée optionnelle) |
+| `osc`    | `osc:1234`      | Choisit le port OSC                                          |
+| `ip`     | `ip:127.0.0.1`  | Définit l'IP cible                                           |
+| `cc`     | `cc:0`          | **Décalage des CC** (voir note ci-dessous)                   |
+| `pg`     | `pg:1;0;0;5`    | Program Change `canal;bank;sub;program`                      |
 
 ## Thème
 
