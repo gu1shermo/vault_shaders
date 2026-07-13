@@ -7,6 +7,7 @@
 nouvel opérateur
 ### roadmap
 
+
 ### technos utilisées
 opengl
 
@@ -17,6 +18,7 @@ opengl
 
 ### rôles
 ### intentions
+image > son > image anim
 
 ### orca
 à décider
@@ -31,9 +33,21 @@ Codex
 
 ### rôles
 ### intentions
-samples
+samples déclenchés osc
 ### orca
 camera
+### roadmap
+
+### technos utilisées
+
+### IA utilisée
+Claude
+
+## groupe4 Triuyen 
+
+### rôles
+### intentions
+### orca
 ### roadmap
 
 ### technos utilisées
@@ -60,7 +74,7 @@ ChatGPT
 
 ### rôles
 ### intentions
-
+mélodie sur orca
 ### orca
 nouvel opérateur
 ### roadmap

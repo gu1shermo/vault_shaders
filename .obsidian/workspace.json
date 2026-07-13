@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "gamejam/pipeline jam.md",
+                "file": "gamejam/groupes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "pipeline jam"
+              "title": "groupes"
             }
           },
           {
@@ -211,13 +211,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "gamejam/pipeline jam.md",
+                "file": "gamejam/groupes.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of pipeline jam"
+              "title": "Outline of groupes"
             }
           }
         ],
@@ -242,8 +242,11 @@
   },
   "active": "4b5a3829fbcd6a03",
   "lastOpenFiles": [
-    "gamejam/groupes.md",
+    "gamejam/sons_aquatiques.scd.tmp.22848.66e24d85477b",
+    "gamejam/sons_aquatiques.scd",
+    "gamejam/sons_aquatiques.scd.tmp.22848.00f33f075317",
     "gamejam/pipeline jam.md",
+    "gamejam/groupes.md",
     "gamejam/orca_commands.md",
     "gamejam/pipelines.md",
     "gamejam/sc tuto.md",
@@ -270,14 +273,11 @@
     "shaders/Séance 2 - La réfraction/refract1 - étapes.md",
     "shaders/Séance 1 - Les tunnels/tunnel2 - étapes.md",
     "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/shadertoy3 code.md",
-    "shaders/Séance 1 - Les tunnels/tunnel1 - étapes.md",
     "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].vtt",
     "shaders/Séance 3 - La synthèse sonore/shaders-audio/code/code1",
     "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].txt",
     "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].json",
     "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].tsv",
-    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 3 ： Marimba, Saw Bass, ＂Wah＂ Synth [9XeE0v5JLiQ].srt",
-    "shaders/Séance 3 - La synthèse sonore/shaders-audio/sources/Making Music in Shadertoy - Episode 2 ： FM Synthesis, Pad, Lead Synth [CqDrw0l0tas].vtt",
     "Pasted image 20260306160524.png",
     "Pasted image 20260306160431.png",
     "Pasted image 20260306155535.png",
