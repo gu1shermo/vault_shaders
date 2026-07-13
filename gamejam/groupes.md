@@ -1,4 +1,6 @@
-## groupe1 / rôles
+## groupe1
+
+### rôles
 ### intentions
 ### roadmap
 
@@ -6,7 +8,10 @@
 
 ### IA utilisée
 
-## groupe2 / rôles
+
+## groupe2 
+
+### rôles
 ### intentions
 ### roadmap
 
@@ -14,7 +19,9 @@
 
 ### IA utilisée
 
-## groupe3 / rôles
+## groupe3 
+
+### rôles
 ### intentions
 ### roadmap
 
