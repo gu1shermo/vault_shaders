@@ -9,7 +9,7 @@
 - amen break
 - pipeline avec machines en réseau?
 - méthodologie claude code: CLAUDE.md, itérations
-- 
+- fork d orca: https://nx93919.your-storageshare.de/s/L82Trf7ePfreP7r
 
 
 # contraintes
