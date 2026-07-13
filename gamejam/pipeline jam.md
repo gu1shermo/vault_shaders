@@ -15,6 +15,7 @@
 - fork d orca (azertype): https://nx93919.your-storageshare.de/s/L82Trf7ePfreP7r
 - tuto SC: https://composerprogrammer.com/teaching/supercollider/sctutorial/tutorial.html
 - orca: https://github.com/hundredrabbits/Orca
+- pilot pour orca: https://github.com/hundredrabbits/Pilot
 - 
 
 
